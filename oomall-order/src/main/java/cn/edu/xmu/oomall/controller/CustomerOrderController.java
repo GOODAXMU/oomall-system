@@ -19,9 +19,6 @@ import java.util.List;
 @RequestMapping("/orders")
 public class CustomerOrderController {
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "获得订单所有状态",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -35,9 +32,6 @@ public class CustomerOrderController {
         return null;
     }
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家查询名下订单（概要）",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -57,29 +51,6 @@ public class CustomerOrderController {
         return null;
     }
 
-//    /**
-//     * @return
-//     **/
-//    @ApiOperation(value = "买家查询名下订单（概要）",  produces="application/json")
-//    @ApiImplicitParams({
-//            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-//            @ApiImplicitParam(paramType = "body", dataType = "OrderInfoVo", name = "orderInfo", value = "指定新订单的资料", required = true)
-//    })
-//    @ApiResponses({
-//            @ApiResponse(code = 0, message = "成功"),
-//    })
-//    @ResponseStatus(value = HttpStatus.OK)
-//    @GetMapping("")
-//    public List<OrderPostResponse> createOrders(
-//            @RequestParam(required = false) String orderSn, @RequestParam(required = false) Integer state,
-//            @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize){
-//        return null;
-//    }
-
-
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家申请建立订单（普通，团购，预售）",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -94,9 +65,6 @@ public class CustomerOrderController {
         return null;
     }
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -111,11 +79,6 @@ public class CustomerOrderController {
         return null;
     }
 
-
-
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家修改本人名下订单",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -130,9 +93,6 @@ public class CustomerOrderController {
         return null;
     }
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家修改本人名下订单",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -147,9 +107,6 @@ public class CustomerOrderController {
         return null;
     }
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家标记确认收货",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -164,9 +121,6 @@ public class CustomerOrderController {
         return null;
     }
 
-    /**
-     * @return
-     **/
     @ApiOperation(value = "买家将团购订单转为普通订单",  produces="application/json")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -175,7 +129,7 @@ public class CustomerOrderController {
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
     })
-    @ResponseStatus(value = HttpStatus.OK)
+    @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("{id}/groupon-normal")
     public Object transferOrder(@RequestParam(required = true) Long id){
         return null;

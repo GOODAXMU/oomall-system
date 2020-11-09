@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderPostRequest {
-    private OrderItemsInner orderItems;
+    private OrderItemInner orderItems;
     private String consignee;
     private Long regionId;
     private String address;

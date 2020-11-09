@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemsInner {
+public class OrderItemInner {
     private Long skuId;
     private Integer quantity;
 }
