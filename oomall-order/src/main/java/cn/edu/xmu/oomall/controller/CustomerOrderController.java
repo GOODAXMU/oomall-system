@@ -1,10 +1,7 @@
 package cn.edu.xmu.oomall.controller;
 
 
-import cn.edu.xmu.oomall.vo.OrderPostRequest;
-import cn.edu.xmu.oomall.vo.OrderGetResponse;
-import cn.edu.xmu.oomall.vo.OrderStateGetResponse;
-import cn.edu.xmu.oomall.vo.OrderPutRequest;
+import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -93,7 +90,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("")
-    public OrderPostResponse createOrders(@RequestParam(required = true) OrderPostRequest orderInfo){
+    public OrderDetailGetResponse createOrders(@RequestParam(required = true) OrderPostRequest orderInfo){
         return null;
     }
 

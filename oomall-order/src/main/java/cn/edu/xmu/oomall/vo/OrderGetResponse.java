@@ -6,10 +6,10 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * @author zhibin lan
+ * @author zhibin lan, Jianheng HUANG
  * @date 2020-11-09
  */
-@ApiModel(description = "获得订单的响应对象")
+@ApiModel(description = "获取订单简略内容的响应对象")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,8 +21,8 @@ public class OrderGetResponse {
     private Integer orderType;
     private Integer state;
     private Integer subState;
-    private Integer gmtCreateTime;
-    private Integer originalPrice;
-    private Integer discountPrice;
-    private Integer freightPrice;
+    private Long gmtCreateTime;
+    private Long originalPrice;
+    private Long discountPrice;
+    private Long freightPrice;
 }
