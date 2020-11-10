@@ -16,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "goods_goods_sku")
+@Table(name = "good_goods_sku")
 public class GoodsSkuPo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,7 +24,7 @@ public class GoodsSkuPo {
 
 	private Long goodsSpuId;
 
-	private Long skuSn;
+	private String skuSn;
 
 	private String name;
 
@@ -36,9 +36,9 @@ public class GoodsSkuPo {
 
 	private String imageUrl;
 
-	private Long inventory;
+	private Integer inventory;
 
 	private String detail;
 
-	private Boolean disabled;
+	private Integer disabled;
 }
