@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "goods_flash_sale")
+@Table(name = "good_flash_sale")
 public class FlashSalePo {
 
 	@Id

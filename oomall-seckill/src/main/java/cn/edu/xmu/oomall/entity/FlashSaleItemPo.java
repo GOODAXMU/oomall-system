@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "goods_flash_sale_item")
+@Table(name = "good_flash_sale_item")
 public class FlashSaleItemPo {
 
 	@Id
@@ -25,7 +25,7 @@ public class FlashSaleItemPo {
 
 	private Long goodsSkuId;
 
-	private Integer price;
+	private Long price;
 
 	private Integer quantity;
 
