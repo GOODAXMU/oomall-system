@@ -42,30 +42,30 @@ public class OrderPo {
 
 	private Integer orderType;
 
-	private Integer freightPrice;
+	private Long freightPrice;
 
 	private Long couponId;
 
 	private Long couponActivityId;
 
-	private Integer discountPrice;
+	private Long discountPrice;
 
-	private Integer originPrice;
+	private Long originPrice;
 
 	private Long presaleId;
 
-	private Integer grouponDiscount;
+	private Long grouponDiscount;
 
 	private Integer rebateNum;
 
 	private LocalDateTime confirmTime;
 
-	private Long shipmentSn;
+	private String shipmentSn;
 
 	private Integer state;
 
 	@Column(name = "substate")
 	private Integer subState;
 
-	private Boolean beDeleted;
+	private Integer beDeleted;
 }

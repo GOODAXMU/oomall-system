@@ -25,7 +25,7 @@ public class OrderItemPo {
 
 	private Long goodsSkuId;
 
-	private Long quantity;
+	private Integer quantity;
 
 	private Long price;
 
