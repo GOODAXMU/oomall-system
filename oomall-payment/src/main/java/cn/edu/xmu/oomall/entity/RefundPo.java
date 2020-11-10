@@ -24,9 +24,9 @@ public class RefundPo {
 
 	private Long paymentId;
 
-	private Integer amount;
+	private Long amount;
 
-	private Long paySn;
+	private String paySn;
 
 	private Long billId;
 

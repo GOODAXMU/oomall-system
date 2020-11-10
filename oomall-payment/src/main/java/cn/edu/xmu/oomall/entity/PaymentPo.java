@@ -23,15 +23,15 @@ public class PaymentPo {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
-	private Integer amount;
+	private Long amount;
 
-	private Integer actualAmount;
+	private Long actualAmount;
 
 	private Integer paymentPattern;
 
 	private LocalDateTime payTime;
 
-	private Long paySn;
+	private String paySn;
 
 	private LocalDateTime beginTime;
 
