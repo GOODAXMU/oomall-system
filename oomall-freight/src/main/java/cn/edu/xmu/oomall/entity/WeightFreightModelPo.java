@@ -23,19 +23,19 @@ public class WeightFreightModelPo {
 
 	private Long freightModelId;
 
-	private Integer firstWeight;
+	private Long firstWeight;
 
-	private Integer firstWeightFreight;
+	private Long firstWeightFreight;
 
-	private Integer tenPrice;
+	private Long tenPrice;
 
-	private Integer fiftyPrice;
+	private Long fiftyPrice;
 
-	private Integer hundredPrice;
+	private Long hundredPrice;
 
-	private Integer trihunPrice;
+	private Long trihunPrice;
 
-	private Integer abovePrice;
+	private Long abovePrice;
 
 	private Long regionId;
 

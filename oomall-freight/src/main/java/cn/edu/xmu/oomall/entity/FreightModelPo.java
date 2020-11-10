@@ -25,8 +25,7 @@ public class FreightModelPo {
 
 	private String name;
 
-	@Column(name = "default")
-	private Boolean defaultModel;
+	private String defaultModel;
 
 	private Integer type;
 

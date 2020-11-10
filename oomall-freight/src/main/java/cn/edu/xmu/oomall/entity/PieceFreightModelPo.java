@@ -25,11 +25,11 @@ public class PieceFreightModelPo {
 
 	private Integer firstItems;
 
-	private Integer firstItemPrice;
+	private Long firstItemsPrice;
 
 	private Integer additionalItems;
 
-	private Integer additionalItemPrice;
+	private Long additionalItemsPrice;
 
 	private Long regionId;
 
