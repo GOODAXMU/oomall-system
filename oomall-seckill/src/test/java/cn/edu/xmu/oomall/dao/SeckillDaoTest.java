@@ -2,8 +2,8 @@ package cn.edu.xmu.oomall.dao;
 
 import cn.edu.xmu.oomall.OomallSeckillApplicationTest;
 import cn.edu.xmu.oomall.cache.ICache;
-import cn.edu.xmu.oomall.constant.ResponseStatus;
-import cn.edu.xmu.oomall.dto.Result;
+import cn.edu.xmu.oomall.constant.SeckillResponseStatus;
+import cn.edu.xmu.oomall.dto.SeckillResult;
 import cn.edu.xmu.oomall.repository.SeckillItemRepository;
 import org.junit.Assert;
 import org.junit.Test;
@@ -75,7 +75,7 @@ public class SeckillDaoTest {
 			int quantity = -random.nextInt(20);
 			Map<String, Object> r0 = seckillDao.modifyInventory(seckillId, skuId, quantity);
 			int n0 = (int) seckillItemCache.get(seckillItemPrefix, skuId);
-			Assert.assertEquals(Result.getStatus(r0), ResponseStatus.OK);;
+			Assert.assertEquals(SeckillResult.getStatus(r0), SeckillResponseStatus.OK);;
 			int times = 1;
 			while (rest < Math.abs(quantity)) {
 				rest += (1 + times * loadFactor) * batchSize;
@@ -111,7 +111,7 @@ public class SeckillDaoTest {
 				for (int i = 0; i < 10; i++) {
 					int quantity = -random.nextInt(20);
 					Map<String, Object> r0 = seckillDao.modifyInventory(seckillId, skuId, quantity);
-					if (Result.getStatus(r0).equals(ResponseStatus.OK)) {
+					if (SeckillResult.getStatus(r0).equals(SeckillResponseStatus.OK)) {
 						sum -= quantity;
 					}
 				}
