@@ -13,7 +13,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class InventoryModifyRequest implements Serializable {
+public class SeckillInventoryRequest implements Serializable {
 	private Long seckillId;
 	private Long skuId;
 	/**

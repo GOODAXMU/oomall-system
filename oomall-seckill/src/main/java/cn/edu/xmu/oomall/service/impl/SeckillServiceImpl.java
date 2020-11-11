@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.service.impl;
 
-import cn.edu.xmu.oomall.constant.ResponseStatus;
-import cn.edu.xmu.oomall.dto.Result;
+import cn.edu.xmu.oomall.constant.SeckillResponseStatus;
+import cn.edu.xmu.oomall.dto.SeckillResult;
 import cn.edu.xmu.oomall.dao.SeckillDao;
 import cn.edu.xmu.oomall.dto.*;
 import cn.edu.xmu.oomall.service.ISeckillService;
@@ -24,7 +24,7 @@ public class SeckillServiceImpl implements ISeckillService {
 	@Override
 	public Map<String, Object> loadSeckill(SeckillLoadRequest request) {
 		if (request == null || request.getSeckillId() == null) {
-			return Result.getResult(ResponseStatus.PARAM_ERROR);
+			return SeckillResult.getResult(SeckillResponseStatus.PARAM_ERROR);
 		}
 
 		return seckillDao.loadSeckill(request.getSeckillId(), request.getBatchSize());
@@ -33,7 +33,7 @@ public class SeckillServiceImpl implements ISeckillService {
 	@Override
 	public Map<String, Object> unloadSeckill(SeckillUnloadRequest request) {
 		if (request == null || request.getSeckillId() == null) {
-			return Result.getResult(ResponseStatus.PARAM_ERROR);
+			return SeckillResult.getResult(SeckillResponseStatus.PARAM_ERROR);
 		}
 
 		return seckillDao.unloadSeckill(request.getSeckillId());
@@ -42,17 +42,17 @@ public class SeckillServiceImpl implements ISeckillService {
 	@Override
 	public Map<String, Object> modifySeckillStatus(SeckillStatusModifyRequest request) {
 		if (request == null || request.getSeckillId() == null || request.getSwitchOn() == null) {
-			return Result.getResult(ResponseStatus.PARAM_ERROR);
+			return SeckillResult.getResult(SeckillResponseStatus.PARAM_ERROR);
 		}
 
 		return seckillDao.modifySeckillStatus(request.getSeckillId(), request.getSwitchOn());
 	}
 
 	@Override
-	public Map<String, Object> modifyInventory(InventoryModifyRequest request) {
+	public Map<String, Object> modifyInventory(SeckillInventoryRequest request) {
 		if (request == null || request.getSeckillId() == null
 				|| request.getQuantity() == null || request.getSkuId() == null) {
-			return Result.getResult(ResponseStatus.PARAM_ERROR);
+			return SeckillResult.getResult(SeckillResponseStatus.PARAM_ERROR);
 		}
 
 		return seckillDao.modifyInventory(request.getSeckillId(), request.getSkuId(), request.getQuantity());

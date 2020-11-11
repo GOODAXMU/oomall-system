@@ -1,8 +1,8 @@
 package cn.edu.xmu.oomall.dao;
 
 import cn.edu.xmu.oomall.cache.ICache;
-import cn.edu.xmu.oomall.constant.ResponseStatus;
-import cn.edu.xmu.oomall.dto.Result;
+import cn.edu.xmu.oomall.constant.SeckillResponseStatus;
+import cn.edu.xmu.oomall.dto.SeckillResult;
 import cn.edu.xmu.oomall.entity.FlashSaleItemPo;
 import cn.edu.xmu.oomall.entity.FlashSalePo;
 import cn.edu.xmu.oomall.repository.SeckillItemRepository;
@@ -66,7 +66,7 @@ public class SeckillDao {
 		// 在数据库中查找该秒杀活动
 		Optional<FlashSalePo> o = seckillRepository.findById(seckillId);
 		if (o.isEmpty()) {
-			return Result.getResult(ResponseStatus.SECKILL_NOT_FOUND);
+			return SeckillResult.getResult(SeckillResponseStatus.SECKILL_NOT_FOUND);
 		}
 
 		if (batchSize == null || batchSize <= 0) {
@@ -101,10 +101,10 @@ public class SeckillDao {
 			}
 		} while (page.getContent().size() != 0);
 
-		Result.Load result = new Result.Load();
+		SeckillResult.Load result = new SeckillResult.Load();
 		result.setTotalCount(total);
 		result.setSuccessCount(load);
-		return Result.getResult(ResponseStatus.OK, result);
+		return SeckillResult.getResult(SeckillResponseStatus.OK, result);
 	}
 
 	/**
@@ -116,7 +116,7 @@ public class SeckillDao {
 		// 在数据库中查找该秒杀活动
 		Optional<FlashSalePo> o = seckillRepository.findById(seckillId);
 		if (o.isEmpty()) {
-			return Result.getResult(ResponseStatus.SECKILL_NOT_FOUND);
+			return SeckillResult.getResult(SeckillResponseStatus.SECKILL_NOT_FOUND);
 		}
 
 		// 移除秒杀活动缓存
@@ -141,9 +141,9 @@ public class SeckillDao {
 			}
 		} while (page.getContent().size() != 0);
 
-		Result.Unload result = new Result.Unload();
+		SeckillResult.Unload result = new SeckillResult.Unload();
 		result.setTotalCount(total);
-		return Result.getResult(ResponseStatus.OK, result);
+		return SeckillResult.getResult(SeckillResponseStatus.OK, result);
 	}
 
 	/**
@@ -155,9 +155,9 @@ public class SeckillDao {
 	public Map<String, Object> modifySeckillStatus(Long seckillId, Boolean switchOn) {
 		Boolean r = seckillSwitch.computeIfPresent(seckillId, (k, v) -> switchOn);
 		if (r == null) {
-			return Result.getResult(ResponseStatus.SECKILL_NOT_FOUND);
+			return SeckillResult.getResult(SeckillResponseStatus.SECKILL_NOT_FOUND);
 		}
-		return Result.getResult(ResponseStatus.OK);
+		return SeckillResult.getResult(SeckillResponseStatus.OK);
 	}
 
 	/**
@@ -170,10 +170,10 @@ public class SeckillDao {
 	public Map<String, Object> modifyInventory(Long seckillId, Long skuId, Integer quantity) {
 		Boolean status = seckillSwitch.get(seckillId);
 		if (status == null) {
-			return Result.getResult(ResponseStatus.SECKILL_NOT_FOUND);
+			return SeckillResult.getResult(SeckillResponseStatus.SECKILL_NOT_FOUND);
 		}
 		if (!status) {
-			return Result.getResult(ResponseStatus.SECKILL_CLOSED);
+			return SeckillResult.getResult(SeckillResponseStatus.SECKILL_CLOSED);
 		}
 
 		int r = -1;
@@ -220,7 +220,7 @@ public class SeckillDao {
 		}
 
 		return r < 0
-				? Result.getResult(ResponseStatus.OUT_OF_INVENTORY)
-				: Result.getResult(ResponseStatus.OK);
+				? SeckillResult.getResult(SeckillResponseStatus.OUT_OF_INVENTORY)
+				: SeckillResult.getResult(SeckillResponseStatus.OK);
 	}
 }

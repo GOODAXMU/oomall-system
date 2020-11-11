@@ -4,7 +4,7 @@ package cn.edu.xmu.oomall.constant;
  * @author xincong yao
  * @date 2020-11-1
  */
-public enum ResponseStatus {
+public enum SeckillResponseStatus {
 
 	OK(0, "成功"),
 	ERROR(1, "未知错误"),
@@ -18,7 +18,7 @@ public enum ResponseStatus {
 	private final int value;
 	private final String reasonPhrase;
 
-	ResponseStatus(int value, String reasonPhrase) {
+	SeckillResponseStatus(int value, String reasonPhrase) {
 		this.value = value;
 		this.reasonPhrase = reasonPhrase;
 	}
@@ -31,8 +31,8 @@ public enum ResponseStatus {
 		return this.reasonPhrase;
 	}
 
-	public ResponseStatus valueOf(int statusCode) {
-		ResponseStatus status = resolve(statusCode);
+	public SeckillResponseStatus valueOf(int statusCode) {
+		SeckillResponseStatus status = resolve(statusCode);
 		if (status == null) {
 			throw new IllegalArgumentException("No matching constant for [" + statusCode + "]");
 		} else {
@@ -40,12 +40,12 @@ public enum ResponseStatus {
 		}
 	}
 
-	public static ResponseStatus resolve(int statusCode) {
-		ResponseStatus[] var1 = values();
+	public static SeckillResponseStatus resolve(int statusCode) {
+		SeckillResponseStatus[] var1 = values();
 		int var2 = var1.length;
 
 		for(int var3 = 0; var3 < var2; ++var3) {
-			ResponseStatus status = var1[var3];
+			SeckillResponseStatus status = var1[var3];
 			if (status.value == statusCode) {
 				return status;
 			}

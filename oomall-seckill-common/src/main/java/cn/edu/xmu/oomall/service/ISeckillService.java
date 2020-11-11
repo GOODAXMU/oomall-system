@@ -51,5 +51,5 @@ public interface ISeckillService {
 	 * @param request
 	 * @return
 	 */
-	Map<String, Object> modifyInventory(InventoryModifyRequest request);
+	Map<String, Object> modifyInventory(SeckillInventoryRequest request);
 }
