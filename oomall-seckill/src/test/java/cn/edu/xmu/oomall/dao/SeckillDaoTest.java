@@ -65,7 +65,7 @@ public class SeckillDaoTest {
 	public void modifyInventorySingleThreadTest() {
 		long seckillId = 12L;
 		long skuId = 1L;
-		int batchSize = 6;
+		int batchSize = 10;
 		seckillDao.loadSeckill(seckillId, batchSize);
 		seckillDao.modifySeckillStatus(seckillId, true);
 
@@ -75,7 +75,7 @@ public class SeckillDaoTest {
 			int quantity = -random.nextInt(20);
 			Map<String, Object> r0 = seckillDao.modifyInventory(seckillId, skuId, quantity);
 			int n0 = (int) seckillItemCache.get(seckillItemPrefix, skuId);
-			Assert.assertEquals(SeckillResult.getStatus(r0), SeckillResponseStatus.OK);;
+			Assert.assertEquals(SeckillResult.getStatus(r0), SeckillResponseStatus.OK);
 			int times = 1;
 			while (rest < Math.abs(quantity)) {
 				rest += (1 + times * loadFactor) * batchSize;
