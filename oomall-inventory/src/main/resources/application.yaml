@@ -30,12 +30,6 @@ spring:
   application:
     name: oomall-inventory
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
 dubbo:
   application:
     name: dubbo-inventory
@@ -47,8 +41,7 @@ dubbo:
     name: dubbo
     port: 19500
 
-oomall:
-  producer:
-    freight-service: oomall-freight
-    seckill-service:
-      version: 0.0.1-SNAPSHOT
+#-------------自定义字段----------------------
+inventory:
+  version: 0.0.1-SNAPSHOT
+#-------------------------------------------

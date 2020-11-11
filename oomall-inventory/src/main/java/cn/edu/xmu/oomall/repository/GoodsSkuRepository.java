@@ -15,6 +15,19 @@ public interface GoodsSkuRepository extends
 		JpaRepository<GoodsSkuPo, Long>,
 		JpaSpecificationExecutor<GoodsSkuPo> {
 
+	/**
+	 * 扣除指定数量的库存
+	 * @param id
+	 * @param number
+	 * @return
+	 */
+	@Modifying
+	@Transactional(rollbackFor = Exception.class)
+	@Query(value = "UPDATE good_goods_sku fsi " +
+			"SET inventory = inventory - :number " +
+			"WHERE id = :id AND inventory >= :number", nativeQuery = true)
+	int fetchQuantity(Long id, Integer number);
+
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE GoodsSkuPo gs SET " +
