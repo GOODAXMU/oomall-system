@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,7 +45,7 @@ public class SeckillResult {
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class Load {
+	public static class Load implements Serializable {
 		private Integer totalCount;
 		private Integer successCount;
 	}
@@ -52,7 +53,7 @@ public class SeckillResult {
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
-	public static class Unload {
+	public static class Unload implements Serializable {
 		private Integer totalCount;
 	}
 
