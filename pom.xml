@@ -25,9 +25,11 @@
         <module>oomall-order</module>
         <module>oomall-inventory</module>
         <module>oomall-payment</module>
+        <module>oomall-discount</module>
         <module>oomall-inventory-common</module>
         <module>oomall-freight-common</module>
         <module>oomall-payment-common</module>
+        <module>oomall-discount-common</module>
     </modules>
 
     <properties>
