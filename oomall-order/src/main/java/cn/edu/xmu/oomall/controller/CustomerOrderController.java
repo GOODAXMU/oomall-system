@@ -61,7 +61,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("")
-    public OrderDetailGetResponse createOrders(@RequestParam(required = true) OrderPostRequest orderInfo){
+    public OrderDetailGetResponse createOrders(@RequestBody OrderPostRequest orderInfo){
         return null;
     }
 
@@ -75,7 +75,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping("{id}")
-    public OrderDetailGetResponse createOrders(@RequestParam(required = true) Long id){
+    public OrderDetailGetResponse getOrderDetails(@PathVariable Long id){
         return null;
     }
 
@@ -89,7 +89,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     @PutMapping("{id}")
-    public Object updateSelfOrder(@RequestParam(required = true) OrderPutRequest userReceiveInfo){
+    public Object updateSelfOrder(@RequestBody OrderPutRequest userReceiveInfo, @PathVariable Long id){
         return null;
     }
 
@@ -103,7 +103,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     @DeleteMapping("{id}")
-    public Object deleteSelfOrder(@RequestParam(required = true) Long id){
+    public Object deleteSelfOrder(@PathVariable Long id){
         return null;
     }
 
@@ -117,7 +117,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.OK)
     @DeleteMapping("{id}/confirm")
-    public Object confirmOrder(@RequestParam(required = true) Long id){
+    public Object confirmOrder(@PathVariable Long id){
         return null;
     }
 
@@ -131,7 +131,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("{id}/groupon-normal")
-    public Object transferOrder(@RequestParam(required = true) Long id){
+    public Object transferOrder(@PathVariable Long id){
         return null;
     }
 }
