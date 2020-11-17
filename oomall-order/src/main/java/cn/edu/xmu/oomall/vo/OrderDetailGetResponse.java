@@ -17,35 +17,37 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDetailGetResponse {
 
-	private class Customer {
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	private static class Customer {
 		private Long id;
 		private String userName;
 		private String realName;
 	}
 
-	private class Shop {
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	private static class Shop {
 		private Long id;
 		private String name;
 		private String gmtCreateTime;
 		private String gmtModiTime;
 	}
-	private class OrderItem {
+
+	@Data
+	@AllArgsConstructor
+	@NoArgsConstructor
+	private static class OrderItem {
 		private Long skuId;
-
 		private Long orderId;
-
 		private String name;
-
 		private Long quantity;
-
 		private Long price;
-
 		private Long discount;
-
 		private Long couponId;
-
 		private Long couponActivityId;
-
 		private Long beSharedId;
 	}
 

@@ -61,7 +61,7 @@ public class CustomerOrderController {
     })
     @ResponseStatus(value = HttpStatus.CREATED)
     @PostMapping("")
-    public OrderDetailGetResponse createOrders(@RequestBody OrderPostRequest orderInfo){
+    public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo){
         return null;
     }
 

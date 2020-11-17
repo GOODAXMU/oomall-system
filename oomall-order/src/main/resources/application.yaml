@@ -47,8 +47,24 @@ dubbo:
     name: dubbo
     port: 19900
 
+
+#---------自定义字段---------------------
+
 oomall:
-  producer:
-    freight-service: oomall-freight
-    seckill-service:
-      version: 0.0.1-SNAPSHOT
+  external:
+    customer-service:
+      name: SimulatedCustomerServiceImpl
+    shop-service:
+      name: SimulatedShopServiceImpl
+    inventory-service:
+      name: SimulatedInventoryServiceImpl
+    freight-service:
+      name: SimulatedFreightServiceImpl
+    discount-service:
+      name: SimulatedDiscountServiceImpl
+    rebate-service:
+      name: SimulatedRebateServiceImpl
+    shipment-service:
+      name: SimulatedShipmentServiceImpl
+    share-service:
+      name: SimulatedShareServiceImpl
