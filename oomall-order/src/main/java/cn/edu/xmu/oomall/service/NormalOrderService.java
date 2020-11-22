@@ -63,6 +63,11 @@ public class NormalOrderService {
 		}
 		order.setOrderItems(orderItems);
 
+		// 异步计算折扣
+		CompletableFuture<List<OrderItem>> discount
+				= discountService.calcDiscountAsynchronous(
+				order.getOrderItems());
+
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -71,20 +76,27 @@ public class NormalOrderService {
 		}
 		order.setCustomer(customer);
 
-		// 根据sku所属商铺划分orderItem
+		// 添加分享记录
+		for (OrderItem oi : order.getOrderItems()) {
+			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
+			if (beSharedId != null) {
+				shareService.sendShareMessage(beSharedId, oi.getId());
+				oi.setBeSharedId(beSharedId);
+			}
+		}
+
+		// 获取并设置折扣
+		order.setOrderItems(discount.get());
+
+		// 根据sku所属商铺划分orderItem并创建子订单
 		Map<Shop, List<OrderItem>> shop2OrderItems =
 				shopService.classifySku(order.getOrderItems());
 		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
 			order.createAndAddSubOrder(e.getKey(), e.getValue());
 		}
 
-		// 保持父订单与子订单的orderItem引用指向相同的对象
-		order.resetOrderItems();
-
 		// 计算价格
-		for (Order subOrder : order.getSubOrders()) {
-			subOrder.calcAndSetSubOrderOriginPrice();
-		}
+		order.calcAndSetSubOrdersOriginPrice();
 		order.calcAndSetParentOrderOriginPrice();
 
 		// 异步计算运费
@@ -93,11 +105,6 @@ public class NormalOrderService {
 			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems());
 			freights.put(subOrder, cf);
 		}
-
-		// 异步计算折扣
-		CompletableFuture<Map<String, Object>> discount
-				= discountService.calcDiscountAsynchronous(
-						order.getOrderItems(), order.getCouponId());
 
 		// 使用返点
 		Integer rebate = order.calcAndGetRebate();
@@ -110,30 +117,16 @@ public class NormalOrderService {
 			subOrder.setFreightPrice(f);
 		}
 
-		// 获取并设置折扣
-		List<Boolean> useCoupon = discountService.useCoupon(discount);
-		List<Long> couponActivity = discountService.getCouponActivity(discount);
-		List<Long> discountList = discountService.getDiscountPrice(discount);
-		order.setDiscountAndCouponAndActivity(useCoupon, couponActivity, discountList);
-
 		// 设置订单状态
 		order.setOrderStatus(OrderStatus.NEW, true);
 
-		// 分配订单流水号
-		String orderSn = order.createAndGetOrderSn();
-
 		// 创建并设置快递消息
-		Map<String, Object> shipment = shipmentService.createShipment(orderSn);
-		order.setShipmentSn(shipmentService.getShipmentSn(shipment));
-		order.setConfirmTime(shipmentService.getConfirmTime(shipment));
-
-		// 添加分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
-			if (beSharedId != null) {
-				shareService.sendShareMessage(beSharedId, oi.getId());
-				oi.setBeSharedId(beSharedId);
-			}
+		for (Order subOrder : order.getSubOrders()) {
+			// 分配订单流水号
+			String orderSn = subOrder.createAndGetOrderSn();
+			Map<String, Object> shipment = shipmentService.createShipment(orderSn);
+			subOrder.setShipmentSn(shipmentService.getShipmentSn(shipment));
+			subOrder.setConfirmTime(shipmentService.getConfirmTime(shipment));
 		}
 
 		// 订单写入数据库

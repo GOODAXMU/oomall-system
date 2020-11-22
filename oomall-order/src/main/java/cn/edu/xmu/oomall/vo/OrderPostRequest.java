@@ -25,6 +25,7 @@ public class OrderPostRequest {
     public static class OrderItem {
         private Long skuId;
         private Integer quantity;
+        private Long couponActId;
     }
 
     private List<OrderItem> orderItems;
@@ -34,10 +35,6 @@ public class OrderPostRequest {
     private String mobile;
     private String message;
     private Long couponId;
-    /**
-     * 一个订单只能用一个优惠活动？
-     */
-    private Long couponActivityId;
     private Long presaleId;
     private Long grouponId;
 }

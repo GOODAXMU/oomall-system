@@ -41,7 +41,6 @@ public class Order {
 	private Long freightPrice;
 
 	private Long couponId;
-	private Long couponActivityId;
 
 	private Long discountPrice;
 	private Long originPrice;
@@ -65,32 +64,6 @@ public class Order {
 
 	private List<OrderItem> orderItems;
 
-	public void resetOrderItems() {
-		this.setOrderItems(new ArrayList<>());
-		for (Order subOrder : this.getSubOrders()) {
-			for (OrderItem orderItem : subOrder.getOrderItems()) {
-				this.getOrderItems().add(orderItem);
-			}
-		}
-	}
-
-	public void setDiscountAndCouponAndActivity(
-			List<Boolean> useCoupon,
-			List<Long> couponActivity,
-			List<Long> discountList) {
-		for (int i = 0; i < discountList.size(); i++) {
-			Long discountPrice = discountList.get(i);
-			if (discountPrice == 0) {
-				continue;
-			}
-			if (useCoupon.get(i)) {
-				getOrderItems().get(i).setCouponId(getCouponId());
-			} else {
-				getOrderItems().get(i).setCouponActivityId(couponActivity.get(i));
-			}
-			getOrderItems().get(i).setDiscount(discountPrice);
-		}
-	}
 
 	public Order createAndAddSubOrder(Shop shop, List<OrderItem> orderItems) {
 		Order subOrder = new Order();
@@ -115,32 +88,34 @@ public class Order {
 
 	public void calcAndSetParentOrderOriginPrice() {
 		Long price = 0L;
-		for (Order o : this.getSubOrders()) {
+		for (Order o : getSubOrders()) {
 			price += o.getOriginPrice();
 		}
-		this.originPrice = price;
+		originPrice = price;
 	}
 
-	public void calcAndSetSubOrderOriginPrice() {
-		Long price = 0L;
-		for (OrderItem oi : this.getOrderItems()) {
-			price += oi.getPrice();
+	public void calcAndSetSubOrdersOriginPrice() {
+		for (Order subOrder : getSubOrders()) {
+			long price = 0L;
+			for (OrderItem oi : subOrder.getOrderItems()) {
+				price += oi.getQuantity() * oi.getPrice();
+			}
+			subOrder.setOriginPrice(price);
 		}
-		this.originPrice = price;
 	}
 
 	public Integer calcAndGetRebate() {
 		if (originPrice == null) {
 			return 0;
 		}
-		return Math.toIntExact(this.originPrice / 25L);
+		return Math.toIntExact(originPrice / 25L);
 	}
 
 	public void setOrderStatus(OrderStatus status, boolean withSubOrder) {
-		this.state = status.value();
+		state = status.value();
 		if (withSubOrder) {
-			for (Order o : this.getSubOrders()) {
-				o.setState(this.state);
+			for (Order o : getSubOrders()) {
+				o.setState(state);
 			}
 		}
 	}
