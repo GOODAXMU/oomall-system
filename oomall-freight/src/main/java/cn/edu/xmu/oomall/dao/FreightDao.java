@@ -3,9 +3,11 @@ package cn.edu.xmu.oomall.dao;
 import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PieceFreightModel;
 import cn.edu.xmu.oomall.bo.WeightFreightModel;
+import cn.edu.xmu.oomall.constant.OrderModuleStatus;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.repository.FreightModelRepository;
 import cn.edu.xmu.oomall.repository.PieceModelRepository;
 import cn.edu.xmu.oomall.repository.WeightModelRepository;
@@ -30,22 +32,26 @@ public class FreightDao {
     @Autowired
     private PieceModelRepository pieceModelRepository;
 
-    public FreightModel getFreightModelByPo(FreightModelPo freightModelPo){
+    public FreightModel getFreightModelByPo(FreightModelPo freightModelPo) {
         FreightModel freightModel = new FreightModel(freightModelRepository.findOne(SpecificationFactory.get(freightModelPo)).get());
         return freightModel;
     }
 
-    public FreightModel getFreightModelById(Long id){
-        return new FreightModel(freightModelRepository.findById(id).get());
+    public FreightModel getFreightModelById(Long id) throws OrderModuleException {
+        FreightModel freightModel = new FreightModel(freightModelRepository.findById(id).get());
+        if (null == freightModel) {
+            throw new OrderModuleException(OrderModuleStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        return freightModel;
     }
 
-    public WeightFreightModel getWeightFreightModelByPo(WeightFreightModelPo weightFreightModelPo){
+    public WeightFreightModel getWeightFreightModelByPo(WeightFreightModelPo weightFreightModelPo) {
         WeightFreightModel weightFreightModel = new WeightFreightModel(
                 weightModelRepository.findOne(SpecificationFactory.get(weightFreightModelPo)).get());
         return weightFreightModel;
     }
 
-    public PieceFreightModel getPieceFreightModelByPo(PieceFreightModelPo pieceFreightModelPo){
+    public PieceFreightModel getPieceFreightModelByPo(PieceFreightModelPo pieceFreightModelPo) {
         PieceFreightModel pieceFreightModel = new PieceFreightModel(
                 pieceModelRepository.findOne(SpecificationFactory.get(pieceFreightModelPo)).get());
         return pieceFreightModel;
