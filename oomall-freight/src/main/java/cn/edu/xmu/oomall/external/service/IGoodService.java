@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.external.service;
 
 
 import cn.edu.xmu.oomall.bo.GoodsSku;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 
 /**
  * @author zhibin lan
@@ -15,10 +16,10 @@ public interface IGoodService {
      * @param skuid
      * @return
      */
-    Long getShopId(Long skuid);
+    Long getShopId(Long skuid) throws OrderModuleException;
 
 
-    Long getGoodsSkuWeightById(Long skuid);
+    Long getGoodsSkuWeightById(Long skuid) throws OrderModuleException;
 
     /**
      * 获取sku的模板id
@@ -26,5 +27,5 @@ public interface IGoodService {
      * @param skuid
      * @return
      */
-    Long getFreightModelId(Long skuid);
+    Long getFreightModelId(Long skuid) throws OrderModuleException;
 }

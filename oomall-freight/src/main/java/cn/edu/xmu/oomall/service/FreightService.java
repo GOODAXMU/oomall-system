@@ -2,10 +2,12 @@ package cn.edu.xmu.oomall.service;
 
 
 import cn.edu.xmu.oomall.bo.*;
+import cn.edu.xmu.oomall.constant.OrderModuleStatus;
 import cn.edu.xmu.oomall.dao.FreightDao;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.IGoodService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.strategy.IFreightCalculate;
@@ -52,7 +54,7 @@ public class FreightService {
      * @param rid
      * @return
      */
-    public Long calFreight(List<PurchaseItem> purchaseItems, Long rid) {
+    public Long calFreight(List<PurchaseItem> purchaseItems, Long rid) throws OrderModuleException {
 
         //获取所有商品的运费模板并获取购买项重量
         List<FreightModel> freightModels = new ArrayList<>();
@@ -62,7 +64,7 @@ public class FreightService {
             item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
         }
 
-        //没有定义模板则使用默认运费模板
+        //没有定义模板则使用商家默认运费模板
         if (null == freightModels) {
             for (PurchaseItem item : purchaseItems) {
                 freightModels.add(getDefaultFreightModel(item.getSkuId()));
@@ -96,7 +98,7 @@ public class FreightService {
      * @param skuId
      * @return
      */
-    public FreightModel getFreightModel(Long skuId) {
+    public FreightModel getFreightModel(Long skuId) throws OrderModuleException {
         Long freightModelId = goodService.getFreightModelId(skuId);
         FreightModel freightModel = freightDao.getFreightModelById(freightModelId);
         return freightModel;
@@ -108,7 +110,7 @@ public class FreightService {
      * @param skuId
      * @return
      */
-    public FreightModel getDefaultFreightModel(Long skuId) {
+    public FreightModel getDefaultFreightModel(Long skuId) throws OrderModuleException {
         Long shopId = goodService.getShopId(skuId);
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
