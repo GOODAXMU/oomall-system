@@ -26,10 +26,15 @@
         <module>oomall-inventory</module>
         <module>oomall-payment</module>
         <module>oomall-discount</module>
+        <module>oomall-discount-common</module>
         <module>oomall-inventory-common</module>
         <module>oomall-freight-common</module>
         <module>oomall-payment-common</module>
-        <module>oomall-discount-common</module>
+        <module>oomall-timer</module>
+        <module>oomall-timer-common</module>
+        <module>oomall-goods</module>
+        <module>oomall-activity</module>
+        <module>oomall-activity-common</module>
     </modules>
 
     <properties>

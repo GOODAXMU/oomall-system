@@ -72,7 +72,7 @@ public class NormalOrderService {
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
 		if (customer == null) {
-			throw new OrderModuleException(OrderModuleStatus.CUSTOMER_NOT_EXIST);
+			throw new OrderModuleException(OrderModuleStatus.RESOURCE_ID_NOT_EXIST);
 		}
 		order.setCustomer(customer);
 

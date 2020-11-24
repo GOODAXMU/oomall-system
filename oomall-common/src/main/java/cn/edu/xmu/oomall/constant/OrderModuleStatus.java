@@ -10,7 +10,16 @@ public enum OrderModuleStatus {
 	 * 通用状态码
 	 ******************************/
 	OK(0, "成功"),
-	OUT_OF_STOCK(900, "商品库存不足"),
+
+
+	/******************************
+	 * 系统级错误
+	 ******************************/
+	INTERNAL_SERVER_ERR(500,"服务器内部错误"),
+	FIELD_INVALID(503,"字段不合法"),
+	RESOURCE_ID_NOT_EXIST(504,"操作的资源id不存在"),
+	RESOURCE_ID_OUT_OF_SCOPE(505,"操作的资源id不是自己的对象"),
+	RESOURCE_FALSIFY(507, "信息签名不正确"),
 
 
 	/******************************
@@ -23,10 +32,16 @@ public enum OrderModuleStatus {
 
 
 	/******************************
+	 * 非订单模块状态码
+	 ******************************/
+	OUT_OF_STOCK(900, "商品库存不足"),
+
+
+	/******************************
 	 * 自定义状态码
 	 ******************************/
-	CUSTOMER_NOT_EXIST(599, "用户id不存在")
 	;
+
 
 	private final int value;
 	private final String reasonPhrase;
@@ -57,7 +72,7 @@ public enum OrderModuleStatus {
 		OrderModuleStatus[] var1 = values();
 		int var2 = var1.length;
 
-		for(int var3 = 0; var3 < var2; ++var3) {
+		for (int var3 = 0; var3 < var2; ++var3) {
 			OrderModuleStatus status = var1[var3];
 			if (status.value == statusCode) {
 				return status;
