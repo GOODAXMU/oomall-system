@@ -59,7 +59,7 @@ public class FreightService {
         for (PurchaseItem item : purchaseItems) {
             FreightModel freightModel = getFreightModel(item.getSkuId());
             freightModels.add(freightModel);
-            item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()));
+            item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
         }
 
         //没有定义模板则使用默认运费模板

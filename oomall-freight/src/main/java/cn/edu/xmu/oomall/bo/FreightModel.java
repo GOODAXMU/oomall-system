@@ -24,7 +24,7 @@ public class FreightModel {
 
     private Boolean isDefault;
 
-
+    private Integer unit;
     /**
      * 构造函数
      * @param freightModelPo Po对象
