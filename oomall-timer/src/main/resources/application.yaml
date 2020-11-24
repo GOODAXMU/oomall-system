@@ -1,0 +1,46 @@
+spring:
+
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        format_sql: true
+
+  datasource:
+    druid:
+      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: gooda
+      password: 123456
+      initial-size: 1
+      min-idle: 1
+      max-active: 20
+      test-on-borrow: true
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      test-while-idle: true
+
+dubbo:
+  application:
+    name: dubbo-timer
+  scan:
+    base-packages: cn.edu.xmu.oomall.service
+  registry:
+    address: nacos://localhost:8848
+  protocol:
+    name: dubbo
+    port: 17800
+
+server:
+  port: 7800
+
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: timer
+    max-message-size: 4096
+    send-message-timeout: 3000
+    retry-times-when-send-async-failed: 2
+
+timer:
+  version: 0.0.1-SNAPSHOT
