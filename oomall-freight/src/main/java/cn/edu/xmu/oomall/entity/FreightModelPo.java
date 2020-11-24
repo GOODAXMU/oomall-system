@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order_freight_model")
+@Table(name = "freight_model")
 public class FreightModelPo {
 
 	@Id
@@ -25,7 +25,7 @@ public class FreightModelPo {
 
 	private String name;
 
-	private String defaultModel;
+	private Boolean defaultModel;
 
 	private Integer type;
 

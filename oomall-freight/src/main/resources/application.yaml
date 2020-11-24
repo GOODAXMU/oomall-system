@@ -48,7 +48,26 @@ dubbo:
     port: 19800
 
 oomall:
-  producer:
-    freight-service: oomall-freight
-    seckill-service:
-      version: 0.0.1-SNAPSHOT
+  external:
+    goods-service:
+      name: SimulatedGoodsServiceImpl
+  freight:
+    model:
+      #重量运费模式
+      weight: 0
+      #计件运费模式
+      piece: 1
+
+  #kg
+  kg: 1000
+  #0.5kg
+  half-kg: 500
+  #10
+  ten: 10
+  #50
+  fifty: 50
+  #100
+  hundry: 100
+  #300
+  tri-hundry: 300
+

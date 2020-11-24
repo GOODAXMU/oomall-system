@@ -17,7 +17,6 @@
     <description>Object Oriented Mall System</description>
 
     <modules>
-        <module>oomall-consumer</module>
         <module>oomall-freight</module>
         <module>oomall-common</module>
         <module>oomall-seckill</module>

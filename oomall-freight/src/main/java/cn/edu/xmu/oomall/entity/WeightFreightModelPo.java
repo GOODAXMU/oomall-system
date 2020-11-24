@@ -14,7 +14,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order_weight_freight_model")
+@Table(name = "weight_freight_model")
 public class WeightFreightModelPo {
 
 	@Id

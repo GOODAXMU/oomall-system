@@ -17,5 +17,5 @@ public class FreightCalculateResponse {
 
 	private Long skuId;
 	private Integer count;
-	private Double freight;
+	private Long freight;
 }
