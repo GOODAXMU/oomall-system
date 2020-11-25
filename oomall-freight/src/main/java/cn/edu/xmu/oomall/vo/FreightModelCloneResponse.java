@@ -16,6 +16,6 @@ public class FreightModelCloneResponse {
     private String name;
     private Integer type;
     private Boolean defaultModel;
-    private String gmtCreateTime;
-    private String gmtModiTime;
+    private String gmtCreate;
+    private String gmtModified;
 }

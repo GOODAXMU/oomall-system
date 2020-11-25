@@ -11,6 +11,7 @@ import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.IGoodService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.strategy.IFreightCalculate;
+import cn.edu.xmu.oomall.vo.FreightModelDefineResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -91,6 +92,17 @@ public class FreightService {
 
     }
 
+    /**
+     * 定义运费模板
+     *
+     * @param freightModel
+     * @return
+     */
+    public FreightModelDefineResponse defineFreightModel(FreightModel freightModel) throws OrderModuleException {
+        FreightModelPo freightModelPo = freightModel.createPo();
+        freightDao.createFreightModel(freightModelPo);
+        return null;
+    }
 
     /**
      * 获取运费模板

@@ -1,7 +1,11 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.bo.FreightModel;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
+import cn.edu.xmu.oomall.service.FreightService;
 import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,12 +18,18 @@ import javax.validation.constraints.NotNull;
  * @date 2020-11-9
  */
 public class ShopShipmentController {
+
+    @Autowired
+    private FreightService freightService;
+
     @ApiOperation(value = "管理员定义店铺运费模板")
     @PostMapping(value = "/shops/{id}/freightmodels", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
     public FreightModelDefineResponse defineFreightModel(
             @Valid @RequestBody FreightModelDefineRequest freightModelInfo,
-            @NotNull @Min(value = 0) @PathVariable Long id) {
+            @NotNull @Min(value = 0) @PathVariable Long id) throws OrderModuleException {
+        FreightModel freightModel = new FreightModel(freightModelInfo);
+        freightService.defineFreightModel(freightModel);
         return null;
     }
 
@@ -29,6 +39,7 @@ public class ShopShipmentController {
     public FreightModelGetResponse getFreightModel(
             @Valid @RequestBody FreightModelGetRequest freightModelInfo,
             @NotNull @Min(value = 0) @PathVariable Long id) {
+
         return null;
     }
 

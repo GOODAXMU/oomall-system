@@ -21,6 +21,10 @@ public class PurchaseItem {
 
     private Long weight;
 
+    /**
+     * 构造函数
+     * @param freightCalculateRequest Vo对象
+     */
     public PurchaseItem(FreightCalculateRequest freightCalculateRequest){
         skuId = freightCalculateRequest.getSkuId();
         count = freightCalculateRequest.getCount();
