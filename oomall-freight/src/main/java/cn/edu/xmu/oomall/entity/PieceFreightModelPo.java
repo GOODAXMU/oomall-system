@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author jianheng huang
@@ -33,5 +34,8 @@ public class PieceFreightModelPo {
 
 	private Long regionId;
 
+	private LocalDateTime gmtCreate;
+
+	private LocalDateTime gmtModified;
 
 }

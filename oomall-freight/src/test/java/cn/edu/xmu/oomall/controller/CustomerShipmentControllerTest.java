@@ -30,6 +30,6 @@ public class CustomerShipmentControllerTest {
 
 	@Test
 	public void calculateFreightTest() throws Exception {
-
+		
 	}
 }

@@ -40,8 +40,8 @@ public class PieceItemResponse {
     private Long additionalItemPrice;
 
     @NotNull
-    private String gmtCreateTime;
+    private String gmtCreate;
 
     @NotNull
-    private String gmtModiTime;
+    private String gmtModified;
 }
