@@ -4,7 +4,7 @@ import cn.edu.xmu.oomall.bo.Customer;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
-import cn.edu.xmu.oomall.constant.OrderModuleStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
 import cn.edu.xmu.oomall.exception.OrderModuleException;
@@ -59,7 +59,7 @@ public class NormalOrderService {
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
 		if (orderItems.size() == 0) {
-			throw new OrderModuleException(OrderModuleStatus.OUT_OF_STOCK);
+			throw new OrderModuleException(ResponseStatus.OUT_OF_STOCK);
 		}
 		order.setOrderItems(orderItems);
 
@@ -72,7 +72,7 @@ public class NormalOrderService {
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
 		if (customer == null) {
-			throw new OrderModuleException(OrderModuleStatus.RESOURCE_ID_NOT_EXIST);
+			throw new OrderModuleException(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 		order.setCustomer(customer);
 

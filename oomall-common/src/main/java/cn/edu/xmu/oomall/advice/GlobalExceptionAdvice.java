@@ -25,8 +25,8 @@ public class GlobalExceptionAdvice {
 		if (e.getHttpStatus() != null) {
 			response.setStatus(e.getHttpStatus().value());
 		}
-		return new CommonResponse<>(e.getOrderModuleStatus().value(),
-				e.getOrderModuleStatus().getReasonPhrase());
+		return new CommonResponse<>(e.getResponseStatus().value(),
+				e.getResponseStatus().getReasonPhrase());
 	}
 
 	@ExceptionHandler(value = MethodArgumentNotValidException.class)

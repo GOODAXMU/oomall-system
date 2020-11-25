@@ -4,7 +4,7 @@ package cn.edu.xmu.oomall.constant;
  * @author xincong yao
  * @date 2020-10-28
  */
-public enum OrderModuleStatus {
+public enum ResponseStatus {
 
 	/******************************
 	 * 通用状态码
@@ -34,19 +34,15 @@ public enum OrderModuleStatus {
 	/******************************
 	 * 非订单模块状态码
 	 ******************************/
-	OUT_OF_STOCK(900, "商品库存不足"),
-
-
-	/******************************
-	 * 自定义状态码
-	 ******************************/
+	OUT_OF_STOCK(900, "库存不足")
+	
 	;
 
 
 	private final int value;
 	private final String reasonPhrase;
 
-	OrderModuleStatus(int value, String reasonPhrase) {
+	ResponseStatus(int value, String reasonPhrase) {
 		this.value = value;
 		this.reasonPhrase = reasonPhrase;
 	}
@@ -59,8 +55,8 @@ public enum OrderModuleStatus {
 		return this.reasonPhrase;
 	}
 
-	public OrderModuleStatus valueOf(int statusCode) {
-		OrderModuleStatus status = resolve(statusCode);
+	public ResponseStatus valueOf(int statusCode) {
+		ResponseStatus status = resolve(statusCode);
 		if (status == null) {
 			throw new IllegalArgumentException("No matching constant for [" + statusCode + "]");
 		} else {
@@ -68,12 +64,12 @@ public enum OrderModuleStatus {
 		}
 	}
 
-	public static OrderModuleStatus resolve(int statusCode) {
-		OrderModuleStatus[] var1 = values();
+	public static ResponseStatus resolve(int statusCode) {
+		ResponseStatus[] var1 = values();
 		int var2 = var1.length;
 
 		for (int var3 = 0; var3 < var2; ++var3) {
-			OrderModuleStatus status = var1[var3];
+			ResponseStatus status = var1[var3];
 			if (status.value == statusCode) {
 				return status;
 			}
