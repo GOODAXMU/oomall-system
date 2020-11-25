@@ -3,7 +3,6 @@ package cn.edu.xmu.oomall.vo;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.http.HttpStatus;
 
 /**
@@ -12,22 +11,27 @@ import org.springframework.http.HttpStatus;
  */
 @Data
 @AllArgsConstructor
-@NoArgsConstructor
 public class Reply<T> {
 
 	private HttpStatus httpStatus;
 	private ResponseStatus responseStatus;
 	private T data;
 
-	public Reply(HttpStatus httpStatus) {
-		this.httpStatus = httpStatus;
+	public Reply() {
+		this.responseStatus = ResponseStatus.OK;
 	}
 
 	public Reply(ResponseStatus responseStatus) {
 		this.responseStatus = responseStatus;
 	}
 
+	public Reply(HttpStatus httpStatus, ResponseStatus responseStatus) {
+		this.httpStatus = httpStatus;
+		this.responseStatus = responseStatus;
+	}
+
 	public Reply(T data) {
+		this.responseStatus = ResponseStatus.OK;
 		this.data = data;
 	}
 }
