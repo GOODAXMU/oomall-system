@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author zhibin lan
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order_order_item")
+@Table(name = "order_item")
 public class OrderItemPo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,4 +39,8 @@ public class OrderItemPo {
 	private Long couponActivityId;
 
 	private Long beSharedId;
+
+	private LocalDateTime gmtCreated;
+
+	private LocalDateTime gmtModified;
 }
