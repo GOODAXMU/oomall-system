@@ -81,7 +81,7 @@ public class NormalOrderService {
 			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
 			if (beSharedId != null) {
 				shareService.sendShareMessage(beSharedId, oi.getId());
-				oi.setBeSharedId(beSharedId);
+				oi.setBeShareId(beSharedId);
 			}
 		}
 

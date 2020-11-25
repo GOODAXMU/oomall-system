@@ -15,4 +15,8 @@ public class Customer {
 	private Long id;
 	private String userName;
 	private String realName;
+
+	public Customer(Long id) {
+		this.id = id;
+	}
 }

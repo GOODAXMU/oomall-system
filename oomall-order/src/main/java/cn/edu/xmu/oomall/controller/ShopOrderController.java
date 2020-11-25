@@ -26,7 +26,7 @@ public class ShopOrderController {
 	@ApiOperation(value = "店家查询商户所有订单 (概要)。")
 	@GetMapping(value = "/{shopId}/orders", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(value = HttpStatus.OK)
-	public List<OrderGetResponse> searchShopOrders(
+	public List<OrderSummaryGetResponse> searchShopOrders(
 			@NotNull @Min(value = 0) @PathVariable Long shopId,
 			@Min(value = 0) Long customerId,
 			String orderSn,
@@ -58,7 +58,7 @@ public class ShopOrderController {
 	@GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(value = HttpStatus.OK)
 	//API标准 v1.0.6 返回类型有误
-	public OrderDetailGetResponse/*OrderGetResponse*/ getShopOrderDetail(
+	public OrderDetailGetResponse/*OrderSummaryGetResponse*/ getShopOrderDetail(
 			@NotNull @Min(value = 0) @PathVariable Long shopId,
 			@NotNull @Min(value = 0) @PathVariable Long id) {
 		return null;

@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
@@ -26,8 +28,10 @@ public interface OrderItemRepository extends
 			"oi.name = CASE WHEN :#{#orderItem.name} IS NULL THEN oi.name ELSE :#{#orderItem.name} END, " +
 			"oi.couponId = CASE WHEN :#{#orderItem.couponId} IS NULL THEN oi.couponId ELSE :#{#orderItem.couponId} END, " +
 			"oi.couponActivityId = CASE WHEN :#{#orderItem.couponActivityId} IS NULL THEN oi.couponActivityId ELSE :#{#orderItem.couponActivityId} END, " +
-			"oi.beSharedId = CASE WHEN :#{#orderItem.beSharedId} IS NULL THEN oi.beSharedId ELSE :#{#orderItem.beSharedId} END " +
+			"oi.beShareId = CASE WHEN :#{#orderItem.beShareId} IS NULL THEN oi.beShareId ELSE :#{#orderItem.beShareId} END " +
 			"WHERE oi.id = :#{#orderItem.id}")
 	int update(OrderItemPo orderItem);
+
+	List<OrderItemPo> findByOrderId(Long id);
 
 }

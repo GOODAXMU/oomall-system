@@ -8,7 +8,7 @@ import javax.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * @author Wang Zhizhou
+ * @author xincong yao
  * @date 2020-11-07
  */
 
@@ -53,6 +53,8 @@ public class OrderPo {
 	private Long originPrice;
 
 	private Long presaleId;
+
+	private Long grouponId;
 
 	private Long grouponDiscount;
 

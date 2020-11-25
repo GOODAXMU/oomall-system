@@ -34,6 +34,7 @@ public interface OrderRepository extends
 			"o.discountPrice = CASE WHEN :#{#order.discountPrice} IS NULL THEN o.discountPrice ELSE :#{#order.discountPrice} END, " +
 			"o.originPrice = CASE WHEN :#{#order.originPrice} IS NULL THEN o.originPrice ELSE :#{#order.originPrice} END, " +
 			"o.presaleId = CASE WHEN :#{#order.presaleId} IS NULL THEN o.presaleId ELSE :#{#order.presaleId} END, " +
+			"o.grouponId = CASE WHEN :#{#order.grouponId} IS NULL THEN o.grouponId ELSE :#{#order.grouponId} END, " +
 			"o.grouponDiscount = CASE WHEN :#{#order.grouponDiscount} IS NULL THEN o.grouponDiscount ELSE :#{#order.grouponDiscount} END, " +
 			"o.rebateNum = CASE WHEN :#{#order.rebateNum} IS NULL THEN o.rebateNum ELSE :#{#order.rebateNum} END, " +
 			"o.confirmTime = CASE WHEN :#{#order.confirmTime} IS NULL THEN o.confirmTime ELSE :#{#order.confirmTime} END, " +
