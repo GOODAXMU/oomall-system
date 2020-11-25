@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.advice;
 
 import cn.edu.xmu.oomall.annotation.IgnoreResponseAdvice;
-import cn.edu.xmu.oomall.constant.OrderModuleStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.vo.CommonResponse;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.core.MethodParameter;
@@ -62,8 +62,8 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 		}
 
 		CommonResponse<Object> response =
-				new CommonResponse<>(OrderModuleStatus.OK.value(),
-						OrderModuleStatus.OK.getReasonPhrase());
+				new CommonResponse<>(ResponseStatus.OK.value(),
+						ResponseStatus.OK.getReasonPhrase());
 
 		if (o == null) {
 			return response;
@@ -72,8 +72,8 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 		} else if (o instanceof Reply) {
 			Reply r = (Reply) o;
 			response.setData(r.getData());
-			response.setCode(r.getOrderModuleStatus().value());
-			response.setMessage(r.getOrderModuleStatus().getReasonPhrase());
+			response.setCode(r.getResponseStatus().value());
+			response.setMessage(r.getResponseStatus().getReasonPhrase());
 			if (r.getHttpStatus() != null) {
 				serverHttpResponse.setStatusCode(r.getHttpStatus());
 			}
