@@ -26,8 +26,12 @@ public interface FreightModelRepository extends
 			"THEN fm.defaultModel ELSE :#{#freightModel.defaultModel} END, " +
 			"fm.type = CASE WHEN :#{#freightModel.type} IS NULL " +
 			"THEN fm.type ELSE :#{#freightModel.type} END, " +
-			"fm.unit = CASE WHEN :#{#freightModel.unit} IS NULL " +
-			"THEN fm.unit ELSE :#{#freightModel.unit} END " +
+			"fm.weightUnit = CASE WHEN :#{#freightModel.unit} IS NULL " +
+			"THEN fm.weightUnit ELSE :#{#freightModel.unit} END, " +
+			"fm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
+			"THEN fm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
+			"fm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +
+			"THEN fm.gmtModified ELSE :#{#freightModel.gmtModified} END " +
 			"WHERE fm.id = :#{#freightModel.id}")
 	int update(FreightModelPo freightModel);
 }

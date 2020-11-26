@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.service;
 
 
 import cn.edu.xmu.oomall.bo.*;
-import cn.edu.xmu.oomall.constant.OrderModuleStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.FreightDao;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
@@ -12,11 +12,15 @@ import cn.edu.xmu.oomall.external.service.IGoodService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.strategy.IFreightCalculate;
 import cn.edu.xmu.oomall.vo.FreightModelDefineResponse;
+import cn.edu.xmu.oomall.vo.Reply;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +30,9 @@ import java.util.List;
  */
 
 @Service
+@Slf4j
 public class FreightService {
+
     @Autowired
     private FreightDao freightDao;
 
@@ -55,12 +61,12 @@ public class FreightService {
      * @param rid
      * @return
      */
-    public Long calFreight(List<PurchaseItem> purchaseItems, Long rid) throws OrderModuleException {
+    public Reply<Long> calFreight(List<PurchaseItem> purchaseItems, Long rid) {
 
         //获取所有商品的运费模板并获取购买项重量
         List<FreightModel> freightModels = new ArrayList<>();
         for (PurchaseItem item : purchaseItems) {
-            FreightModel freightModel = getFreightModel(item.getSkuId());
+            FreightModel freightModel = getFreightModel(item.getSkuId()).getData();
             freightModels.add(freightModel);
             item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
         }
@@ -88,7 +94,7 @@ public class FreightService {
         }
 
         //计算
-        return freightCalculate.calculateFreight(purchaseItems, weightFreightModels, pieceFreightModels);
+        return new Reply<>(freightCalculate.calculateFreight(purchaseItems, weightFreightModels, pieceFreightModels));
 
     }
 
@@ -98,10 +104,15 @@ public class FreightService {
      * @param freightModel
      * @return
      */
-    public FreightModelDefineResponse defineFreightModel(FreightModel freightModel) throws OrderModuleException {
+    @Transactional
+    public Reply<FreightModel> defineFreightModel(FreightModel freightModel) {
         FreightModelPo freightModelPo = freightModel.createPo();
-        freightDao.createFreightModel(freightModelPo);
-        return null;
+        freightModelPo.setGmtModified(LocalDateTime.now());
+        freightModelPo.setGmtCreated(LocalDateTime.now());
+        Reply<FreightModelPo> reply = freightDao.createFreightModel(freightModelPo);
+        if(reply.getResponseStatus() != ResponseStatus.OK)
+            return new Reply<>(reply.getResponseStatus());
+        return new Reply<FreightModel>(new FreightModel(reply.getData()));
     }
 
     /**
@@ -110,9 +121,9 @@ public class FreightService {
      * @param skuId
      * @return
      */
-    public FreightModel getFreightModel(Long skuId) throws OrderModuleException {
+    public Reply<FreightModel> getFreightModel(Long skuId){
         Long freightModelId = goodService.getFreightModelId(skuId);
-        FreightModel freightModel = freightDao.getFreightModelById(freightModelId);
+        Reply<FreightModel>  freightModel = freightDao.getFreightModelById(freightModelId);
         return freightModel;
     }
 
@@ -122,7 +133,7 @@ public class FreightService {
      * @param skuId
      * @return
      */
-    public FreightModel getDefaultFreightModel(Long skuId) throws OrderModuleException {
+    public FreightModel getDefaultFreightModel(Long skuId) {
         Long shopId = goodService.getShopId(skuId);
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);

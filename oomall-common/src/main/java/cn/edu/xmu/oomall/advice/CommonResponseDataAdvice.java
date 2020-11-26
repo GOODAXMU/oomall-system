@@ -1,8 +1,9 @@
 package cn.edu.xmu.oomall.advice;
 
 import cn.edu.xmu.oomall.annotation.IgnoreResponseAdvice;
-import cn.edu.xmu.oomall.constant.OrderModuleStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.vo.CommonResponse;
+import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.core.MethodParameter;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.HttpMessageConverter;
@@ -61,13 +62,23 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 		}
 
 		CommonResponse<Object> response =
-				new CommonResponse<>(OrderModuleStatus.OK.value(),
-						OrderModuleStatus.OK.getReasonPhrase());
+				new CommonResponse<>(ResponseStatus.OK.value(),
+						ResponseStatus.OK.getReasonPhrase());
 
 		if (o == null) {
 			return response;
 		} else if (o instanceof CommonResponse) {
 			return o;
+		} else if (o instanceof Reply) {
+			Reply r = (Reply) o;
+			System.out.println(" beforeBodyWrite :" + o.toString());
+			response.setData(r.getData());
+			response.setCode(r.getResponseStatus().value());
+			response.setMessage(r.getResponseStatus().getReasonPhrase());
+			if (r.getHttpStatus() != null) {
+				serverHttpResponse.setStatusCode(r.getHttpStatus());
+			}
+			return response;
 		} else {
 			response.setData(o);
 			return response;

@@ -6,6 +6,7 @@ import cn.edu.xmu.oomall.service.FreightService;
 import cn.edu.xmu.oomall.vo.FreightCalculateRequest;
 import cn.edu.xmu.oomall.vo.FreightCalculateResponse;
 import cn.edu.xmu.oomall.vo.FreightModelSummaryGetResponse;
+import cn.edu.xmu.oomall.vo.Reply;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,17 +36,18 @@ public class CustomerShipmentController {
 	@ApiOperation(value = "计算一批商品的运费")
 	@PostMapping(value = "/region/{rid}/price", produces = "application/json;charset=UTF-8")
 	@ResponseStatus(value = HttpStatus.CREATED)
-	public FreightCalculateResponse calculateFreight (
+	public Reply<FreightCalculateResponse> calculateFreight (
 			@Valid @RequestBody List<FreightCalculateRequest> items,
-			@NotNull @Min(value = 0) @PathVariable Long rid) throws OrderModuleException {
+			@NotNull @Min(value = 0) @PathVariable Long rid){
+
 		List<PurchaseItem> purchaseItems = new ArrayList<PurchaseItem>();
 		for(FreightCalculateRequest item : items){
 			purchaseItems.add(new PurchaseItem(item));
 		}
 
 		FreightCalculateResponse freightCalculateResponse = new FreightCalculateResponse();
-		freightCalculateResponse.setFreight(freightService.calFreight(purchaseItems,rid));
-		return freightCalculateResponse;
+		freightCalculateResponse.setFreight(freightService.calFreight(purchaseItems,rid).getData());
+		return new Reply<>(freightCalculateResponse);
 	}
 
 	@ApiOperation(value = "获取运费模板概要")

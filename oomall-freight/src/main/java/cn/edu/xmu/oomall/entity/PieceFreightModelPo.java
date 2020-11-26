@@ -34,7 +34,7 @@ public class PieceFreightModelPo {
 
 	private Long regionId;
 
-	private LocalDateTime gmtCreate;
+	private LocalDateTime gmtCreated;
 
 	private LocalDateTime gmtModified;
 

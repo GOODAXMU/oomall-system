@@ -17,6 +17,7 @@ import javax.validation.constraints.NotNull;
  * @author yan song
  * @date 2020-11-9
  */
+@RestController
 public class ShopShipmentController {
 
     @Autowired
@@ -25,12 +26,12 @@ public class ShopShipmentController {
     @ApiOperation(value = "管理员定义店铺运费模板")
     @PostMapping(value = "/shops/{id}/freightmodels", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public FreightModelDefineResponse defineFreightModel(
+    public Reply<FreightModelDefineResponse> defineFreightModel(
             @Valid @RequestBody FreightModelDefineRequest freightModelInfo,
-            @NotNull @Min(value = 0) @PathVariable Long id) throws OrderModuleException {
+            @NotNull @Min(value = 0) @PathVariable Long id) {
         FreightModel freightModel = new FreightModel(freightModelInfo);
-        freightService.defineFreightModel(freightModel);
-        return null;
+        Reply<FreightModel> reply = freightService.defineFreightModel(freightModel);
+        return new Reply(reply.getData().createDefineResponse());
     }
 
     @ApiOperation(value = "获得店铺中商品的运费模板")
@@ -134,7 +135,7 @@ public class ShopShipmentController {
     }
 
     @ApiOperation(value = "管理员修改重量模板明细")
-    @PutMapping(value = "/shops/{shopId}/pieceItems/{id}/", produces = "application/json;charset=UTF-8")
+    @PutMapping(value = "/shops/{shopId}/weightItems/{id}/", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Object modifyWeightItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
@@ -144,7 +145,7 @@ public class ShopShipmentController {
     }
 
     @ApiOperation(value = "管理员删除重量模板明细")
-    @DeleteMapping(value = "/shops/{shopId}/pieceItems/{id}/", produces = "application/json;charset=UTF-8")
+    @DeleteMapping(value = "/shops/{shopId}/weightItems/{id}/", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Object deleteWeightItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
