@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FreightModelDefineResponse {
-    private Integer id;
+    private Long id;
     private String name;
     private Integer type;
     private Boolean defaultModel;

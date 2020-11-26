@@ -16,10 +16,10 @@ public interface IGoodService {
      * @param skuid
      * @return
      */
-    Long getShopId(Long skuid) throws OrderModuleException;
+    Long getShopId(Long skuid);
 
 
-    Long getGoodsSkuWeightById(Long skuid) throws OrderModuleException;
+    Long getGoodsSkuWeightById(Long skuid);
 
     /**
      * 获取sku的模板id
@@ -27,5 +27,5 @@ public interface IGoodService {
      * @param skuid
      * @return
      */
-    Long getFreightModelId(Long skuid) throws OrderModuleException;
+    Long getFreightModelId(Long skuid);
 }

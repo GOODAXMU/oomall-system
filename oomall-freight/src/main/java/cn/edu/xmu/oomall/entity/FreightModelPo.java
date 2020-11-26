@@ -30,9 +30,10 @@ public class FreightModelPo {
 
 	private Integer type;
 
-	private Long unit;
+	@Column(name = "unit")
+	private Long weightUnit;
 
-	private LocalDateTime gmtCreate;
+	private LocalDateTime gmtCreated;
 
 	private LocalDateTime gmtModified;
 }

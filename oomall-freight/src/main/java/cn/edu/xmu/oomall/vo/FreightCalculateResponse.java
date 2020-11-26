@@ -15,7 +15,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FreightCalculateResponse {
 
-	private Long skuId;
-	private Integer count;
 	private Long freight;
 }

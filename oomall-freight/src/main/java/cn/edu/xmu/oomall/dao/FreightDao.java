@@ -3,7 +3,7 @@ package cn.edu.xmu.oomall.dao;
 import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PieceFreightModel;
 import cn.edu.xmu.oomall.bo.WeightFreightModel;
-import cn.edu.xmu.oomall.constant.OrderModuleStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
@@ -12,6 +12,8 @@ import cn.edu.xmu.oomall.repository.FreightModelRepository;
 import cn.edu.xmu.oomall.repository.PieceModelRepository;
 import cn.edu.xmu.oomall.repository.WeightModelRepository;
 import cn.edu.xmu.oomall.repository.util.SpecificationFactory;
+import cn.edu.xmu.oomall.vo.Reply;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Repository;
  */
 
 @Repository
+@Slf4j
 public class FreightDao {
 
     @Autowired
@@ -51,12 +54,13 @@ public class FreightDao {
      * @return FreightModel
      * createdBy: zhibin lan
      */
-    public FreightModel getFreightModelById(Long id) throws OrderModuleException {
+    public Reply<FreightModel> getFreightModelById(Long id) {
         FreightModel freightModel = new FreightModel(freightModelRepository.findById(id).get());
         if (null == freightModel) {
-            throw new OrderModuleException(OrderModuleStatus.RESOURCE_ID_NOT_EXIST);
+            log.debug("freight model no exist, id: " + id);
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        return freightModel;
+        return new Reply<>(freightModel);
     }
 
     /**
@@ -91,12 +95,22 @@ public class FreightDao {
      * @param freightModelPo po对象
      * @return FreightModel
      */
-    public FreightModel createFreightModel(FreightModelPo freightModelPo) throws OrderModuleException{
-        //模板名重复
+    public Reply<FreightModelPo> createFreightModel(FreightModelPo freightModelPo) {
+
+        Reply reply = new Reply<FreightModelPo>();
+        //判断模板名是否重复
         if (isFreightModelNameExit(freightModelPo.getName())) {
-            throw new OrderModuleException(OrderModuleStatus.FREIGHT_NAME_EXIST);
+            log.debug("模板名重复: "+ freightModelPo.getName());
+            return new Reply<>(ResponseStatus.FREIGHT_NAME_EXIST);
         }
-        return null;
+        try{
+            reply.setData(freightModelRepository.saveAndFlush(freightModelPo));
+        }
+        catch (Exception e){
+            log.debug("数据库错误: "+ e.getMessage());
+            return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
+        }
+        return reply;
     }
 
     /**
@@ -108,6 +122,6 @@ public class FreightDao {
     public boolean isFreightModelNameExit(String name) {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setName(name);
-        return null != freightModelRepository.findOne(SpecificationFactory.get(freightModelPo)).get();
+        return !freightModelRepository.findOne(SpecificationFactory.get(freightModelPo)).isEmpty();
     }
 }

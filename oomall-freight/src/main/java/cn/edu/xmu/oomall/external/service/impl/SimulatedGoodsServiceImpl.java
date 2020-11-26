@@ -8,17 +8,17 @@ import org.springframework.stereotype.Component;
 public class SimulatedGoodsServiceImpl implements IGoodService {
 
     @Override
-    public Long getShopId(Long skuid) throws OrderModuleException {
+    public Long getShopId(Long skuid) {
         return Long.valueOf(1);
     }
 
     @Override
-    public Long getGoodsSkuWeightById(Long skuid) throws OrderModuleException {
+    public Long getGoodsSkuWeightById(Long skuid) {
         return Long.valueOf(1000);
     }
 
     @Override
-    public Long getFreightModelId(Long skuid) throws OrderModuleException {
+    public Long getFreightModelId(Long skuid) {
         return Long.valueOf(1);
     }
 }

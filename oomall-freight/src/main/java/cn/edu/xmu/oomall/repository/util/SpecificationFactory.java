@@ -19,90 +19,94 @@ import java.util.List;
  */
 public class SpecificationFactory {
 
-	public static Specification<FreightModelPo> get(FreightModelPo freightModel) {
-		return (Specification<FreightModelPo>) (root, criteriaQuery, builder) -> {
-			List<Predicate> predicates = new ArrayList<>();
+    public static Specification<FreightModelPo> get(FreightModelPo freightModel) {
+        return (Specification<FreightModelPo>) (root, criteriaQuery, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-			if (freightModel.getShopId() != null) {
-				predicates.add(builder.equal(root.get("shopId"), freightModel.getShopId()));
+            if (freightModel.getShopId() != null) {
+                predicates.add(builder.equal(root.get("shopId"), freightModel.getShopId()));
+            }
+            if (freightModel.getName() != null) {
+                predicates.add(builder.equal(root.get("name"), freightModel.getName()));
+            }
+            if (freightModel.getDefaultModel() != null) {
+                predicates.add(builder.equal(root.get("defaultModel"), freightModel.getDefaultModel()));
+            }
+            if (freightModel.getType() != null) {
+                predicates.add(builder.equal(root.get("type"), freightModel.getType()));
+            }
+			if (freightModel.getWeightUnit() != null) {
+				predicates.add(builder.equal(root.get("weightUnit"), freightModel.getWeightUnit()));
 			}
-			if (freightModel.getName() != null) {
-				predicates.add(builder.equal(root.get("name"), freightModel.getName()));
-			}
-			if (freightModel.getDefaultModel() != null) {
-				predicates.add(builder.equal(root.get("defaultModel"), freightModel.getDefaultModel()));
-			}
-			if (freightModel.getType() != null) {
-				predicates.add(builder.equal(root.get("type"), freightModel.getType()));
-			}
-			if (freightModel.getUnit() != null) {
-				predicates.add(builder.equal(root.get("unit"), freightModel.getUnit()));
-			}
+            if (freightModel.getGmtCreated() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), freightModel.getGmtCreated()));
+            }
+            if (freightModel.getGmtCreated() != null) {
+                predicates.add(builder.equal(root.get("gmtModified"), freightModel.getGmtModified()));
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 
-			return builder.and(predicates.toArray(new Predicate[0]));
-		};
-	}
+    public static Specification<WeightFreightModelPo> get(WeightFreightModelPo weightFreightModel) {
+        return (Specification<WeightFreightModelPo>) (root, criteriaQuery, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-	public static Specification<WeightFreightModelPo> get(WeightFreightModelPo weightFreightModel) {
-		return (Specification<WeightFreightModelPo>) (root, criteriaQuery, builder) -> {
-			List<Predicate> predicates = new ArrayList<>();
+            if (weightFreightModel.getFreightModelId() != null) {
+                predicates.add(builder.equal(root.get("freightModelId"), weightFreightModel.getFreightModelId()));
+            }
+            if (weightFreightModel.getFirstWeight() != null) {
+                predicates.add(builder.equal(root.get("firstWeight"), weightFreightModel.getFirstWeight()));
+            }
+            if (weightFreightModel.getFirstWeightFreight() != null) {
+                predicates.add(builder.equal(root.get("firstWeightFreight"), weightFreightModel.getFirstWeightFreight()));
+            }
+            if (weightFreightModel.getTenPrice() != null) {
+                predicates.add(builder.equal(root.get("tenPrice"), weightFreightModel.getTenPrice()));
+            }
+            if (weightFreightModel.getFiftyPrice() != null) {
+                predicates.add(builder.equal(root.get("fiftyPrice"), weightFreightModel.getFiftyPrice()));
+            }
+            if (weightFreightModel.getHundredPrice() != null) {
+                predicates.add(builder.equal(root.get("hundredPrice"), weightFreightModel.getHundredPrice()));
+            }
+            if (weightFreightModel.getTrihunPrice() != null) {
+                predicates.add(builder.equal(root.get("trihunPrice"), weightFreightModel.getTrihunPrice()));
+            }
+            if (weightFreightModel.getAbovePrice() != null) {
+                predicates.add(builder.equal(root.get("abovePrice"), weightFreightModel.getAbovePrice()));
+            }
+            if (weightFreightModel.getRegionId() != null) {
+                predicates.add(builder.equal(root.get("regionId"), weightFreightModel.getRegionId()));
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 
-			if (weightFreightModel.getFreightModelId() != null) {
-				predicates.add(builder.equal(root.get("freightModelId"), weightFreightModel.getFreightModelId()));
-			}
-			if (weightFreightModel.getFirstWeight() != null) {
-				predicates.add(builder.equal(root.get("firstWeight"), weightFreightModel.getFirstWeight()));
-			}
-			if (weightFreightModel.getFirstWeightFreight() != null) {
-				predicates.add(builder.equal(root.get("firstWeightFreight"), weightFreightModel.getFirstWeightFreight()));
-			}
-			if (weightFreightModel.getTenPrice() != null) {
-				predicates.add(builder.equal(root.get("tenPrice"), weightFreightModel.getTenPrice()));
-			}
-			if (weightFreightModel.getFiftyPrice() != null) {
-				predicates.add(builder.equal(root.get("fiftyPrice"), weightFreightModel.getFiftyPrice()));
-			}
-			if (weightFreightModel.getHundredPrice() != null) {
-				predicates.add(builder.equal(root.get("hundredPrice"), weightFreightModel.getHundredPrice()));
-			}
-			if (weightFreightModel.getTrihunPrice() != null) {
-				predicates.add(builder.equal(root.get("trihunPrice"), weightFreightModel.getTrihunPrice()));
-			}
-			if (weightFreightModel.getAbovePrice() != null) {
-				predicates.add(builder.equal(root.get("abovePrice"), weightFreightModel.getAbovePrice()));
-			}
-			if (weightFreightModel.getRegionId() != null) {
-				predicates.add(builder.equal(root.get("regionId"), weightFreightModel.getRegionId()));
-			}
+    public static Specification<PieceFreightModelPo> get(PieceFreightModelPo pieceFreightModel) {
+        return (Specification<PieceFreightModelPo>) (root, criteriaQuery, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
 
-			return builder.and(predicates.toArray(new Predicate[0]));
-		};
-	}
+            if (pieceFreightModel.getFreightModelId() != null) {
+                predicates.add(builder.equal(root.get("freightModelId"), pieceFreightModel.getFreightModelId()));
+            }
+            if (pieceFreightModel.getFirstItems() != null) {
+                predicates.add(builder.equal(root.get("firstItems"), pieceFreightModel.getFirstItems()));
+            }
+            if (pieceFreightModel.getFirstItemsPrice() != null) {
+                predicates.add(builder.equal(root.get("firstItemsPrice"), pieceFreightModel.getFirstItemsPrice()));
+            }
+            if (pieceFreightModel.getAdditionalItems() != null) {
+                predicates.add(builder.equal(root.get("additionalItems"), pieceFreightModel.getAdditionalItems()));
+            }
+            if (pieceFreightModel.getAdditionalItemsPrice() != null) {
+                predicates.add(builder.equal(root.get("additionalItemsPrice"), pieceFreightModel.getAdditionalItemsPrice()));
+            }
+            if (pieceFreightModel.getRegionId() != null) {
+                predicates.add(builder.equal(root.get("regionId"), pieceFreightModel.getRegionId()));
+            }
 
-	public static Specification<PieceFreightModelPo> get(PieceFreightModelPo pieceFreightModel) {
-		return (Specification<PieceFreightModelPo>) (root, criteriaQuery, builder) -> {
-			List<Predicate> predicates = new ArrayList<>();
-
-			if (pieceFreightModel.getFreightModelId() != null) {
-				predicates.add(builder.equal(root.get("freightModelId"), pieceFreightModel.getFreightModelId()));
-			}
-			if (pieceFreightModel.getFirstItems() != null) {
-				predicates.add(builder.equal(root.get("firstItems"), pieceFreightModel.getFirstItems()));
-			}
-			if (pieceFreightModel.getFirstItemsPrice() != null) {
-				predicates.add(builder.equal(root.get("firstItemsPrice"), pieceFreightModel.getFirstItemsPrice()));
-			}
-			if (pieceFreightModel.getAdditionalItems() != null) {
-				predicates.add(builder.equal(root.get("additionalItems"), pieceFreightModel.getAdditionalItems()));
-			}
-			if (pieceFreightModel.getAdditionalItemsPrice() != null) {
-				predicates.add(builder.equal(root.get("additionalItemsPrice"), pieceFreightModel.getAdditionalItemsPrice()));
-			}
-			if (pieceFreightModel.getRegionId() != null) {
-				predicates.add(builder.equal(root.get("regionId"), pieceFreightModel.getRegionId()));
-			}
-
-			return builder.and(predicates.toArray(new Predicate[0]));
-		};
-	}
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 }

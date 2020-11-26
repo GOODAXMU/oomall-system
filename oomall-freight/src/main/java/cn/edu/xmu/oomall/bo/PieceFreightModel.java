@@ -38,4 +38,5 @@ public class PieceFreightModel {
         additionalItems = pieceFreightModelPo.getAdditionalItems();
         additionalItemsPrice = pieceFreightModelPo.getAdditionalItemsPrice();
     }
+
 }
