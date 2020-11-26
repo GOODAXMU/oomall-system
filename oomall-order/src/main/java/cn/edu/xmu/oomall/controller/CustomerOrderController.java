@@ -1,16 +1,23 @@
 package cn.edu.xmu.oomall.controller;
 
 
+import cn.edu.xmu.oomall.bo.Order;
+import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.service.OrderService;
+import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author zhibin lan
+ * @author xincong yao
  * @date 2020-11-9
  */
 @Api(value = "供买家访问的订单api")
@@ -19,119 +26,157 @@ import java.util.List;
 @RequestMapping("/orders")
 public class CustomerOrderController {
 
-    @ApiOperation(value = "获得订单所有状态",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping("/states")
-    public List<OrderStateGetResponse> getAllOrdersStates(){
-        return null;
-    }
+    @Autowired
+    private OrderService orderService;
 
-    @ApiOperation(value = "买家查询名下订单（概要）",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "query", dataType = "String", name = "orderSn", value = "订单编号", required = false),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "state", value = "订单状态", required = false),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "page", value = "页码", required = false),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = "每页数目", required = false),
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping("")
-    public List<OrderGetResponse> getAllOrders(
-            @RequestParam(required = false) String orderSn, @RequestParam(required = false) Integer state,
-            @RequestParam(required = false) Integer page, @RequestParam(required = false) Integer pageSize){
-        return null;
-    }
 
-    @ApiOperation(value = "买家申请建立订单（普通，团购，预售）",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "OrderCreatePostRequest", name = "orderInfo", value = "指定新订单的资料", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("")
-    public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo){
-        return null;
-    }
+	@ApiOperation(value = "获得订单所有状态", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping("/states")
+	public Reply<List<OrderStateGetResponse>> getAllOrdersStates() {
+		List<OrderStateGetResponse> r = new ArrayList<>();
+		for (OrderStatus os : OrderStatus.values()) {
+			r.add(new OrderStateGetResponse(os.value(), os.getDesc()));
+		}
 
-    @ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @GetMapping("{id}")
-    public OrderDetailGetResponse getOrderDetails(@PathVariable Long id){
-        return null;
-    }
+		return new Reply<>(r);
+	}
 
-    @ApiOperation(value = "买家修改本人名下订单",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "OrderUpdatePutRequest", name = "userReceiveInfo", value = "操作字段 (状态)", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @PutMapping("{id}")
-    public Object updateSelfOrder(@RequestBody OrderPutRequest userReceiveInfo, @PathVariable Long id){
-        return null;
-    }
 
-    @ApiOperation(value = "买家修改本人名下订单",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @DeleteMapping("{id}")
-    public Object deleteSelfOrder(@PathVariable Long id){
-        return null;
-    }
+	@ApiOperation(value = "买家查询名下订单（概要）", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "query", dataType = "String", name = "orderSn", value = "订单编号", required = false),
+			@ApiImplicitParam(paramType = "query", dataType = "int", name = "state", value = "订单状态", required = false),
+			@ApiImplicitParam(paramType = "query", dataType = "int", name = "page", value = "页码", required = false),
+			@ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = "每页数目", required = false),
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping("")
+	public Reply<OrderSummaryGetResponse> getAllOrders(
+			@RequestParam(required = false) String orderSn,
+			@RequestParam(required = false) Integer state,
+			@RequestParam(required = false) String beginTime,
+			@RequestParam(required = false) String endTime,
+			@RequestParam(required = false, defaultValue = "1") Integer page,
+			@RequestParam(required = false, defaultValue = "20") Integer pageSize) {
+		PageInfo pageInfo = new PageInfo(page, pageSize);
+        List<Order> os = orderService.getOrders(orderSn, state,
+                beginTime == null ? null : LocalDateTime.parse(beginTime),
+                endTime == null ? null : LocalDateTime.parse(endTime),
+                pageInfo, false).getData();
 
-    @ApiOperation(value = "买家标记确认收货",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "指定需要返回订单概要信息的订单号", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.OK)
-    @DeleteMapping("{id}/confirm")
-    public Object confirmOrder(@PathVariable Long id){
-        return null;
-    }
+        OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
+        vo.setSummaryList(os);
+        vo.setPageInfo(pageInfo);
 
-    @ApiOperation(value = "买家将团购订单转为普通订单",  produces="application/json")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping("{id}/groupon-normal")
-    public Object transferOrder(@PathVariable Long id){
-        return null;
-    }
+		return new Reply<>(vo);
+	}
+
+
+	@ApiOperation(value = "买家申请建立订单（普通，团购，预售）", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "OrderCreatePostRequest", name = "orderInfo", value = "指定新订单的资料", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@PostMapping("")
+	public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo) {
+		return null;
+	}
+
+
+	@ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@GetMapping("{id}")
+	public Reply<OrderDetailGetResponse> getOrderDetails(@PathVariable Long id) {
+		Order o = orderService.getOrderById(id).getData();
+
+		OrderDetailGetResponse vo = new OrderDetailGetResponse();
+		vo.setAll(o);
+
+		return new Reply<>(vo);
+	}
+
+
+	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "OrderUpdatePutRequest", name = "userReceiveInfo", value = "操作字段 (状态)", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@PutMapping("{id}")
+	public Reply<Object> updateSelfOrder(@RequestBody OrderPutRequest request, @PathVariable Long id) {
+		Order o =Order.toOrder(request);
+		o.setId(id);
+
+		return orderService.updateOrder(o);
+	}
+
+
+	@ApiOperation(value = "买家删除本人名下订单", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@DeleteMapping("{id}")
+	public Object deleteSelfOrder(@PathVariable Long id) {
+		return orderService.deleteSelfOrder(id);
+	}
+
+
+	@ApiOperation(value = "买家标记确认收货", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "指定需要返回订单概要信息的订单号", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.OK)
+	@PutMapping("{id}/confirm")
+	public Reply<Object> confirmOrder(@PathVariable Long id) {
+		return orderService.confirmOrder(id);
+	}
+
+
+	@ApiOperation(value = "买家将团购订单转为普通订单", produces = "application/json")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功"),
+	})
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@PostMapping("{id}/groupon-normal")
+	public Reply<Object> transferOrder(@PathVariable Long id) {
+		return orderService.groupon2Normal(id);
+	}
 }

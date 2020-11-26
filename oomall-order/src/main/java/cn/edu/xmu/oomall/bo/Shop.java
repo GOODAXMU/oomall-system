@@ -16,4 +16,8 @@ public class Shop {
 	private String name;
 	private String gmtCreateTime;
 	private String gmtModiTime;
+
+	public Shop(Long shopId) {
+		this.id = shopId;
+	}
 }

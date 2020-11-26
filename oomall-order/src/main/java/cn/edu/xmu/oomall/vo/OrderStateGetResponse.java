@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderStateGetResponse {
-    private Long code;
+    private Integer code;
     private String name;
 }

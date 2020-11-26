@@ -34,6 +34,7 @@ public interface OrderRepository extends
 			"o.discountPrice = CASE WHEN :#{#order.discountPrice} IS NULL THEN o.discountPrice ELSE :#{#order.discountPrice} END, " +
 			"o.originPrice = CASE WHEN :#{#order.originPrice} IS NULL THEN o.originPrice ELSE :#{#order.originPrice} END, " +
 			"o.presaleId = CASE WHEN :#{#order.presaleId} IS NULL THEN o.presaleId ELSE :#{#order.presaleId} END, " +
+			"o.grouponId = CASE WHEN :#{#order.grouponId} IS NULL THEN o.grouponId ELSE :#{#order.grouponId} END, " +
 			"o.grouponDiscount = CASE WHEN :#{#order.grouponDiscount} IS NULL THEN o.grouponDiscount ELSE :#{#order.grouponDiscount} END, " +
 			"o.rebateNum = CASE WHEN :#{#order.rebateNum} IS NULL THEN o.rebateNum ELSE :#{#order.rebateNum} END, " +
 			"o.confirmTime = CASE WHEN :#{#order.confirmTime} IS NULL THEN o.confirmTime ELSE :#{#order.confirmTime} END, " +
@@ -43,4 +44,21 @@ public interface OrderRepository extends
 			"o.beDeleted = CASE WHEN :#{#order.beDeleted} IS NULL THEN o.beDeleted ELSE :#{#order.beDeleted} END " +
 			"WHERE o.id = :#{#order.id}")
 	int update(OrderPo order);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.beDeleted = 1 WHERE p.id = :id AND p.state < :state")
+	int deleteSelfOrderByIdAndStateBefore(Long id, Integer state);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.state = :to WHERE p.id = :id AND p.state <> :notEquals")
+	int changeOrderStateWhenStateNotEquals(Long id, Integer to, Integer notEquals);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p " +
+			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
+			"WHERE p.id = :id AND p.orderType = :groupon AND p.state <> :state")
+	int updateGroupon2NormalWhenStateNotEquals(Long id, int groupon, int normal, int state);
 }
