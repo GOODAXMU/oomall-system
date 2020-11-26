@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.bo;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.vo.OrderPostRequest;
+import cn.edu.xmu.oomall.vo.OrderPutRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -144,6 +145,15 @@ public class Order {
 		o.beDeleted = orderPo.getBeDeleted();
 		o.gmtCreated = orderPo.getGmtCreated();
 		o.gmtModified = orderPo.getGmtModified();
+		return o;
+	}
+
+	public static Order toOrder(OrderPutRequest vo) {
+		Order o = new Order();
+		o.setConsignee(vo.getConsignee());
+		o.setAddress(vo.getAddress());
+		o.setMobile(vo.getMobile());
+		o.setRegionId(vo.getRegionId());
 		return o;
 	}
 

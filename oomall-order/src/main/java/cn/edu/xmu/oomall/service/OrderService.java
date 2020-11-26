@@ -41,8 +41,8 @@ public class OrderService {
 	public Reply<List<Order>> getOrders(String orderSn, Integer state,
 										LocalDateTime beginTime,
 										LocalDateTime endTime,
-										PageInfo pageInfo) {
-		return orderDao.getOrders(orderSn, state, beginTime, endTime, pageInfo);
+										PageInfo pageInfo, Boolean withParent) {
+		return orderDao.getOrders(orderSn, state, beginTime, endTime, pageInfo, withParent);
 	}
 
 	public Reply<Order> getOrderById(Long id) {
@@ -55,5 +55,21 @@ public class OrderService {
 		o.setShop(shop);
 
 		return new Reply<>(o);
+	}
+
+	public Reply<Object> updateOrder(Order o) {
+		return orderDao.updateOrder(o);
+	}
+
+	public Reply<Object> deleteSelfOrder(Long id) {
+		return orderDao.deleteSelfOrder(id);
+	}
+
+	public Reply<Object> confirmOrder(Long id) {
+		return orderDao.confirmOrder(id);
+	}
+
+	public Reply<Object> groupon2Normal(Long id) {
+		return orderDao.updateOrderType(id);
 	}
 }

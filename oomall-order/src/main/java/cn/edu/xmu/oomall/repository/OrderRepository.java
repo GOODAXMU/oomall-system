@@ -44,4 +44,21 @@ public interface OrderRepository extends
 			"o.beDeleted = CASE WHEN :#{#order.beDeleted} IS NULL THEN o.beDeleted ELSE :#{#order.beDeleted} END " +
 			"WHERE o.id = :#{#order.id}")
 	int update(OrderPo order);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.beDeleted = 1 WHERE p.id = :id AND p.state < :state")
+	int deleteSelfOrderByIdAndStateBefore(Long id, Integer state);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.state = :to WHERE p.id = :id AND p.state <> :notEquals")
+	int changeOrderStateWhenStateNotEquals(Long id, Integer to, Integer notEquals);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo p " +
+			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
+			"WHERE p.id = :id AND p.orderType = :groupon AND p.state <> :state")
+	int updateGroupon2NormalWhenStateNotEquals(Long id, int groupon, int normal, int state);
 }

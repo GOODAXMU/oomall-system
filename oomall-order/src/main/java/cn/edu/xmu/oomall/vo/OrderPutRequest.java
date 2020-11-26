@@ -18,5 +18,5 @@ public class OrderPutRequest {
     private String consignee;
     private Long regionId;
     private String address;
-    private Integer mobile;
+    private String mobile;
 }

@@ -29,6 +29,7 @@ public class CustomerOrderController {
     @Autowired
     private OrderService orderService;
 
+
 	@ApiOperation(value = "获得订单所有状态", produces = "application/json")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -72,7 +73,7 @@ public class CustomerOrderController {
         List<Order> os = orderService.getOrders(orderSn, state,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
                 endTime == null ? null : LocalDateTime.parse(endTime),
-                pageInfo).getData();
+                pageInfo, false).getData();
 
         OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
         vo.setSummaryList(os);
@@ -96,6 +97,7 @@ public class CustomerOrderController {
 		return null;
 	}
 
+
 	@ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）", produces = "application/json")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -115,6 +117,7 @@ public class CustomerOrderController {
 		return new Reply<>(vo);
 	}
 
+
 	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -125,11 +128,15 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping("{id}")
-	public Object updateSelfOrder(@RequestBody OrderPutRequest userReceiveInfo, @PathVariable Long id) {
-		return null;
+	public Reply<Object> updateSelfOrder(@RequestBody OrderPutRequest request, @PathVariable Long id) {
+		Order o =Order.toOrder(request);
+		o.setId(id);
+
+		return orderService.updateOrder(o);
 	}
 
-	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json")
+
+	@ApiOperation(value = "买家删除本人名下订单", produces = "application/json")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
@@ -140,8 +147,9 @@ public class CustomerOrderController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@DeleteMapping("{id}")
 	public Object deleteSelfOrder(@PathVariable Long id) {
-		return null;
+		return orderService.deleteSelfOrder(id);
 	}
+
 
 	@ApiOperation(value = "买家标记确认收货", produces = "application/json")
 	@ApiImplicitParams({
@@ -152,10 +160,11 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@DeleteMapping("{id}/confirm")
-	public Object confirmOrder(@PathVariable Long id) {
-		return null;
+	@PutMapping("{id}/confirm")
+	public Reply<Object> confirmOrder(@PathVariable Long id) {
+		return orderService.confirmOrder(id);
 	}
+
 
 	@ApiOperation(value = "买家将团购订单转为普通订单", produces = "application/json")
 	@ApiImplicitParams({
@@ -167,7 +176,7 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping("{id}/groupon-normal")
-	public Object transferOrder(@PathVariable Long id) {
-		return null;
+	public Reply<Object> transferOrder(@PathVariable Long id) {
+		return orderService.groupon2Normal(id);
 	}
 }

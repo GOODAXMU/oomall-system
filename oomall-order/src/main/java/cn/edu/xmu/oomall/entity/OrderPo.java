@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.entity;
 
+import cn.edu.xmu.oomall.bo.Order;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -74,4 +75,39 @@ public class OrderPo {
 	private LocalDateTime gmtCreated;
 
 	private LocalDateTime gmtModified;
+
+	public static OrderPo toOrderPo(Order o) {
+		if (o == null) {
+			return null;
+		}
+		OrderPo po = new OrderPo();
+		po.setId(o.getId());
+		po.setCustomerId(o.getCustomer() == null ? null : o.getCustomer().getId());
+		po.setShopId(o.getShop() == null ? null : o.getShop().getId());
+		po.setOrderSn(o.getOrderSn());
+		po.setPid(o.getPid());
+		po.setConsignee(o.getConsignee());
+		po.setRegionId(o.getRegionId());
+		po.setAddress(o.getAddress());
+		po.setMobile(o.getMobile());
+		po.setMessage(o.getMessage());
+		po.setOrderType(o.getOrderType());
+		po.setFreightPrice(o.getFreightPrice());
+		po.setCouponId(o.getCouponId());
+		po.setCouponActivityId(o.getCouponActivityId());
+		po.setDiscountPrice(o.getDiscountPrice());
+		po.setOriginPrice(o.getOriginPrice());
+		po.setPresaleId(o.getPresaleId());
+		po.setGrouponId(o.getGrouponId());
+		po.setGrouponDiscount(o.getGrouponDiscount());
+		po.setRebateNum(o.getRebateNum());
+		po.setConfirmTime(o.getConfirmTime());
+		po.setShipmentSn(o.getShipmentSn());
+		po.setState(o.getState());
+		po.setSubState(o.getSubState());
+		po.setBeDeleted(o.getBeDeleted());
+		po.setGmtCreated(o.getGmtCreated());
+		po.setGmtModified(o.getGmtModified());
+		return po;
+	}
 }
