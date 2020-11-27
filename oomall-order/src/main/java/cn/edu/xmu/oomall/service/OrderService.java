@@ -3,6 +3,8 @@ package cn.edu.xmu.oomall.service;
 import cn.edu.xmu.oomall.bo.Customer;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.Shop;
+import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
 import cn.edu.xmu.oomall.external.service.ICustomerService;
 import cn.edu.xmu.oomall.external.service.IShopService;
@@ -46,7 +48,11 @@ public class OrderService {
 	}
 
 	public Reply<Order> getOrderById(Long id) {
-		Order o = orderDao.getOrderById(id).getData();
+		Reply<Order> r = orderDao.getOrderById(id);
+		Order o = r.getData();
+		if (o == null) {
+			return r;
+		}
 
 		// 设置用户和商铺
 		Customer customer = customerService.getCustomer(o.getCustomer().getId());
@@ -57,12 +63,20 @@ public class OrderService {
 		return new Reply<>(o);
 	}
 
-	public Reply<Object> updateOrder(Order o) {
-		return orderDao.updateOrder(o);
+	public Reply<Object> updateOrderDeliveryInformation(Order o) {
+		return orderDao.updateOrderDeliveryInformation(o);
 	}
 
-	public Reply<Object> deleteSelfOrder(Long id) {
-		return orderDao.deleteSelfOrder(id);
+	public Reply<Object> deleteOrCancelSelfOrder(Long id) {
+		int s = orderDao.getOrderStateById(id);
+
+		if (s == OrderStatus.COMPLETE.value()) {
+			return orderDao.deleteSelfOrder(id);
+		} else if (s < OrderStatus.DELIVERED.value()) {
+			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value());
+		} else {
+			return new Reply<>(ResponseStatus.OK);
+		}
 	}
 
 	public Reply<Object> confirmOrder(Long id) {

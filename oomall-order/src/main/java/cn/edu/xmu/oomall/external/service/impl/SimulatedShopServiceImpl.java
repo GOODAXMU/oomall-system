@@ -23,8 +23,8 @@ public class SimulatedShopServiceImpl implements IShopService {
 		Shop shop = new Shop();
 		shop.setId(shopId);
 		shop.setName("super shop");
-		shop.setGmtCreateTime(LocalDateTime.now().toString());
-		shop.setGmtModiTime(LocalDateTime.now().toString());
+		shop.setGmtCreateTime(LocalDateTime.parse("2020-11-27T07:59:58.623756500").toString());
+		shop.setGmtModiTime(LocalDateTime.parse("2020-11-27T07:59:58.623756500").toString());
 		return shop;
 	}
 
