@@ -17,6 +17,10 @@ public class Reply<T> {
 	private ResponseStatus responseStatus;
 	private T data;
 
+	public boolean isOk() {
+		return ResponseStatus.OK.equals(responseStatus);
+	}
+
 	public Reply() {
 		this.responseStatus = ResponseStatus.OK;
 	}
