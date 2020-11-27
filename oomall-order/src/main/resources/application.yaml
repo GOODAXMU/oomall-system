@@ -47,6 +47,14 @@ dubbo:
     name: dubbo
     port: 19900
 
+rocketmq:
+  name-server: localhost:9876
+  producer:
+    group: order
+    max-message-size: 4096
+    send-message-timeout: 3000
+    retry-times-when-send-async-failed: 2
+
 
 #---------自定义字段---------------------
 
@@ -68,3 +76,5 @@ oomall:
       name: SimulatedShipmentServiceImpl
     share-service:
       name: SimulatedShareServiceImpl
+    activity-service:
+      name: SimulatedActivityServiceImpl
