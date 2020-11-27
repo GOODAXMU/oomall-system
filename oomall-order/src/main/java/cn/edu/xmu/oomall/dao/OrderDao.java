@@ -64,7 +64,7 @@ public class OrderDao {
 		Optional<OrderPo> orderPo = orderRepository.findById(id);
 		Order o = Order.toOrder(orderPo.orElse(null));
 		if (o == null) {
-			return new Reply<>(null);
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 
 		// 设置订单列表
@@ -78,13 +78,14 @@ public class OrderDao {
 		return new Reply<>(o);
 	}
 
-	public Reply<Object> updateOrder(Order o) {
+	public Reply<Object> updateOrderDeliveryInformation(Order o) {
 		OrderPo po = OrderPo.toOrderPo(o);
 		if (po == null) {
 			return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
 		}
 
-		int r = orderRepository.update(po);
+		int r = orderRepository.updateWhenStateBetween(
+				po, OrderStatus.FORBID.value(), OrderStatus.DELIVERED.value());
 
 		if (r <= 0) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -94,7 +95,7 @@ public class OrderDao {
 	}
 
 	public Reply<Object> deleteSelfOrder(Long id) {
-		int r = orderRepository.deleteSelfOrderByIdAndStateBefore(id, OrderStatus.DELIVERED.value());
+		int r = orderRepository.deleteSelfOrderById(id);
 
 		if (r <= 0) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -104,8 +105,9 @@ public class OrderDao {
 	}
 
 	public Reply<Object> confirmOrder(Long id) {
-		int r = orderRepository.changeOrderStateWhenStateNotEquals(
-				id, OrderStatus.RECEIVED.value(), OrderStatus.FORBID.value());
+		int r = orderRepository.changeOrderStateWhenStateBetween(
+				id, OrderStatus.RECEIVED.value(),
+				OrderStatus.FORBID.value(), OrderStatus.RECEIVED.value());
 
 		if (r <= 0) {
 			return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -123,5 +125,17 @@ public class OrderDao {
 		} else {
 			return new Reply<>(ResponseStatus.OK);
 		}
+	}
+
+	public int getOrderStateById(Long id) {
+		return orderRepository.findOrderStateById(id);
+	}
+
+	public Reply<Object> updateOrderState(Long id, Integer state) {
+		int r = orderRepository.updateOrderState(id, state);
+
+		// todo 数据库返回值校验
+
+		return new Reply<>(ResponseStatus.OK);
 	}
 }

@@ -11,10 +11,12 @@ import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.service.IShipmentService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
+import org.apache.commons.lang3.concurrent.Computable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,10 +31,10 @@ import java.util.concurrent.ExecutionException;
 public class NormalOrderService {
 
 	@Autowired
-	private OrderDao orderDao;
-
-	@Autowired
 	private ServiceFactory serviceFactory;
+
+	@Resource(name = "rocketMQSender")
+	private IMessageSender sender;
 
 	private ICustomerService customerService;
 	private IShopService shopService;
@@ -40,8 +42,10 @@ public class NormalOrderService {
 	private IFreightService freightService;
 	private IDiscountService discountService;
 	private IRebateService rebateService;
-	private IShipmentService shipmentService;
 	private IShareService shareService;
+	private IActivityService activityService;
+
+	private final static String TOPIC = "order";
 
 	@PostConstruct
 	public void init() {
@@ -51,11 +55,15 @@ public class NormalOrderService {
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		discountService = (IDiscountService) serviceFactory.get(IDiscountService.class);
 		rebateService = (IRebateService) serviceFactory.get(IRebateService.class);
-		shipmentService = (IShipmentService) serviceFactory.get(IShipmentService.class);
 		shareService = (IShareService) serviceFactory.get(IShareService.class);
+		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
 	}
 
 	public Order createOrder(Order order) throws OrderModuleException, ExecutionException, InterruptedException {
+		// 校验优惠活动与优惠卷
+		CompletableFuture<Map<Long, Long>> activity
+				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
+
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
 		if (orderItems.size() == 0) {
@@ -63,8 +71,15 @@ public class NormalOrderService {
 		}
 		order.setOrderItems(orderItems);
 
+		// 获取可用的优惠活动并设置
+		Map<Long, Long> sku2Activity = activity.get();
+		for (OrderItem oi : order.getOrderItems()) {
+			Long act = sku2Activity.get(oi.getSkuId());
+			oi.setCouponActivityId(act);
+		}
+
 		// 异步计算折扣
-		CompletableFuture<List<OrderItem>> discount
+		CompletableFuture<Map<Long, Long>> discount
 				= discountService.calcDiscountAsynchronous(
 				order.getOrderItems());
 
@@ -86,7 +101,10 @@ public class NormalOrderService {
 		}
 
 		// 获取并设置折扣
-		order.setOrderItems(discount.get());
+		Map<Long, Long> sku2Discount = discount.get();
+		for (OrderItem oi : order.getOrderItems()) {
+			oi.setDiscount(sku2Discount.get(oi.getSkuId()));
+		}
 
 		// 根据sku所属商铺划分orderItem并创建子订单
 		Map<Shop, List<OrderItem>> shop2OrderItems =
@@ -120,17 +138,13 @@ public class NormalOrderService {
 		// 设置订单状态
 		order.setOrderStatus(OrderStatus.NEW, true);
 
-		// 创建并设置快递消息
+		// 分配订单流水号
 		for (Order subOrder : order.getSubOrders()) {
-			// 分配订单流水号
 			String orderSn = subOrder.createAndGetOrderSn();
-			Map<String, Object> shipment = shipmentService.createShipment(orderSn);
-			subOrder.setShipmentSn(shipmentService.getShipmentSn(shipment));
-			subOrder.setConfirmTime(shipmentService.getConfirmTime(shipment));
 		}
 
-		// 订单写入数据库
-		order = orderDao.saveOrder(order);
+		// 订单写入消息队列
+		sender.sendAsynchronous(order, TOPIC);
 
 		return order;
 	}

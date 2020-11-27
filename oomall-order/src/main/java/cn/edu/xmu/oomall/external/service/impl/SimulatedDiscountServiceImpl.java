@@ -23,12 +23,12 @@ public class SimulatedDiscountServiceImpl implements IDiscountService {
 
 
 	@Override
-	public List<OrderItem> calcDiscount(List<OrderItem> orderItems) {
+	public Map<Long, Long> calcDiscount(List<OrderItem> orderItems) {
 		return null;
 	}
 
 	@Override
-	public CompletableFuture<List<OrderItem>> calcDiscountAsynchronous(List<OrderItem> orderItems) {
+	public CompletableFuture<Map<Long, Long>> calcDiscountAsynchronous(List<OrderItem> orderItems) {
 		return null;
 	}
 }

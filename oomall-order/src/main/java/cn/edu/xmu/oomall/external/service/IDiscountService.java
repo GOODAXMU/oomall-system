@@ -15,14 +15,14 @@ public interface IDiscountService {
 	/**
 	 * 计算折扣
 	 * @param orderItems
-	 * @return
+	 * @return skuId到discount的映射
 	 */
-	List<OrderItem> calcDiscount(List<OrderItem> orderItems);
+	Map<Long, Long> calcDiscount(List<OrderItem> orderItems);
 
 	/**
 	 * 异步计算折扣
 	 * @param orderItems
 	 * @return
 	 */
-	CompletableFuture<List<OrderItem>> calcDiscountAsynchronous(List<OrderItem> orderItems);
+	CompletableFuture<Map<Long, Long>> calcDiscountAsynchronous(List<OrderItem> orderItems);
 }

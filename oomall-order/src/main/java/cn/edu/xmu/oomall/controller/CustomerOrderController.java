@@ -30,7 +30,7 @@ public class CustomerOrderController {
     private OrderService orderService;
 
 
-	@ApiOperation(value = "获得订单所有状态", produces = "application/json")
+	@ApiOperation(value = "获得订单所有状态", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 	})
@@ -38,7 +38,7 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping("/states")
+	@GetMapping(value = "/states", produces = "application/json;charset=UTF-8")
 	public Reply<List<OrderStateGetResponse>> getAllOrdersStates() {
 		List<OrderStateGetResponse> r = new ArrayList<>();
 		for (OrderStatus os : OrderStatus.values()) {
@@ -49,7 +49,7 @@ public class CustomerOrderController {
 	}
 
 
-	@ApiOperation(value = "买家查询名下订单（概要）", produces = "application/json")
+	@ApiOperation(value = "买家查询名下订单（概要）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "query", dataType = "String", name = "orderSn", value = "订单编号", required = false),
@@ -61,7 +61,7 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping("")
+	@GetMapping(value = "", produces = "application/json;charset=UTF-8")
 	public Reply<OrderSummaryGetResponse> getAllOrders(
 			@RequestParam(required = false) String orderSn,
 			@RequestParam(required = false) Integer state,
@@ -83,7 +83,7 @@ public class CustomerOrderController {
 	}
 
 
-	@ApiOperation(value = "买家申请建立订单（普通，团购，预售）", produces = "application/json")
+	@ApiOperation(value = "买家申请建立订单（普通，团购，预售）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "OrderCreatePostRequest", name = "orderInfo", value = "指定新订单的资料", required = true)
@@ -92,13 +92,13 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
-	@PostMapping("")
+	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
 	public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo) {
 		return null;
 	}
 
 
-	@ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）", produces = "application/json")
+	@ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true)
@@ -107,9 +107,13 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping("{id}")
+	@GetMapping(value = "{id}", produces = "application/json;charset=UTF-8")
 	public Reply<OrderDetailGetResponse> getOrderDetails(@PathVariable Long id) {
-		Order o = orderService.getOrderById(id).getData();
+		Reply<Order> r = orderService.getOrderById(id);
+		Order o = r.getData();
+		if (o == null) {
+			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
+		}
 
 		OrderDetailGetResponse vo = new OrderDetailGetResponse();
 		vo.setAll(o);
@@ -118,7 +122,7 @@ public class CustomerOrderController {
 	}
 
 
-	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json")
+	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "OrderUpdatePutRequest", name = "userReceiveInfo", value = "操作字段 (状态)", required = true)
@@ -127,16 +131,16 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@PutMapping("{id}")
+	@PutMapping(value = "{id}", produces = "application/json;charset=UTF-8")
 	public Reply<Object> updateSelfOrder(@RequestBody OrderPutRequest request, @PathVariable Long id) {
 		Order o =Order.toOrder(request);
 		o.setId(id);
-
-		return orderService.updateOrder(o);
+		// todo 发货前仅允许修改一次
+		return orderService.updateOrderDeliveryInformation(o);
 	}
 
 
-	@ApiOperation(value = "买家删除本人名下订单", produces = "application/json")
+	@ApiOperation(value = "买家删除本人名下订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
@@ -145,13 +149,13 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@DeleteMapping("{id}")
+	@DeleteMapping(value = "{id}", produces = "application/json;charset=UTF-8")
 	public Object deleteSelfOrder(@PathVariable Long id) {
-		return orderService.deleteSelfOrder(id);
+		return orderService.deleteOrCancelSelfOrder(id);
 	}
 
 
-	@ApiOperation(value = "买家标记确认收货", produces = "application/json")
+	@ApiOperation(value = "买家标记确认收货", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "指定需要返回订单概要信息的订单号", required = true)
@@ -160,13 +164,13 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@PutMapping("{id}/confirm")
+	@PutMapping(value = "{id}/confirm", produces = "application/json;charset=UTF-8")
 	public Reply<Object> confirmOrder(@PathVariable Long id) {
 		return orderService.confirmOrder(id);
 	}
 
 
-	@ApiOperation(value = "买家将团购订单转为普通订单", produces = "application/json")
+	@ApiOperation(value = "买家将团购订单转为普通订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
 			@ApiImplicitParam(paramType = "body", dataType = "int", name = "id", value = "订单id", required = true)
@@ -175,7 +179,7 @@ public class CustomerOrderController {
 			@ApiResponse(code = 0, message = "成功"),
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
-	@PostMapping("{id}/groupon-normal")
+	@PostMapping(value = "{id}/groupon-normal", produces = "application/json;charset=UTF-8")
 	public Reply<Object> transferOrder(@PathVariable Long id) {
 		return orderService.groupon2Normal(id);
 	}

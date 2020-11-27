@@ -37,6 +37,8 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 	private String shipmentServiceName;
 	@Value(value = "${oomall.external.share-service.name}")
 	private String shareServiceName;
+	@Value(value = "${oomall.external.activity-service.name}")
+	private String activityServiceName;
 
 	private List<Object> services = new ArrayList<>();
 
@@ -66,6 +68,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 		services.add(applicationContext.getBean(getBeanName(rebateServiceName)));
 		services.add(applicationContext.getBean(getBeanName(shipmentServiceName)));
 		services.add(applicationContext.getBean(getBeanName(shareServiceName)));
+		services.add(applicationContext.getBean(getBeanName(activityServiceName)));
 	}
 
 	@Override
