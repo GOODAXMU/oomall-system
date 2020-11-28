@@ -26,8 +26,8 @@ public interface FreightModelRepository extends
 			"THEN fm.defaultModel ELSE :#{#freightModel.defaultModel} END, " +
 			"fm.type = CASE WHEN :#{#freightModel.type} IS NULL " +
 			"THEN fm.type ELSE :#{#freightModel.type} END, " +
-			"fm.weightUnit = CASE WHEN :#{#freightModel.unit} IS NULL " +
-			"THEN fm.weightUnit ELSE :#{#freightModel.unit} END, " +
+			"fm.weightUnit = CASE WHEN :#{#freightModel.weightUnit} IS NULL " +
+			"THEN fm.weightUnit ELSE :#{#freightModel.weightUnit} END, " +
 			"fm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
 			"THEN fm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
 			"fm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +

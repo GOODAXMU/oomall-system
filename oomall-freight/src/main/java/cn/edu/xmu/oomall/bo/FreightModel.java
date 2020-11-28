@@ -2,8 +2,7 @@ package cn.edu.xmu.oomall.bo;
 
 
 import cn.edu.xmu.oomall.entity.FreightModelPo;
-import cn.edu.xmu.oomall.vo.FreightModelDefineRequest;
-import cn.edu.xmu.oomall.vo.FreightModelDefineResponse;
+import cn.edu.xmu.oomall.vo.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +22,8 @@ public class FreightModel {
     private Long id;
 
     private Long shopId;
+
+    private Long rid;
 
     private String name;
 
@@ -48,6 +49,8 @@ public class FreightModel {
         shopId = freightModelPo.getShopId();
         unit = freightModelPo.getWeightUnit();
         isDefault = freightModelPo.getDefaultModel();
+        gmtCreated = freightModelPo.getGmtCreated();
+        gmtModified = freightModelPo.getGmtModified();
     }
 
     /**
@@ -59,6 +62,16 @@ public class FreightModel {
         name = freightModelDefineRequest.getName();
         type = freightModelDefineRequest.getType();
         unit = freightModelDefineRequest.getUnit();
+    }
+
+    /**
+     * 构造函数
+     *
+     * @param freightModelPutRequest Vo对象
+     */
+    public FreightModel(FreightModelPutRequest freightModelPutRequest) {
+        name = freightModelPutRequest.getName();
+        unit = freightModelPutRequest.getUnit();
     }
 
     /**
@@ -93,4 +106,25 @@ public class FreightModel {
         return freightModelDefineResponse;
     }
 
+    public FreightModelSummaryGetResponse createSummaryGetResponse(){
+        FreightModelSummaryGetResponse freightModelSummaryGetResponse = new FreightModelSummaryGetResponse();
+        freightModelSummaryGetResponse.setDefaultModel(isDefault);
+        freightModelSummaryGetResponse.setGmtCreate(gmtCreated);
+        freightModelSummaryGetResponse.setGmtModified(gmtModified);
+        freightModelSummaryGetResponse.setId(id);
+        freightModelSummaryGetResponse.setName(name);
+        freightModelSummaryGetResponse.setType(type);
+        return freightModelSummaryGetResponse;
+    }
+
+    public FreightModelCloneResponse createCloneResponse(){
+        FreightModelCloneResponse freightModelCloneResponse = new FreightModelCloneResponse();
+        freightModelCloneResponse.setDefaultModel(isDefault);
+        freightModelCloneResponse.setGmtCreate(gmtCreated);
+        freightModelCloneResponse.setGmtModified(gmtModified);
+        freightModelCloneResponse.setId(id);
+        freightModelCloneResponse.setName(name);
+        freightModelCloneResponse.setType(type);
+        return freightModelCloneResponse;
+    }
 }

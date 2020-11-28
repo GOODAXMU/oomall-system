@@ -39,14 +39,11 @@ public class CreateFreightModelTest {
 
     @Test
     public void createFreight() throws Exception{
-        FreightModelPo freightModelPo = new FreightModelPo();
-        freightModelPo.setName("测试名2");
-        freightModelPo.setWeightUnit(Long.valueOf(500));
-        freightModelPo.setGmtCreated(LocalDateTime.now());
-        freightModelPo.setGmtModified(LocalDateTime.now());
-        log.debug(freightModelPo.toString());
+        FreightModel freightModel = new FreightModel();
+        freightModel.setName("测试名2");
+        log.debug(freightModel.toString());
 
-        Reply<FreightModelPo> reply =  freightDao.createFreightModel(freightModelPo);
+        Reply<FreightModel> reply =  freightDao.createFreightModel(freightModel);
         log.info("reply: "+reply.toString());
         Assert.assertEquals(Long.valueOf(2),reply.getData().getId());
     }
