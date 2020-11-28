@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author yan song
  * @date 2020-11-9
@@ -12,10 +14,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FreightModelInner {
-    private Integer id;
+    private Long id;
     private String name;
     private Integer type;
     private Boolean defaultModel;
-    private String gmtCreateTime;
-    private String gmtModiTime;
+    private LocalDateTime gmtCreate;
+    private LocalDateTime gmtModified;
 }

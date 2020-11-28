@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author jianheng huang
@@ -29,6 +30,10 @@ public class FreightModelPo {
 
 	private Integer type;
 
-	private Integer unit;
+	@Column(name = "unit")
+	private Long weightUnit;
 
+	private LocalDateTime gmtCreated;
+
+	private LocalDateTime gmtModified;
 }

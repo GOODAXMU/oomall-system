@@ -51,6 +51,10 @@ oomall:
   external:
     goods-service:
       name: SimulatedGoodsServiceImpl
+
+  strategy:
+    freight-calculate:
+      name: FreightCalculateImpl
   freight:
     model:
       #重量运费模式

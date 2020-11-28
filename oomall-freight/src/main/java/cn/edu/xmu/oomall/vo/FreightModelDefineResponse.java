@@ -12,10 +12,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FreightModelDefineResponse {
-    private Integer id;
+    private Long id;
     private String name;
     private Integer type;
     private Boolean defaultModel;
-    private String gmtCreateTime;
-    private String gmtModiTime;
+    private String gmtCreate;
+    private String gmtModified;
 }

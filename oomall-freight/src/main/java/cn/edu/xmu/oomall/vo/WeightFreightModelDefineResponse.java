@@ -19,6 +19,6 @@ public class WeightFreightModelDefineResponse {
     private Integer hundredPrice;
     private Integer triHundredPrice;
     private Integer abovePrice;
-    private String gmtCreateTime;
-    private String gmtModiTime;
+    private String gmtCreate;
+    private String gmtModified;
 }
