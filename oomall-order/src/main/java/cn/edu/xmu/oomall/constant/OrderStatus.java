@@ -6,7 +6,12 @@ package cn.edu.xmu.oomall.constant;
  */
 public enum OrderStatus {
 
-	NEW(0, "新建态")
+	NEW(0, "新建态"),
+	DELIVERED(10, "已发货"),
+	RECEIVED(11, "已收货"),
+	COMPLETE(12, "已完成"),
+	FORBID(-1, "禁止"),
+	CANCELED(-2, "已取消"),
 	;
 
 

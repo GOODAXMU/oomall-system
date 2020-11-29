@@ -38,7 +38,7 @@ public class OrderItemPo {
 
 	private Long couponActivityId;
 
-	private Long beSharedId;
+	private Long beShareId;
 
 	private LocalDateTime gmtCreated;
 

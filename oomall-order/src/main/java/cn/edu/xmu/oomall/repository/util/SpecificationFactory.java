@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.entity.OrderPo;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.persistence.criteria.Predicate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -70,6 +71,9 @@ public class SpecificationFactory {
 			if (order.getPresaleId() != null) {
 				predicates.add(builder.equal(root.get("presaleId"), order.getPresaleId()));
 			}
+			if (order.getGrouponId() != null) {
+				predicates.add(builder.equal(root.get("grouponId"), order.getGrouponId()));
+			}
 			if (order.getGrouponDiscount() != null) {
 				predicates.add(builder.equal(root.get("grouponDiscount"), order.getGrouponDiscount()));
 			}
@@ -124,8 +128,31 @@ public class SpecificationFactory {
 			if (orderItem.getCouponActivityId() != null) {
 				predicates.add(builder.equal(root.get("couponActivityId"), orderItem.getCouponActivityId()));
 			}
-			if (orderItem.getBeSharedId() != null) {
-				predicates.add(builder.equal(root.get("beSharedId"), orderItem.getBeSharedId()));
+			if (orderItem.getBeShareId() != null) {
+				predicates.add(builder.equal(root.get("beShareId"), orderItem.getBeShareId()));
+			}
+
+			return builder.and(predicates.toArray(new Predicate[0]));
+		};
+	}
+
+	public static Specification<OrderPo> get(
+			String orderSn, Integer state,
+			LocalDateTime beginTime, LocalDateTime endTime) {
+		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+
+			if (orderSn != null) {
+				predicates.add(builder.equal(root.get("orderSn"), orderSn));
+			}
+			if (state != null) {
+				predicates.add(builder.equal(root.get("state"), state));
+			}
+			if (beginTime != null) {
+				predicates.add(builder.greaterThanOrEqualTo(root.get("gmtCreate"), beginTime));
+			}
+			if (endTime != null) {
+				predicates.add(builder.lessThanOrEqualTo(root.get("gmtCreate"), endTime));
 			}
 
 			return builder.and(predicates.toArray(new Predicate[0]));

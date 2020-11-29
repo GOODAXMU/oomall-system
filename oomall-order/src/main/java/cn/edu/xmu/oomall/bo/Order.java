@@ -1,7 +1,9 @@
 package cn.edu.xmu.oomall.bo;
 
 import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.vo.OrderPostRequest;
+import cn.edu.xmu.oomall.vo.OrderPutRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,48 +23,34 @@ import java.util.UUID;
 public class Order {
 
 	private Long id;
-
 	private Customer customer;
-
 	private Shop shop;
-
 	private String orderSn;
-
 	private List<Order> subOrders;
-
+	private Long pid;
 	private String consignee;
 	private Long regionId;
 	private String address;
 	private String mobile;
 	private String message;
-
 	private Integer orderType;
-
 	private Long freightPrice;
-
 	private Long couponId;
-
+	private Long couponActivityId;
 	private Long discountPrice;
 	private Long originPrice;
-
 	private Long presaleId;
-
 	private Long grouponId;
-
 	private Long grouponDiscount;
-
 	private Integer rebateNum;
-
 	private LocalDateTime confirmTime;
-
 	private String shipmentSn;
-
 	private Integer state;
 	private Integer subState;
-
 	private Integer beDeleted;
-
 	private List<OrderItem> orderItems;
+	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtModified;
 
 
 	public Order createAndAddSubOrder(Shop shop, List<OrderItem> orderItems) {
@@ -123,6 +111,50 @@ public class Order {
 	public String createAndGetOrderSn() {
 		orderSn = UUID.randomUUID().toString();
 		return orderSn;
+	}
+
+	public static Order toOrder(OrderPo orderPo) {
+		if (orderPo == null) {
+			return null;
+		}
+		Order o = new Order();
+		o.id = orderPo.getId();
+		o.customer = new Customer(orderPo.getCustomerId());
+		o.shop = new Shop(orderPo.getShopId());
+		o.orderSn = orderPo.getOrderSn();
+		o.pid = orderPo.getPid();
+		o.couponActivityId = orderPo.getCouponActivityId();
+		o.consignee = orderPo.getConsignee();
+		o.regionId = orderPo.getRegionId();
+		o.address = orderPo.getAddress();
+		o.mobile = orderPo.getMobile();
+		o.message = orderPo.getMessage();
+		o.orderType = orderPo.getOrderType();
+		o.freightPrice = orderPo.getFreightPrice();
+		o.couponId = orderPo.getCouponId();
+		o.discountPrice = orderPo.getDiscountPrice();
+		o.originPrice = orderPo.getOriginPrice();
+		o.presaleId = orderPo.getPresaleId();
+		o.grouponId = orderPo.getGrouponId();
+		o.grouponDiscount = orderPo.getGrouponDiscount();
+		o.rebateNum = orderPo.getRebateNum();
+		o.confirmTime = orderPo.getConfirmTime();
+		o.shipmentSn = orderPo.getShipmentSn();
+		o.state = orderPo.getState();
+		o.subState = orderPo.getSubState();
+		o.beDeleted = orderPo.getBeDeleted();
+		o.gmtCreated = orderPo.getGmtCreated();
+		o.gmtModified = orderPo.getGmtModified();
+		return o;
+	}
+
+	public static Order toOrder(OrderPutRequest vo) {
+		Order o = new Order();
+		o.setConsignee(vo.getConsignee());
+		o.setAddress(vo.getAddress());
+		o.setMobile(vo.getMobile());
+		o.setRegionId(vo.getRegionId());
+		return o;
 	}
 
 	public static Order toOrder(OrderPostRequest request) {
