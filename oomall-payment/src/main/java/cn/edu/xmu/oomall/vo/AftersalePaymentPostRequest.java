@@ -10,14 +10,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
- * @author xincong yao
- * @date 2020-11-9
+ * @author Wang Zhizhou
+ * @date 2020-11-28
+ * 实际上和 PaymentPostRequest 一致
  */
-@ApiModel(description = "创建支付单方法的请求对象")
+@ApiModel(description = "创建售后支付单方法的请求对象")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class PaymentPostRequest {
+public class AftersalePaymentPostRequest {
 
 	@NotNull
 	@Min(value = 0)

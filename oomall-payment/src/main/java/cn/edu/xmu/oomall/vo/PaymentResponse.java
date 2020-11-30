@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.vo;
 
+import cn.edu.xmu.oomall.bo.Payment;
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,12 +18,13 @@ public class PaymentResponse {
 
 	private Long id;
 	private Long orderId;
-	private Integer amount;
-	private Integer actualAmount;
+	private Long amount;
+	private Long actualAmount;
 	private String payTime;
-	private Integer state;
+	private String payPattern;
+	private String state;
 	private String beginTime;
 	private String endTime;
 	private String gmtCreateTime;
-	private String gmtModiTime;
+	private String gmtModifiedTime;
 }

@@ -11,17 +11,21 @@ import java.time.LocalDateTime;
 /**
  * @author yan song
  * @date 2020-11-07
+ * @author Wang Zhizhou
+ * modified 2020/11/26
  */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order_payment")
+@Table(name = "payment")
 public class PaymentPo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	private Long aftersaleId;
 
 	private Long amount;
 
@@ -40,4 +44,8 @@ public class PaymentPo {
 	private Long orderId;
 
 	private Integer state;
+
+	private LocalDateTime gmtCreated;
+
+	private LocalDateTime gmtModified;
 }

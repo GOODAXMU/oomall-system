@@ -6,17 +6,20 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author yan song
  * @date 2020-11-07
+ * @author Wang Zhizhou
+ * modified 2020/11/29
  */
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "order_refund")
+@Table(name = "refund")
 public class RefundPo {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,7 +31,13 @@ public class RefundPo {
 
 	private String paySn;
 
-	private Long billId;
+	private Long orderId;
+
+	private Long aftersaleId;
 
 	private Integer state;
+
+	private LocalDateTime gmtCreated;
+
+	private LocalDateTime gmtModified;
 }
