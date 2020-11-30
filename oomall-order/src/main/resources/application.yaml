@@ -78,3 +78,9 @@ oomall:
       name: SimulatedShareServiceImpl
     activity-service:
       name: SimulatedActivityServiceImpl
+    flash-sale-service:
+      name: SimulatedFlashSaleServiceImpl
+    seckill-service:
+      name: SimulatedSeckillServiceImpl
+    goods-service:
+      name: SimulatedGoodsServiceImpl

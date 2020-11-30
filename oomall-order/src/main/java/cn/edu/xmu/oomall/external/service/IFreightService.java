@@ -27,13 +27,4 @@ public interface IFreightService {
 	 * @return
 	 */
 	CompletableFuture<Long> calcFreightPriceAsynchronous(List<OrderItem> orderItems);
-
-	/**
-	 * 获取异步计算的运费
-	 * @param cf
-	 * @throws ExecutionException if this future completed exceptionally
-	 * @throws InterruptedException if the current thread was interrupted
-	 * @return
-	 */
-	Long getFreightPrice(CompletableFuture<Long> cf) throws ExecutionException, InterruptedException;
 }
