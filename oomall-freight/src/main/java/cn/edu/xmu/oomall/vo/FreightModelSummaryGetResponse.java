@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 /**
  * @author xincong yao
  * @date 2020-11-8
@@ -19,6 +21,6 @@ public class FreightModelSummaryGetResponse {
 	private String name;
 	private Integer type;
 	private Boolean defaultModel;
-	private String gmtCreateTime;
-	private String gmtModiTime;
+	private LocalDateTime gmtCreate;
+	private LocalDateTime gmtModified;
 }

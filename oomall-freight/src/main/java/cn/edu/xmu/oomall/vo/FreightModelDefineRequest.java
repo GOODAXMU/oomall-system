@@ -20,7 +20,7 @@ public class FreightModelDefineRequest {
 
     @NotNull
     @Min(value = 0)
-    private Long type;
+    private Integer type;
 
     @NotNull
     @Min(value = 0)

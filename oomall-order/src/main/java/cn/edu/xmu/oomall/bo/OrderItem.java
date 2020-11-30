@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.bo;
 
+import cn.edu.xmu.ooamll.dto.OrderItemDto;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -39,6 +40,21 @@ public class OrderItem {
 		oi.setCouponActivityId(po.getCouponActivityId());
 		oi.setBeShareId(po.getBeShareId());
 		return oi;
+	}
+
+	public OrderItemDto orderItemDto() {
+		OrderItemDto dto = new OrderItemDto();
+		dto.setId(id);
+		dto.setSkuId(skuId);
+		dto.setOrderId(orderId);
+		dto.setName(name);
+		dto.setQuantity(quantity);
+		dto.setPrice(price);
+		dto.setDiscount(discount);
+		dto.setCouponActivityId(couponActivityId);
+		dto.setBeShareId(beShareId);
+
+		return dto;
 	}
 
 }

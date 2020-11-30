@@ -31,7 +31,13 @@ public class SimulatedActivityServiceImpl implements IActivityService {
 
 	@Override
 	public CompletableFuture<Map<Long, Long>> validateActivityAsynchronous(List<OrderItem> orderItems, Long couponId) {
-		return null;
+		CompletableFuture<Map<Long, Long>> cf = new CompletableFuture<>();
+		Map<Long, Long> map = new HashMap<>(orderItems.size());
+		for (OrderItem oi : orderItems) {
+			map.put(oi.getSkuId(), oi.getCouponActivityId());
+		}
+		cf.complete(map);
+		return cf;
 	}
 
 	@Override

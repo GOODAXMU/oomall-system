@@ -4,11 +4,14 @@ import cn.edu.xmu.oomall.OomallOrderFreightApplication;
 import cn.edu.xmu.oomall.vo.FreightCalculateRequest;
 import com.alibaba.fastjson.JSONObject;
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,18 +21,20 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 /**
- * @author xincong yao
- * @date 2020-10-26
+ * @author zhibin lan
+ * @date 2020-11-24
  */
 @SpringBootTest(classes = OomallOrderFreightApplication.class)
+@Transactional
+@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
-public class CustomerShipmentControllerTest {
+public class CalculateFreightTest {
 
 	@Autowired
 	private MockMvc mvc;
 
 	@Test
-	public void calculateFreightTest() throws Exception {
-
+	public void calculateFreight() throws Exception {
+		
 	}
 }
