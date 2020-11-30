@@ -102,8 +102,8 @@ public class OrderPo {
 		po.setState(dto.getState());
 		po.setSubState(dto.getSubState());
 		po.setBeDeleted(dto.getBeDeleted());
-		po.setGmtCreated(dto.getGmtCreated() == null ? LocalDateTime.now() : dto.getGmtCreated());
-		po.setGmtModified(dto.getGmtModified() == null ? LocalDateTime.now() : dto.getGmtModified());
+		po.setGmtCreated(LocalDateTime.now());
+		po.setGmtModified(LocalDateTime.now());
 
 		return po;
 	}

@@ -98,6 +98,11 @@
             <artifactId>oomall-seckill-common</artifactId>
             <version>0.0.1-SNAPSHOT</version>
         </dependency>
+        <dependency>
+            <groupId>cn.edu.xmu</groupId>
+            <artifactId>oomall-order-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>

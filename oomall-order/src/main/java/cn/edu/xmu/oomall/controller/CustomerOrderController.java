@@ -3,7 +3,9 @@ package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.constant.OrderStatus;
-import cn.edu.xmu.oomall.service.OrderService;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
+import cn.edu.xmu.oomall.service.IOrderService;
+import cn.edu.xmu.oomall.service.CustomerOrderService;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.*;
@@ -12,9 +14,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author xincong yao
@@ -27,7 +31,16 @@ import java.util.List;
 public class CustomerOrderController {
 
     @Autowired
-    private OrderService orderService;
+    private CustomerOrderService customerOrderService;
+
+	@Resource(name = "normalOrderServiceImpl")
+	private IOrderService normalOrderService;
+	@Resource(name = "grouponOrderServiceImpl")
+	private IOrderService grouponOrderService;
+	@Resource(name = "seckillOrderServiceImpl")
+	private IOrderService seckillOrderService;
+	@Resource(name = "presaleOrderServiceImpl")
+	private IOrderService presaleOrderService;
 
 
 	@ApiOperation(value = "获得订单所有状态", produces = "application/json;charset=UTF-8")
@@ -70,7 +83,7 @@ public class CustomerOrderController {
 			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false, defaultValue = "20") Integer pageSize) {
 		PageInfo pageInfo = new PageInfo(page, pageSize);
-        List<Order> os = orderService.getOrders(orderSn, state,
+        List<Order> os = customerOrderService.getOrders(orderSn, state,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
                 endTime == null ? null : LocalDateTime.parse(endTime),
                 pageInfo, false).getData();
@@ -93,8 +106,20 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
-	public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo) {
-		return null;
+	public Reply<OrderDetailGetResponse> createOrder(@RequestBody OrderPostRequest request) throws InterruptedException, ExecutionException, OrderModuleException {
+		Order order = Order.toOrder(request);
+
+		IOrderService orderService = getOrderService(order);
+
+		Reply<Order> reply = orderService.createOrder(order);
+		if (!reply.isOk()) {
+			return new Reply<>(reply.getHttpStatus(), reply.getResponseStatus());
+		}
+
+		Order o = reply.getData();
+		OrderDetailGetResponse vo = new OrderDetailGetResponse();
+		vo.setAll(o);
+		return new Reply<>(vo);
 	}
 
 
@@ -109,7 +134,7 @@ public class CustomerOrderController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "{id}", produces = "application/json;charset=UTF-8")
 	public Reply<OrderDetailGetResponse> getOrderDetails(@PathVariable Long id) {
-		Reply<Order> r = orderService.getOrderById(id);
+		Reply<Order> r = customerOrderService.getOrderById(id);
 		Order o = r.getData();
 		if (o == null) {
 			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
@@ -136,7 +161,7 @@ public class CustomerOrderController {
 		Order o =Order.toOrder(request);
 		o.setId(id);
 		// todo 发货前仅允许修改一次
-		return orderService.updateOrderDeliveryInformation(o);
+		return customerOrderService.updateOrderDeliveryInformation(o);
 	}
 
 
@@ -151,7 +176,7 @@ public class CustomerOrderController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@DeleteMapping(value = "{id}", produces = "application/json;charset=UTF-8")
 	public Object deleteSelfOrder(@PathVariable Long id) {
-		return orderService.deleteOrCancelSelfOrder(id);
+		return customerOrderService.deleteOrCancelSelfOrder(id);
 	}
 
 
@@ -166,7 +191,7 @@ public class CustomerOrderController {
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping(value = "{id}/confirm", produces = "application/json;charset=UTF-8")
 	public Reply<Object> confirmOrder(@PathVariable Long id) {
-		return orderService.confirmOrder(id);
+		return customerOrderService.confirmOrder(id);
 	}
 
 
@@ -181,6 +206,21 @@ public class CustomerOrderController {
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "{id}/groupon-normal", produces = "application/json;charset=UTF-8")
 	public Reply<Object> transferOrder(@PathVariable Long id) {
-		return orderService.groupon2Normal(id);
+		return customerOrderService.groupon2Normal(id);
+	}
+
+	public IOrderService getOrderService(Order order) {
+		if (order.getPresaleId() != null) {
+			return presaleOrderService;
+		}
+		if (order.getGrouponId() != null) {
+			return grouponOrderService;
+		}
+		if (order.getOrderItems().size() == 1
+				&& customerOrderService.isSeckill(order.getOrderItems().get(0).getSkuId())) {
+			return seckillOrderService;
+		}
+
+		return normalOrderService;
 	}
 }

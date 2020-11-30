@@ -43,6 +43,4 @@ public class OrderDto {
 	private Integer subState;
 	private Integer beDeleted;
 	private List<OrderItemDto> orderItems;
-	private LocalDateTime gmtCreated;
-	private LocalDateTime gmtModified;
 }

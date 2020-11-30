@@ -7,6 +7,7 @@ import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
 import cn.edu.xmu.oomall.external.service.ICustomerService;
+import cn.edu.xmu.oomall.external.service.IFlashSaleService;
 import cn.edu.xmu.oomall.external.service.IShopService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
@@ -23,7 +24,7 @@ import java.util.List;
  * @date 2020-11-25
  */
 @Service
-public class OrderService {
+public class CustomerOrderService {
 
 	@Autowired
 	private ServiceFactory serviceFactory;
@@ -33,11 +34,13 @@ public class OrderService {
 
 	private ICustomerService customerService;
 	private IShopService shopService;
+	private IFlashSaleService flashSaleService;
 
 	@PostConstruct
 	public void init() {
 		customerService = (ICustomerService) serviceFactory.get(ICustomerService.class);
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
+		flashSaleService = (IFlashSaleService) serviceFactory.get(IFlashSaleService.class);
 	}
 
 	public Reply<List<Order>> getOrders(String orderSn, Integer state,
@@ -85,5 +88,9 @@ public class OrderService {
 
 	public Reply<Object> groupon2Normal(Long id) {
 		return orderDao.updateOrderType(id);
+	}
+
+	public boolean isSeckill(Long skuId) {
+		return flashSaleService.isSeckill(skuId);
 	}
 }

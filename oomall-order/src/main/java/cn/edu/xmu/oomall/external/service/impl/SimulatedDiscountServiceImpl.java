@@ -29,6 +29,12 @@ public class SimulatedDiscountServiceImpl implements IDiscountService {
 
 	@Override
 	public CompletableFuture<Map<Long, Long>> calcDiscountAsynchronous(List<OrderItem> orderItems) {
-		return null;
+		CompletableFuture<Map<Long, Long>> cf = new CompletableFuture<>();
+		Map<Long, Long> map = new HashMap<>(orderItems.size());
+		for (OrderItem oi : orderItems) {
+			map.put(oi.getSkuId(), 3L);
+		}
+		cf.complete(map);
+		return cf;
 	}
 }

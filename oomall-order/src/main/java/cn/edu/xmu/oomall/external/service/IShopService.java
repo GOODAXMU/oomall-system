@@ -14,10 +14,10 @@ public interface IShopService {
 
 	/**
 	 * 获取商铺消息
-	 * @param shopId
+	 * @param skuId
 	 * @return
 	 */
-	Shop getShop(Long shopId);
+	Shop getShop(Long skuId);
 
 	/**
 	 * 根据sku所属商铺划分orderItem
