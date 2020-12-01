@@ -75,8 +75,8 @@ public interface OrderRepository extends
 			"o.state = CASE WHEN :#{#order.state} IS NULL THEN o.state ELSE :#{#order.state} END, " +
 			"o.subState = CASE WHEN :#{#order.subState} IS NULL THEN o.subState ELSE :#{#order.subState} END, " +
 			"o.beDeleted = CASE WHEN :#{#order.beDeleted} IS NULL THEN o.beDeleted ELSE :#{#order.beDeleted} END " +
-			"WHERE o.id = :#{#order.id} AND o.state > :state1 AND o.state < :state2")
-	int updateWhenStateBetween(OrderPo order, Integer state1, Integer state2);
+			"WHERE o.id = :#{#order.id} AND o.state < :state")
+	int updateWhenStateLessThan(OrderPo order, Integer state);
 
 	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id")
 	int findOrderStateById(Long id);
@@ -103,13 +103,16 @@ public interface OrderRepository extends
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p SET p.state = :to " +
-			"WHERE p.id = :id AND p.state > :state1 AND p.state < :state2")
-	int changeOrderStateWhenStateBetween(Long id, Integer to, Integer state1, Integer state2);
+			"WHERE p.id = :id AND p.state = :s")
+	int changeOrderStateWhenStateEquals(Long id, Integer to, Integer s);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
 			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
-			"WHERE p.id = :id AND p.orderType = :groupon AND p.state <> :state")
-	int updateGroupon2NormalWhenStateNotEquals(Long id, int groupon, int normal, int state);
+			"WHERE p.id = :id AND p.orderType = :groupon AND p.state < :state")
+	int updateGroupon2NormalWhenStateLessThan(Long id, int groupon, int normal, int state);
+
+	@Query(value = "SELECT new OrderPo(o.orderSn, o.shopId) FROM OrderPo o WHERE id = :orderId")
+	OrderPo findOrderSnAndShopIdById(Long orderId);
 }

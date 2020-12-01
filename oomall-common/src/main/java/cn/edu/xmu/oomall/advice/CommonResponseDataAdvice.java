@@ -71,7 +71,6 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 			return o;
 		} else if (o instanceof Reply) {
 			Reply r = (Reply) o;
-			System.out.println(" beforeBodyWrite :" + o.toString());
 			response.setData(r.getData());
 			response.setCode(r.getResponseStatus().value());
 			response.setMessage(r.getResponseStatus().getReasonPhrase());

@@ -184,12 +184,11 @@ public class MultiLayerTimeWheel {
 	private List<TaskMessageBody> roll(Object[] lock, int pointer,
 									   List<List<TaskMessageBody>> wheel,
 									   int ticksPerWheel) {
+		// todo 将轮子属性封装到类里
 		List<TaskMessageBody> taskList;
 		synchronized (lock[pointer]) {
 			taskList = wheel.get(pointer);
 			wheel.set(pointer, new LinkedList<>());
-			// 将轮子属性封装到类里
-			// todo
 			pointer = next(pointer, ticksPerWheel);
 		}
 		return taskList;
