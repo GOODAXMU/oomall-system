@@ -125,7 +125,9 @@ public class OrderDetailGetResponse {
 		this.orderType = o.getOrderType();
 		this.state = o.getState();
 		this.subState = o.getSubState();
-		this.gmtCreate = o.getGmtCreated().toEpochSecond(ZoneOffset.UTC);
+		if (o.getGmtCreated() != null) {
+			this.gmtCreate = o.getGmtCreated().toEpochSecond(ZoneOffset.UTC);
+		}
 		this.originPrice = o.getOriginPrice();
 		this.discountPrice = o.getDiscountPrice();
 		this.freightPrice = o.getFreightPrice();

@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
+ * modified by Jianheng HUANG, date: 2020-11-29
  */
 public interface OrderRepository extends
 		JpaRepository<OrderPo, Long>,
@@ -82,6 +85,15 @@ public interface OrderRepository extends
 	@Transactional
 	@Query(value = "UPDATE OrderPo o SET o.state = :state WHERE o.id = :id")
 	int updateOrderState(Long id, Integer state);
+
+	/**
+	 * @author Jianheng HUANG
+	 * @date 2020-11-29
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo o SET o.message = :message WHERE o.id = :id")
+	int addShopOrderMessage(Long id, String message);
 
 	@Modifying
 	@Transactional
