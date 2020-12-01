@@ -8,7 +8,12 @@ import java.util.List;
 
 public interface IFreightCalculate {
 
-    public Long calculateFreight(List<PurchaseItem> items,
+    Long calculateFreight(List<PurchaseItem> items,
                                  List<WeightFreightModel> weightFreightModels,
                                  List<PieceFreightModel> pieceFreightModels);
+
+
+    Long calActivityFreightByWeight(PurchaseItem item, WeightFreightModel weightFreightModel);
+
+    Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel);
 }

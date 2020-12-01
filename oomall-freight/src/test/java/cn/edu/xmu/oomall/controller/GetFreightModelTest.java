@@ -38,4 +38,5 @@ public class GetFreightModelTest {
         String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+
 }

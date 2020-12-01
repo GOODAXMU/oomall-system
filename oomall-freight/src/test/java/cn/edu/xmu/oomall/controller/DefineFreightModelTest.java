@@ -54,4 +54,28 @@ public class DefineFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    /**
+     * 测试定义模板功能
+     * 模板名重复
+     * @throws Exception
+     */
+    @Test
+    public void defineFreightModel1() throws Exception {
+        FreightModelDefineRequest freightModelDefineRequest = new FreightModelDefineRequest();
+        freightModelDefineRequest.setName("测试模板");
+        freightModelDefineRequest.setType(0);
+        freightModelDefineRequest.setUnit(Long.valueOf(500));
+        String json = JSON.toJSONString(freightModelDefineRequest);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":802,\"message\":\"运费模板名重复\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
 }

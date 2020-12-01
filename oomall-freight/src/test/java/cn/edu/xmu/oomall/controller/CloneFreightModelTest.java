@@ -28,15 +28,39 @@ public class CloneFreightModelTest {
     @Autowired
     private MockMvc mvc;
 
+    /**
+     * 测试克隆模板功能
+     * 资源不存在
+     *
+     * @throws Exception
+     */
     @Test
     public void cloneFreightModel() throws Exception{
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/clone"))
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone"))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false );
+    }
+
+    /**
+     * 测试克隆模板功能
+     * 成功
+     *
+     * @throws Exception
+     */
+    @Test
+    public void cloneFreightModel1() throws Exception{
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 }
