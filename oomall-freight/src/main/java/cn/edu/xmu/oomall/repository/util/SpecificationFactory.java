@@ -41,7 +41,7 @@ public class SpecificationFactory {
             if (freightModel.getGmtCreated() != null) {
                 predicates.add(builder.equal(root.get("gmtCreated"), freightModel.getGmtCreated()));
             }
-            if (freightModel.getGmtCreated() != null) {
+            if (freightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), freightModel.getGmtModified()));
             }
             return builder.and(predicates.toArray(new Predicate[0]));
@@ -79,6 +79,12 @@ public class SpecificationFactory {
             if (weightFreightModel.getRegionId() != null) {
                 predicates.add(builder.equal(root.get("regionId"), weightFreightModel.getRegionId()));
             }
+            if (weightFreightModel.getGmtCreated() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), weightFreightModel.getGmtCreated()));
+            }
+            if (weightFreightModel.getGmtModified() != null) {
+                predicates.add(builder.equal(root.get("gmtModified"), weightFreightModel.getGmtModified()));
+            }
             return builder.and(predicates.toArray(new Predicate[0]));
         };
     }
@@ -105,7 +111,12 @@ public class SpecificationFactory {
             if (pieceFreightModel.getRegionId() != null) {
                 predicates.add(builder.equal(root.get("regionId"), pieceFreightModel.getRegionId()));
             }
-
+            if (pieceFreightModel.getGmtCreated() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), pieceFreightModel.getGmtCreated()));
+            }
+            if (pieceFreightModel.getGmtModified() != null) {
+                predicates.add(builder.equal(root.get("gmtModified"), pieceFreightModel.getGmtModified()));
+            }
             return builder.and(predicates.toArray(new Predicate[0]));
         };
     }

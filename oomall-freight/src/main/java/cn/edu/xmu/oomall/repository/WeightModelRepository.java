@@ -35,7 +35,11 @@ public interface WeightModelRepository extends
 			"wfm.abovePrice = CASE WHEN :#{#weightFreightModel.abovePrice} IS NULL " +
 			"THEN wfm.abovePrice ELSE :#{#weightFreightModel.abovePrice} END, " +
 			"wfm.regionId = CASE WHEN :#{#weightFreightModel.regionId} IS NULL " +
-			"THEN wfm.regionId ELSE :#{#weightFreightModel.regionId} END " +
+			"THEN wfm.regionId ELSE :#{#weightFreightModel.regionId} END ," +
+			"wfm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
+			"THEN wfm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
+			"wfm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +
+			"THEN wfm.gmtModified ELSE :#{#freightModel.gmtModified} END " +
 			"WHERE wfm.id = :#{#weightFreightModel.id}")
 	int update(WeightFreightModelPo weightFreightModel);
 }
