@@ -87,7 +87,7 @@ public class FreightService {
         }
 
         //没有定义模板则使用商家默认运费模板
-        if (null == freightModels) {
+        if (freightModels.isEmpty()) {
             for (PurchaseItem item : purchaseItems) {
                 freightModels.add(freightDao.getDefaultFreightModel(goodService.getShopId(item.getSkuId())));
             }
@@ -100,12 +100,14 @@ public class FreightService {
             freightModel.setRid(rid);
             if (freightModel.getType() == weightModel) {
                 WeightFreightModel weightFreightModel = freightDao.getWeightFreightModel(freightModel);
-                if (null != weightFreightModel)
+                if (null != weightFreightModel) {
                     weightFreightModels.add(weightFreightModel);
+                }
             } else if (freightModel.getType() == pieceModel) {
                 PieceFreightModel pieceFreightModel = freightDao.getPieceFreightModel(freightModel);
-                if (null != pieceFreightModel)
+                if (null != pieceFreightModel) {
                     pieceFreightModels.add(pieceFreightModel);
+                }
             }
         }
 
@@ -138,14 +140,14 @@ public class FreightService {
             Long freight = Long.valueOf(0);
             if (freightModel.getType() == weightModel) {
                 WeightFreightModel weightFreightModel = freightDao.getWeightFreightModel(freightModel);
-                freight = freightCalculate.calActivityFreightByWeight(purchaseItem,weightFreightModel);
+                freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
 
             } else if (freightModel.getType() == pieceModel) {
                 PieceFreightModel pieceFreightModel = freightDao.getPieceFreightModel(freightModel);
-                freight = freightCalculate.calActivityFreightByPiece(purchaseItem,pieceFreightModel);
+                freight = freightCalculate.calActivityFreightByPiece(purchaseItem, pieceFreightModel);
             }
-            redisTemplate.opsForValue().set(key,freight);
-            redisTemplate.expire(key,3, TimeUnit.MINUTES);
+            redisTemplate.opsForValue().set(key, freight);
+            redisTemplate.expire(key, 3, TimeUnit.MINUTES);
             return new Reply<>(freight);
         }
         return new Reply<>(Long.parseLong((redisTemplate.opsForValue().get(key)).toString()));
@@ -161,8 +163,9 @@ public class FreightService {
     @Transactional
     public Reply<FreightModel> defineFreightModel(FreightModel freightModel) {
         Reply<FreightModel> reply = freightDao.createFreightModel(freightModel);
-        if (reply.getResponseStatus() != ResponseStatus.OK)
+        if (reply.getResponseStatus() != ResponseStatus.OK) {
             return new Reply<>(reply.getResponseStatus());
+        }
         return reply;
     }
 
@@ -225,8 +228,9 @@ public class FreightService {
      */
     public Reply deleteFreightModel(Long id, Long shopId) {
         Reply reply = freightDao.deleteFreightModel(id);
-        if (!reply.isOk())
+        if (!reply.isOk()) {
             return reply;
+        }
         freightDao.deleteWeightFreightModel(id);
         freightDao.deletePieceFreightModel(id);
         goodService.deleteGoodsFreightModel(id, shopId);

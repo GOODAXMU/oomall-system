@@ -18,22 +18,22 @@ import java.time.LocalDateTime;
 @Table(name = "freight_model")
 public class FreightModelPo {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	private Long shopId;
+    private Long shopId;
 
-	private String name;
+    private String name;
 
-	private Boolean defaultModel;
+    private Boolean defaultModel;
 
-	private Integer type;
+    private Integer type;
 
-	@Column(name = "unit")
-	private Long weightUnit;
+    @Column(name = "unit")
+    private Long weightUnit;
 
-	private LocalDateTime gmtCreated;
+    private LocalDateTime gmtCreated;
 
-	private LocalDateTime gmtModified;
+    private LocalDateTime gmtModified;
 }

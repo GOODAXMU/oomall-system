@@ -50,8 +50,9 @@ public class CustomerShipmentController {
     public Reply getFreightModelSummary(
             @NotNull @Min(value = 0) @PathVariable Long id) {
         Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id);
-        if (!freightModelReply.isOk())
+        if (!freightModelReply.isOk()) {
             return freightModelReply;
+        }
         return new Reply<>(freightModelReply.getData().createSummaryGetResponse());
     }
 

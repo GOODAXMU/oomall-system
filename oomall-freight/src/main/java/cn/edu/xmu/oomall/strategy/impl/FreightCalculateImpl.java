@@ -14,6 +14,10 @@ import org.springframework.stereotype.Component;
 import javax.annotation.PostConstruct;
 import java.util.List;
 
+/**
+ * @author zhibin lan
+ * @date 2020-11-20
+ */
 @Component
 public class FreightCalculateImpl implements IFreightCalculate {
 
@@ -35,6 +39,7 @@ public class FreightCalculateImpl implements IFreightCalculate {
     @Value(value = "${oomall.tri-hundry}")
     private Long trihundry;
 
+    @Override
     public Long calculateFreight(List<PurchaseItem> items,
                                  List<WeightFreightModel> weightFreightModels,
                                  List<PieceFreightModel> pieceFreightModels) {
@@ -83,8 +88,9 @@ public class FreightCalculateImpl implements IFreightCalculate {
                     curPrice += (item.getWeight() - trihundry * kg) / halfKg * weightFreightModel.getAbovePrice();
                 }
             }
-            if (curPrice > maxPrice)
+            if (curPrice > maxPrice) {
                 maxPrice = curPrice;
+            }
         }
         return maxPrice;
     }
@@ -102,13 +108,15 @@ public class FreightCalculateImpl implements IFreightCalculate {
                             * pieceFreightModel.getAdditionalItemsPrice();
                 }
             }
-            if (curPrice > maxPrice)
+            if (curPrice > maxPrice) {
                 maxPrice = curPrice;
+            }
         }
         return maxPrice;
     }
 
-    public Long calActivityFreightByWeight(PurchaseItem item, WeightFreightModel weightFreightModel){
+    @Override
+    public Long calActivityFreightByWeight(PurchaseItem item, WeightFreightModel weightFreightModel) {
         Long price = Long.valueOf(0);
         if (item.getWeight() <= weightFreightModel.getFirstWeight()) {
             price = weightFreightModel.getFirstWeightFreight();
@@ -141,7 +149,8 @@ public class FreightCalculateImpl implements IFreightCalculate {
         return price;
     }
 
-    public Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel){
+    @Override
+    public Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel) {
         Long price = Long.valueOf(0);
         if (item.getCount() <= pieceFreightModel.getFirstItem()) {
             price = pieceFreightModel.getFirstItemPrice();

@@ -16,15 +16,18 @@ import java.util.List;
  * @date 2020-11-3
  */
 @DubboService(version = "${oomall.freight.version}")
-public class freightServiceImpl implements IFreightService {
+public class FreightServiceImpl implements IFreightService {
     @Autowired
     FreightService freightService;
 
     /**
+     * 计算普通订单运费
+     *
      * @param calculateFreightRequestList 由skuId和counts数量组成的请求对象
      * @return Long 运费
      */
-    public Reply<Long> calculateFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid) {
+    @Override
+    public Reply<Long> calFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid) {
         List<PurchaseItem> purchaseItems = new ArrayList<>();
         for (CalculateFreightRequest calculateFreightRequest : calculateFreightRequestList) {
             PurchaseItem purchaseItem = new PurchaseItem();
@@ -33,4 +36,20 @@ public class freightServiceImpl implements IFreightService {
         }
         return freightService.calFreight(purchaseItems, rid);
     }
+
+    /**
+     * 计算秒杀活动订单运费
+     *
+     * @param calculateFreightRequest 由skuId和counts数量组成的请求对象
+     * @return Long 运费
+     */
+    @Override
+    public Reply<Long> calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid) {
+        PurchaseItem purchaseItem = new PurchaseItem();
+        purchaseItem.setCount(calculateFreightRequest.getCount());
+        purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
+        return freightService.calActivityFreight(purchaseItem, rid);
+    }
+
+
 }
