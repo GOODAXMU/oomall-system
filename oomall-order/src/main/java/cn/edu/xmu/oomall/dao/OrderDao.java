@@ -137,8 +137,8 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
         }
 
-        int r = orderRepository.updateWhenStateBetween(
-                po, OrderStatus.FORBID.value(), OrderStatus.DELIVERED.value());
+        int r = orderRepository.updateWhenStateLessThan(
+                po, OrderStatus.DELIVERED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -178,9 +178,9 @@ public class OrderDao {
     }
 
     public Reply<Object> confirmOrder(Long id) {
-        int r = orderRepository.changeOrderStateWhenStateBetween(
+        int r = orderRepository.changeOrderStateWhenStateEquals(
                 id, OrderStatus.RECEIVED.value(),
-                OrderStatus.FORBID.value(), OrderStatus.RECEIVED.value());
+                OrderStatus.ARRIVED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -232,8 +232,8 @@ public class OrderDao {
     }
 
     public Reply<Object> updateOrderType(Long id) {
-        int r = orderRepository.updateGroupon2NormalWhenStateNotEquals(
-                id, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.FORBID.value());
+        int r = orderRepository.updateGroupon2NormalWhenStateLessThan(
+                id, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);

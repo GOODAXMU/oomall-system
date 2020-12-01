@@ -7,15 +7,11 @@ import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
-import cn.edu.xmu.oomall.dao.OrderDao;
-import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.*;
-import cn.edu.xmu.oomall.external.service.IShipmentService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IOrderService;
 import cn.edu.xmu.oomall.vo.Reply;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.concurrent.Computable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -128,11 +124,10 @@ public class NormalOrderServiceImpl implements IOrderService {
 			freights.put(subOrder.getOrderSn(), cf);
 		}
 
-		// 添加分享记录
+		// 设置分享记录
 		for (OrderItem oi : order.getOrderItems()) {
 			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
 			if (beSharedId != null) {
-				shareService.sendShareMessage(beSharedId, oi.getId());
 				oi.setBeShareId(beSharedId);
 			}
 		}

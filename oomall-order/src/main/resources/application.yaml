@@ -84,3 +84,6 @@ oomall:
       name: SimulatedSeckillServiceImpl
     goods-service:
       name: SimulatedGoodsServiceImpl
+
+  order:
+    version: 0.0.1-SNAPSHOT
