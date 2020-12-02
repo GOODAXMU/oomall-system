@@ -55,7 +55,7 @@ public interface SeckillItemRepository extends
 	 */
 	@Modifying
 	@Transactional(rollbackFor = Exception.class)
-	@Query(value = "UPDATE good_flash_sale_item fsi " +
+	@Query(value = "UPDATE flash_sale_item fsi " +
 			"SET quantity = quantity - :number " +
 			"WHERE id = :id AND quantity >= :number", nativeQuery = true)
 	int fetchQuantity(Long id, Integer number);

@@ -122,9 +122,6 @@ public class SeckillDaoTest {
 
 		Thread.sleep(15000);
 
-//		int a = (int) seckillItemCache.get(seckillItemPrefix, skuId);
-//		System.out.println(a);
-
 		seckillDao.unloadSeckill(seckillId);
 
 		int actual = seckillItemRepository.findQuantityById(skuId);
