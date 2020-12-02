@@ -20,7 +20,7 @@ public interface IFreightService {
      * @param rid                         地区码
      * @return Long 运费
      */
-    Reply<Long> calFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid);
+    Long calFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid);
 
     /**
      * 计算秒杀活动订单运费
@@ -29,5 +29,5 @@ public interface IFreightService {
      * @param rid                     地区码
      * @return Long 运费
      */
-    public Reply<Long> calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid);
+    Long calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid);
 }

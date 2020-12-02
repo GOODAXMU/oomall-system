@@ -27,14 +27,15 @@ public class FreightServiceImpl implements IFreightService {
      * @return Long 运费
      */
     @Override
-    public Reply<Long> calFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid) {
+    public Long calFreight(List<CalculateFreightRequest> calculateFreightRequestList, Long rid) {
         List<PurchaseItem> purchaseItems = new ArrayList<>();
         for (CalculateFreightRequest calculateFreightRequest : calculateFreightRequestList) {
             PurchaseItem purchaseItem = new PurchaseItem();
             purchaseItem.setCount(calculateFreightRequest.getCount());
             purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
         }
-        return freightService.calFreight(purchaseItems, rid);
+        Reply<Long> r = freightService.calFreight(purchaseItems, rid);
+        return r.getData() == null ? 0L : r.getData();
     }
 
     /**
@@ -44,11 +45,12 @@ public class FreightServiceImpl implements IFreightService {
      * @return Long 运费
      */
     @Override
-    public Reply<Long> calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid) {
+    public Long calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid) {
         PurchaseItem purchaseItem = new PurchaseItem();
         purchaseItem.setCount(calculateFreightRequest.getCount());
         purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
-        return freightService.calActivityFreight(purchaseItem, rid);
+        Reply<Long> r = freightService.calActivityFreight(purchaseItem, rid);
+        return r.getData() == null ? 0L : r.getData();
     }
 
 
