@@ -18,12 +18,12 @@ import java.util.concurrent.ExecutionException;
 public class SimulatedFreightServiceImpl implements IFreightService {
 
 	@Override
-	public Long calcAndGetFreightPrice(List<OrderItem> orderItems) {
+	public Long calcAndGetFreightPrice(List<OrderItem> orderItems, Long regionId, boolean isSeckill) {
 		return 100L;
 	}
 
 	@Override
-	public CompletableFuture<Long> calcFreightPriceAsynchronous(List<OrderItem> orderItems) {
+	public CompletableFuture<Long> calcFreightPriceAsynchronous(List<OrderItem> orderItems, Long regionId, boolean isSeckill) {
 		CompletableFuture<Long> cf = new CompletableFuture<>();
 		cf.complete(2L);
 		return cf;

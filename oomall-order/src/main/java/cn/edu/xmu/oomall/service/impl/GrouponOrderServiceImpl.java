@@ -76,7 +76,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		}
 
 		// 异步计算运费
-		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems());
+		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
 
 		// 获取价格
 		Long price = goodsService.getPrice(orderItem.getSkuId());

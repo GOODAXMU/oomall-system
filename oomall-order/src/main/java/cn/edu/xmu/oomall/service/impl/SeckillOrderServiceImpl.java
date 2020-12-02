@@ -75,7 +75,7 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		}
 
 		// 异步计算运费
-		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems());
+		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), true);
 
 		// 获取价格
 		Long price = flashSaleService.getPrice(orderItem.getSkuId());

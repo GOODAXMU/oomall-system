@@ -120,7 +120,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 		// 异步计算运费
 		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
 		for (Order subOrder : order.getSubOrders()) {
-			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems());
+			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
 			freights.put(subOrder.getOrderSn(), cf);
 		}
 
