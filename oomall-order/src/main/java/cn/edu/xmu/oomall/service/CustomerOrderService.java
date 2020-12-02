@@ -111,7 +111,7 @@ public class CustomerOrderService {
 		return orderDao.updateOrderType(id);
 	}
 
-	public boolean isSeckill(Long skuId) {
-		return flashSaleService.isSeckill(skuId);
+	public Long getSeckillId(Long skuId) {
+		return flashSaleService.getSeckillId(skuId);
 	}
 }

@@ -69,7 +69,7 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		order.setCustomer(customer);
 
 		// 扣库存
-		Boolean r = seckillService.deductInventory(orderItem.getSkuId(), orderItem.getQuantity());
+		Boolean r = seckillService.deductInventory(orderItem.getSkuId(), orderItem.getQuantity(), order.getSeckillId());
 		if (!r) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}

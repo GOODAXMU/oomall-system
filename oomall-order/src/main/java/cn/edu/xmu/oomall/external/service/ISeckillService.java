@@ -9,8 +9,8 @@ public interface ISeckillService {
 	/**
 	 * 扣库存
 	 * @param skuId
-	 * @param quantity
+	 * @param quantity 准备扣掉的库存数, 正数
 	 * @return
 	 */
-	Boolean deductInventory(Long skuId, Integer quantity);
+	Boolean deductInventory(Long skuId, Integer quantity, Long seckillId);
 }

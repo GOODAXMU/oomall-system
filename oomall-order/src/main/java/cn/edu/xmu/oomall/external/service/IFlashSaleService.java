@@ -11,7 +11,7 @@ public interface IFlashSaleService {
 	 * @param skuId
 	 * @return
 	 */
-	Boolean isSeckill(Long skuId);
+	Long getSeckillId(Long skuId);
 
 	/**
 	 * 获取秒杀活动下商品的价格, 不校验时间

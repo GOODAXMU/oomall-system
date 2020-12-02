@@ -87,6 +87,7 @@ oomall:
 
   order:
     version: 0.0.1-SNAPSHOT
-
   freight:
+    version: 0.0.1-SNAPSHOT
+  seckill:
     version: 0.0.1-SNAPSHOT

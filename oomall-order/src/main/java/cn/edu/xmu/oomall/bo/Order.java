@@ -44,6 +44,7 @@ public class Order {
 	private Long originPrice;
 	private Long presaleId;
 	private Long grouponId;
+	private Long seckillId;
 	private Long grouponDiscount;
 	private Integer rebateNum;
 	private LocalDateTime confirmTime;

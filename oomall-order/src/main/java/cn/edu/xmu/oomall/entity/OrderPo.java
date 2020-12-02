@@ -76,6 +76,11 @@ public class OrderPo {
 
 	private LocalDateTime gmtModified;
 
+	public OrderPo(String orderSn, Long shopId) {
+		this.orderSn = orderSn;
+		this.shopId = shopId;
+	}
+
 	public static OrderPo toOrderPo(Order o) {
 		if (o == null) {
 			return null;

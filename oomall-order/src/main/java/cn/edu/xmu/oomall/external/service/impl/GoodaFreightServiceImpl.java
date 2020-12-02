@@ -3,9 +3,8 @@ package cn.edu.xmu.oomall.external.service.impl;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.dto.CalculateFreightRequest;
 import cn.edu.xmu.oomall.external.service.IFreightService;
-import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcContext;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,10 +14,11 @@ import java.util.concurrent.CompletableFuture;
  * @author xincong yao
  * @date 2020-12-2
  */
-@Service
+@Component
 public class GoodaFreightServiceImpl implements IFreightService {
 
-	@DubboReference(version = "${oomall.freight.version}", async = true, timeout = 5000)
+	// todo 外部服务未配置
+	// @DubboReference(version = "${oomall.freight.version}", async = true, timeout = 5000)
 	private cn.edu.xmu.oomall.service.IFreightService freightService;
 
 	@Override

@@ -106,7 +106,7 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
-	public Reply<OrderDetailGetResponse> createOrder(@RequestBody OrderPostRequest request) throws InterruptedException, ExecutionException, OrderModuleException {
+	public Reply<OrderDetailGetResponse> createOrder(@RequestBody OrderPostRequest request) throws InterruptedException, ExecutionException {
 		Order order = Order.toOrder(request);
 
 		IOrderService orderService = getOrderService(order);
@@ -209,6 +209,11 @@ public class CustomerOrderController {
 		return customerOrderService.groupon2Normal(id);
 	}
 
+	/**
+	 * 如果是秒杀活动, 为order设置seckillId
+	 * @param order
+	 * @return
+	 */
 	public IOrderService getOrderService(Order order) {
 		if (order.getPresaleId() != null) {
 			return presaleOrderService;
@@ -216,8 +221,8 @@ public class CustomerOrderController {
 		if (order.getGrouponId() != null) {
 			return grouponOrderService;
 		}
-		if (order.getOrderItems().size() == 1
-				&& customerOrderService.isSeckill(order.getOrderItems().get(0).getSkuId())) {
+		if (order.getOrderItems().size() == 1) {
+			order.setSeckillId(customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId()));
 			return seckillOrderService;
 		}
 
