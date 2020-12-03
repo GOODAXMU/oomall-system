@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
-import cn.edu.xmu.ooamll.dto.AfterSaleDto;
-import cn.edu.xmu.ooamll.service.IDubboOrderService;
+import cn.edu.xmu.oomall.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.service.IDubboOrderService;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
