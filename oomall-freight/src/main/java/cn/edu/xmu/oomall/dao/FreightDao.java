@@ -115,7 +115,7 @@ public class FreightDao {
 
         FreightModelPo freightModelPo = freightModel.createPo();
         freightModelPo.setGmtModified(LocalDateTime.now());
-        freightModelPo.setGmtCreated(LocalDateTime.now());
+        freightModelPo.setGmtCreate(LocalDateTime.now());
         Reply reply = new Reply<FreightModel>();
         //判断模板名是否重复
         if (isFreightModelNameExit(freightModelPo.getName())) {
@@ -271,7 +271,7 @@ public class FreightDao {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setId(id);
-        freightModelPo.setDefaultModel(true);
+        freightModelPo.setDefaultModel(1);
         int ret = freightModelRepository.update(freightModelPo);
         if (ret <= 0) {
             log.debug("设置默认运费模板失败: " + ret);

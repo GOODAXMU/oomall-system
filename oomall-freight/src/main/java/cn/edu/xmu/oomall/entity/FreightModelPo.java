@@ -26,14 +26,14 @@ public class FreightModelPo {
 
     private String name;
 
-    private Boolean defaultModel;
+    private Integer defaultModel;
 
     private Integer type;
 
     @Column(name = "unit")
     private Long weightUnit;
 
-    private LocalDateTime gmtCreated;
+    private LocalDateTime gmtCreate;
 
     private LocalDateTime gmtModified;
 }

@@ -38,8 +38,8 @@ public class SpecificationFactory {
 			if (freightModel.getWeightUnit() != null) {
 				predicates.add(builder.equal(root.get("weightUnit"), freightModel.getWeightUnit()));
 			}
-            if (freightModel.getGmtCreated() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), freightModel.getGmtCreated()));
+            if (freightModel.getGmtCreate() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), freightModel.getGmtCreate()));
             }
             if (freightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), freightModel.getGmtModified()));
@@ -79,8 +79,8 @@ public class SpecificationFactory {
             if (weightFreightModel.getRegionId() != null) {
                 predicates.add(builder.equal(root.get("regionId"), weightFreightModel.getRegionId()));
             }
-            if (weightFreightModel.getGmtCreated() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), weightFreightModel.getGmtCreated()));
+            if (weightFreightModel.getGmtCreate() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), weightFreightModel.getGmtCreate()));
             }
             if (weightFreightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), weightFreightModel.getGmtModified()));
@@ -111,8 +111,8 @@ public class SpecificationFactory {
             if (pieceFreightModel.getRegionId() != null) {
                 predicates.add(builder.equal(root.get("regionId"), pieceFreightModel.getRegionId()));
             }
-            if (pieceFreightModel.getGmtCreated() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), pieceFreightModel.getGmtCreated()));
+            if (pieceFreightModel.getGmtCreate() != null) {
+                predicates.add(builder.equal(root.get("gmtCreated"), pieceFreightModel.getGmtCreate()));
             }
             if (pieceFreightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), pieceFreightModel.getGmtModified()));
