@@ -19,9 +19,9 @@ import java.util.Map;
 public class SimulatedShopServiceImpl implements IShopService {
 
 	@Override
-	public Shop getShop(Long shopId) {
+	public Shop getShop(Long skuId) {
 		Shop shop = new Shop();
-		shop.setId(shopId);
+		shop.setId(345L);
 		shop.setName("super shop");
 		shop.setGmtCreateTime(LocalDateTime.parse("2020-11-27T07:59:58.623756500").toString());
 		shop.setGmtModiTime(LocalDateTime.parse("2020-11-27T07:59:58.623756500").toString());
@@ -32,10 +32,11 @@ public class SimulatedShopServiceImpl implements IShopService {
 	public Map<Shop, List<OrderItem>> classifySku(List<OrderItem> orderItems) {
 		Map<Shop, List<OrderItem>> result = new HashMap<>(orderItems.size());
 		for (OrderItem oi : orderItems) {
+			oi.setPrice(123L);
 			Shop shop = new Shop();
 			shop.setId(oi.getSkuId() + 100);
 			shop.setName("super shop " + (oi.getSkuId() + 100));
-			shop.setGmtModiTime(LocalDateTime.now().toString());
+			shop.setGmtCreateTime(LocalDateTime.now().toString());
 			shop.setGmtModiTime(LocalDateTime.now().toString());
 			result.put(shop, Collections.singletonList(oi));
 		}

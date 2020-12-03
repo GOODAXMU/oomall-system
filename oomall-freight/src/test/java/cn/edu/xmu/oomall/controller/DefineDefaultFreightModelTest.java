@@ -30,18 +30,35 @@ public class DefineDefaultFreightModelTest {
 
     /**
      * 测试定义模板功能
-     *
+     * 操作资源不存在
      * @throws Exception
      */
     @Test
     public void defineDefaultFreightModel() throws Exception {
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/default"))
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/default"))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    /**
+     * 测试定义模板功能
+     * 成功
+     * @throws Exception
+     */
+    @Test
+    public void defineDefaultFreightModel1() throws Exception {
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/default"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 }

@@ -29,7 +29,7 @@ public class GetFreightModelSummaryTest {
 
     @Test
     public void getFreightModelSummary() throws Exception{
-        String responseString = this.mvc.perform(get("/freightmodels/1"))
+        String responseString = this.mvc.perform(get("/freightmodels/200"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -39,4 +39,15 @@ public class GetFreightModelSummaryTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    @Test
+    public void getFreightModelSummary1() throws Exception{
+        String responseString = this.mvc.perform(get("/freightmodels/9"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
 }

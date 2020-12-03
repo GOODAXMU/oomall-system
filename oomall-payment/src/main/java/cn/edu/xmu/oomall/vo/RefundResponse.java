@@ -13,12 +13,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class RefundPostResponse {
+public class RefundResponse {
 
 	private Long id;
 	private Long paymentId;
 	private Long amount;
-	private Integer state;
+	private String state;
 	private String gmtCreateTime;
-	private String gmtModiTime;
+	private String gmtModifiedTime;
 }

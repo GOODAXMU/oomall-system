@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
- * @author yan song
+ * @author zhibin lan
  * @date 2020-11-9
  */
 @RestController
@@ -35,8 +35,9 @@ public class ShopShipmentController {
             @NotNull @Min(value = 0) @PathVariable Long id) {
         FreightModel freightModel = new FreightModel(freightModelInfo);
         Reply<FreightModel> reply = freightService.defineFreightModel(freightModel);
-        if (!reply.isOk())
+        if (!reply.isOk()) {
             return new Reply<>(reply.getResponseStatus());
+        }
         return new Reply(reply.getData().createDefineResponse());
     }
 
@@ -65,8 +66,9 @@ public class ShopShipmentController {
             @NotNull @Min(value = 0) @PathVariable Long id,
             @NotNull @Min(value = 0) @PathVariable Long shopId) {
         Reply<FreightModel> reply = freightService.cloneFreightModel(id, shopId);
-        if (!reply.isOk())
+        if (!reply.isOk()) {
             return new Reply<>(reply.getResponseStatus());
+        }
         return new Reply<FreightModelCloneResponse>(reply.getData().createCloneResponse());
     }
 

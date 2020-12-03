@@ -7,7 +7,6 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
-import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.repository.FreightModelRepository;
 import cn.edu.xmu.oomall.repository.PieceModelRepository;
 import cn.edu.xmu.oomall.repository.WeightModelRepository;
@@ -159,7 +158,7 @@ public class FreightDao {
         freightModelPo.setShopId(shopId);
         Page<FreightModelPo> freightModelPoPage = freightModelRepository.findAll(
                 SpecificationFactory.get(freightModelPo),
-                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize())
+                PageRequest.of(pageInfo.getPage() - 1, pageInfo.getPageSize())
         );
         pageInfo.calAndSetPagesAndTotal(freightModelPoPage.getTotalElements(), freightModelPoPage.getTotalPages());
 
@@ -198,9 +197,11 @@ public class FreightDao {
      */
     public Reply<FreightModel> cloneFreightModel(Long id, Long shopId) {
         Reply<FreightModel> freightModelReply = getFreightModelById(id);
-        if (!freightModelReply.isOk())
+        if (!freightModelReply.isOk()) {
             return freightModelReply;
+        }
         FreightModel freightModel = freightModelReply.getData();
+        freightModel.setId(null);
         freightModel.setShopId(shopId);
         freightModel.setName(freightModel.getName() + UUID.randomUUID());
         return createFreightModel(freightModel);
@@ -209,16 +210,13 @@ public class FreightDao {
     /**
      * 删除运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id 模板id
      * @return
      */
-    public Reply deleteFreightModel(Long id, Long shopId) {
-        FreightModelPo freightModelPo = new FreightModelPo();
-        freightModelPo.setShopId(shopId);
-        freightModelPo.setId(id);
+    public Reply deleteFreightModel(Long id) {
+
         try {
-            freightModelRepository.delete(freightModelPo);
+            freightModelRepository.deleteById(id);
         } catch (Exception e) {
             log.debug(e.getMessage());
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -265,11 +263,11 @@ public class FreightDao {
     /**
      * 设置默认运费模板
      *
-     * @param id 模板id
+     * @param id     模板id
      * @param shopId 商铺id
      * @return
      */
-    public Reply defineDefaultFreightModel(Long id,Long shopId){
+    public Reply defineDefaultFreightModel(Long id, Long shopId) {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setId(id);

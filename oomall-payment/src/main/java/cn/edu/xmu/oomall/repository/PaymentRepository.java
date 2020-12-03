@@ -10,6 +10,8 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author xincong yao
  * @date 2020-11-10
+ * @author Wang Zhizhou
+ * modified 2020/11/28
  */
 public interface PaymentRepository extends
 		JpaRepository<PaymentPo, Long>,
@@ -19,6 +21,7 @@ public interface PaymentRepository extends
 	@Transactional
 	@Query(value = "UPDATE PaymentPo p SET p.amount = CASE WHEN :#{#payment.amount} IS NULL THEN p.amount ELSE :#{#payment.amount} END, " +
 			"p.actualAmount = CASE WHEN :#{#payment.actualAmount} IS NULL THEN p.actualAmount ELSE :#{#payment.actualAmount} END, " +
+			"p.aftersaleId = CASE WHEN :#{#payment.aftersaleId} IS NULL THEN p.aftersaleId ELSE :#{#payment.aftersaleId} END, " +
 			"p.paymentPattern = CASE WHEN :#{#payment.paymentPattern} IS NULL THEN p.paymentPattern ELSE :#{#payment.paymentPattern} END, " +
 			"p.payTime = CASE WHEN :#{#payment.payTime} IS NULL THEN p.payTime ELSE :#{#payment.payTime} END, " +
 			"p.paySn = CASE WHEN :#{#payment.paySn} IS NULL THEN p.paySn ELSE :#{#payment.paySn} END, " +
@@ -28,4 +31,10 @@ public interface PaymentRepository extends
 			"p.state = CASE WHEN :#{#payment.state} IS NULL THEN p.state ELSE :#{#payment.state} END " +
 			"WHERE p.id = :#{#payment.id}")
 	int update(PaymentPo payment);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE PaymentPo po SET po.state = :state WHERE po.id = :id")
+	int updatePaymentState(Long id, Integer state);
+
 }

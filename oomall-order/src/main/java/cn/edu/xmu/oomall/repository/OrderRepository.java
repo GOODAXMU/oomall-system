@@ -7,9 +7,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
+ * modified by Jianheng HUANG, date: 2020-11-29
+ * modified by xincong yao, date: 2020-12-3
  */
 public interface OrderRepository extends
 		JpaRepository<OrderPo, Long>,
@@ -72,16 +76,25 @@ public interface OrderRepository extends
 			"o.state = CASE WHEN :#{#order.state} IS NULL THEN o.state ELSE :#{#order.state} END, " +
 			"o.subState = CASE WHEN :#{#order.subState} IS NULL THEN o.subState ELSE :#{#order.subState} END, " +
 			"o.beDeleted = CASE WHEN :#{#order.beDeleted} IS NULL THEN o.beDeleted ELSE :#{#order.beDeleted} END " +
-			"WHERE o.id = :#{#order.id} AND o.state > :state1 AND o.state < :state2")
-	int updateWhenStateBetween(OrderPo order, Integer state1, Integer state2);
+			"WHERE o.id = :#{#order.id} AND o.state < :state")
+	int updateWhenStateLessThan(OrderPo order, Integer state);
 
-	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id")
-	int findOrderStateById(Long id);
+	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id AND o.customerId = :customerId")
+	int findOrderStateByIdAndCustomerId(Long id, Long customerId);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo o SET o.state = :state WHERE o.id = :id")
 	int updateOrderState(Long id, Integer state);
+
+	/**
+	 * @author Jianheng HUANG
+	 * @date 2020-11-29
+	 */
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo o SET o.message = :message WHERE o.id = :id")
+	int addShopOrderMessage(Long id, String message);
 
 	@Modifying
 	@Transactional
@@ -91,13 +104,18 @@ public interface OrderRepository extends
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p SET p.state = :to " +
-			"WHERE p.id = :id AND p.state > :state1 AND p.state < :state2")
-	int changeOrderStateWhenStateBetween(Long id, Integer to, Integer state1, Integer state2);
+			"WHERE p.id = :id AND p.state = :s")
+	int changeOrderStateWhenStateEquals(Long id, Integer to, Integer s);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
 			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
-			"WHERE p.id = :id AND p.orderType = :groupon AND p.state <> :state")
-	int updateGroupon2NormalWhenStateNotEquals(Long id, int groupon, int normal, int state);
+			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND p.state < :state")
+	int updateGroupon2NormalWhenStateLessThan(Long id, Long customerId, int groupon, int normal, int state);
+
+	@Query(value = "SELECT new OrderPo(o.orderSn, o.shopId) FROM OrderPo o WHERE id = :orderId")
+	OrderPo findOrderSnAndShopIdById(Long orderId);
+
+	OrderPo findByIdAndCustomerId(Long id, Long customerId);
 }

@@ -25,117 +25,233 @@ import java.util.Optional;
 /**
  * @author xincong yao
  * @date 2020-11-17
+ * @modified by Jianheng HUANG, date: 2020-11-27
+ * @modified by Jianheng HUANG, date: 2020-11-29
+ * @modified by xincong yao, date: 2020-12-3
+ * TODO: 店家的权限检查
  */
 @Component
 public class OrderDao {
 
-	@Autowired
-	private OrderRepository orderRepository;
+    @Autowired
+    private OrderRepository orderRepository;
 
-	@Autowired
-	private OrderItemRepository orderItemRepository;
+    @Autowired
+    private OrderItemRepository orderItemRepository;
 
-	public Order saveOrder(Order order) {
-		return order;
-	}
+    public Order saveOrder(Order order) {
+        return order;
+    }
 
-	public Reply<List<Order>> getOrders(String orderSn, Integer state,
-										LocalDateTime beginTime, LocalDateTime endTime,
-										PageInfo pageInfo, Boolean withParent) {
+    public Reply<List<Order>> getOrders(Long customerId, String orderSn, Integer state,
+                                        LocalDateTime beginTime, LocalDateTime endTime,
+                                        PageInfo pageInfo, Boolean withParent) {
 
-		Page<OrderPo> orderPoPage = orderRepository.findAll(
-				SpecificationFactory.get(orderSn, state, beginTime, endTime),
-				PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
+        Page<OrderPo> orderPoPage = orderRepository.findAll(
+                SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime),
+                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
 
-		pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
 
-		List<Order> orders = new ArrayList<>();
-		for (OrderPo op : orderPoPage.getContent()) {
-			if (op.getPid() != null && op.getPid() == 0 && !withParent) {
-				continue;
-			}
-			orders.add(Order.toOrder(op));
-		}
+        List<Order> orders = new ArrayList<>();
+        for (OrderPo op : orderPoPage.getContent()) {
+            if (op.getPid() != null && op.getPid() == 0 && !withParent) {
+                continue;
+            }
+            orders.add(Order.toOrder(op));
+        }
 
-		return new Reply<>(orders);
-	}
+        return new Reply<>(orders);
+    }
 
-	public Reply<Order> getOrderById(Long id) {
-		Optional<OrderPo> orderPo = orderRepository.findById(id);
-		Order o = Order.toOrder(orderPo.orElse(null));
-		if (o == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
+    /**
+     * @author Jianheng HUANG
+     * @date 2020-11-27
+     */
+    public Reply<List<Order>> getShopOrders(Long shopId, Long customerId,
+                                            String orderSn,
+                                            LocalDateTime beginTime,
+                                            LocalDateTime endTime,
+                                            PageInfo pageInfo, Boolean withParent) {
 
-		// 设置订单列表
-		List<OrderItemPo> orderItemPos =  orderItemRepository.findByOrderId(o.getId());
-		List<OrderItem> orderItems = new ArrayList<>();
-		for (OrderItemPo po : orderItemPos) {
-			orderItems.add(OrderItem.toOrderItem(po));
-		}
-		o.setOrderItems(orderItems);
+        Page<OrderPo> orderPoPage = orderRepository.findAll(
+                SpecificationFactory.get(shopId, customerId, orderSn, beginTime, endTime),
+                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
 
-		return new Reply<>(o);
-	}
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
 
-	public Reply<Object> updateOrderDeliveryInformation(Order o) {
-		OrderPo po = OrderPo.toOrderPo(o);
-		if (po == null) {
-			return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
-		}
+        List<Order> orders = new ArrayList<>();
+        for (OrderPo op : orderPoPage.getContent()) {
+            if (op.getPid() != null && op.getPid() == 0 && !withParent) {
+                continue;
+            }
+            orders.add(Order.toOrder(op));
+        }
 
-		int r = orderRepository.updateWhenStateBetween(
-				po, OrderStatus.FORBID.value(), OrderStatus.DELIVERED.value());
+        return new Reply<>(orders);
+    }
 
-		if (r <= 0) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		} else {
-			return new Reply<>(ResponseStatus.OK);
-		}
-	}
+    public Reply<Order> getOrderByIdAndCustomerId(Long id, Long customerId) {
+        OrderPo t = orderRepository.findByIdAndCustomerId(id, customerId);
+        Order o = Order.toOrder(t);
+        if (o == null) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
 
-	public Reply<Object> deleteSelfOrder(Long id) {
-		int r = orderRepository.deleteSelfOrderById(id);
+        // 设置订单列表
+        List<OrderItemPo> orderItemPos = orderItemRepository.findByOrderId(o.getId());
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemPo po : orderItemPos) {
+            orderItems.add(OrderItem.toOrderItem(po));
+        }
+        o.setOrderItems(orderItems);
 
-		if (r <= 0) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		} else {
-			return new Reply<>(ResponseStatus.OK);
-		}
-	}
+        return new Reply<>(o);
+    }
 
-	public Reply<Object> confirmOrder(Long id) {
-		int r = orderRepository.changeOrderStateWhenStateBetween(
-				id, OrderStatus.RECEIVED.value(),
-				OrderStatus.FORBID.value(), OrderStatus.RECEIVED.value());
+    /**
+     * @author Jianheng HUANG
+     * @date 2020-11-29
+     */
+    public Reply<Order> getShopOrderById(Long shopId, Long id) {
 
-		if (r <= 0) {
-			return new Reply<>(ResponseStatus.ORDER_FORBID);
-		} else {
-			return new Reply<>(ResponseStatus.OK);
-		}
-	}
+        Optional<OrderPo> orderPo = orderRepository.findById(id);
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
 
-	public Reply<Object> updateOrderType(Long id) {
-		int r = orderRepository.updateGroupon2NormalWhenStateNotEquals(
-				id, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.FORBID.value());
+        // 设置订单列表
+        List<OrderItemPo> orderItemPos = orderItemRepository.findByOrderId(o.getId());
+        List<OrderItem> orderItems = new ArrayList<>();
+        for (OrderItemPo po : orderItemPos) {
+            orderItems.add(OrderItem.toOrderItem(po));
+        }
+        o.setOrderItems(orderItems);
 
-		if (r <= 0) {
-			return new Reply<>(ResponseStatus.ORDER_FORBID);
-		} else {
-			return new Reply<>(ResponseStatus.OK);
-		}
-	}
+        return new Reply<>(o);
+    }
 
-	public int getOrderStateById(Long id) {
-		return orderRepository.findOrderStateById(id);
-	}
+    public Reply<Object> updateOrderDeliveryInformation(Order o) {
+        OrderPo po = OrderPo.toOrderPo(o);
+        if (po == null) {
+            return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
+        }
 
-	public Reply<Object> updateOrderState(Long id, Integer state) {
-		int r = orderRepository.updateOrderState(id, state);
+        int r = orderRepository.updateWhenStateLessThan(
+                po, OrderStatus.DELIVERED.value());
 
-		// todo 数据库返回值校验
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
 
-		return new Reply<>(ResponseStatus.OK);
-	}
+    /**
+     * @author Jianheng HUANG
+     * @date 2020-11-29
+     */
+    public Reply<Object> addShopOrderMessage(Long shopId, Long id, String message) {
+
+        Optional<OrderPo> orderPo = orderRepository.findById(id);
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        int r = orderRepository.addShopOrderMessage(id, message);
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    public Reply<Object> deleteSelfOrder(Long id) {
+        int r = orderRepository.deleteSelfOrderById(id);
+
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    public Reply<Object> confirmOrder(Long id) {
+        int r = orderRepository.changeOrderStateWhenStateEquals(
+                id, OrderStatus.RECEIVED.value(),
+                OrderStatus.ARRIVED.value());
+
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    /**
+     * @author Jianheng HUANG
+     * @date 2020-11-29
+     */
+    public Reply<Object> cancelShopOrder(Long shopId, Long id) {
+
+        Optional<OrderPo> orderPo = orderRepository.findById(id);
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        int r = orderRepository.updateOrderState(id, OrderStatus.CANCELED.value());
+
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    /**
+     * @author Jianheng HUANG
+     * @date 2020-11-29
+     */
+    public Reply<Object> markShopOrderDelivered(Long shopId, Long id) {
+
+        Optional<OrderPo> orderPo = orderRepository.findById(id);
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        int r = orderRepository.updateOrderState(id, OrderStatus.DELIVERED.value());
+
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    public Reply<Object> updateOrderType(Long id, Long customerId) {
+        int r = orderRepository.updateGroupon2NormalWhenStateLessThan(
+                id, customerId, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
+
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
+    }
+
+    public int getOrderStateByIdAndCustomerId(Long id, Long customerId) {
+        return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
+    }
+
+    public Reply<Object> updateOrderState(Long id, Integer state) {
+        int r = orderRepository.updateOrderState(id, state);
+
+        // todo 数据库返回值校验
+
+        return new Reply<>(ResponseStatus.OK);
+    }
 }

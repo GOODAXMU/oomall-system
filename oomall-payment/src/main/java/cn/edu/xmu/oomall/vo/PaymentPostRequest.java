@@ -24,5 +24,5 @@ public class PaymentPostRequest {
 	private Long price;
 
 	@NotBlank
-	private String name;
+	private String pattern;
 }

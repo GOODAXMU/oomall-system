@@ -1,6 +1,9 @@
 package cn.edu.xmu.oomall.bo;
 
+import cn.edu.xmu.ooamll.dto.OrderDto;
+import cn.edu.xmu.ooamll.dto.OrderItemDto;
 import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.vo.OrderPostRequest;
 import cn.edu.xmu.oomall.vo.OrderPutRequest;
@@ -41,6 +44,7 @@ public class Order {
 	private Long originPrice;
 	private Long presaleId;
 	private Long grouponId;
+	private Long seckillId;
 	private Long grouponDiscount;
 	private Integer rebateNum;
 	private LocalDateTime confirmTime;
@@ -92,6 +96,34 @@ public class Order {
 		}
 	}
 
+	public void calcAndSetSubOrderDiscountPrice() {
+		if (subOrders == null) {
+			return;
+		}
+		for (Order subOrder : subOrders) {
+			Long t = 0L;
+			for (OrderItem oi : subOrder.orderItems) {
+				t += oi.getDiscount() == null ? 0L : oi.getDiscount();
+			}
+			subOrder.discountPrice = t;
+		}
+	}
+
+	public void calcAndSetParentDiscountPrice() {
+		Long t = 0L;
+		for (Order o : subOrders) {
+			t += o.discountPrice == null ? 0L : o.discountPrice;
+		}
+		discountPrice = t;
+	}
+
+	public void calcAndSetRebateNum(Integer rebate) {
+		rebateNum = rebate;
+		for (Order o : subOrders) {
+			o.rebateNum = (int) (1.0 * rebate * o.originPrice / originPrice);
+		}
+	}
+
 	public Integer calcAndGetRebate() {
 		if (originPrice == null) {
 			return 0;
@@ -101,9 +133,27 @@ public class Order {
 
 	public void setOrderStatus(OrderStatus status, boolean withSubOrder) {
 		state = status.value();
-		if (withSubOrder) {
+		if (withSubOrder && subOrders != null) {
 			for (Order o : getSubOrders()) {
 				o.setState(state);
+			}
+		}
+	}
+
+	public void setOrderType(OrderType type, boolean withSubOrder) {
+		orderType = type.value();
+		if (withSubOrder && subOrders != null) {
+			for (Order sub : subOrders) {
+				sub.setOrderType(type.value());
+			}
+		}
+	}
+
+	public void setCustomer(Customer c, boolean withSubOrder) {
+		customer = c;
+		if (withSubOrder && subOrders != null) {
+			for (Order sub : subOrders) {
+				sub.customer = c;
 			}
 		}
 	}
@@ -143,7 +193,7 @@ public class Order {
 		o.state = orderPo.getState();
 		o.subState = orderPo.getSubState();
 		o.beDeleted = orderPo.getBeDeleted();
-		o.gmtCreated = orderPo.getGmtCreated();
+		o.gmtCreated = orderPo.getGmtCreate();
 		o.gmtModified = orderPo.getGmtModified();
 		return o;
 	}
@@ -176,9 +226,60 @@ public class Order {
 			OrderItem noi = new OrderItem();
 			noi.setSkuId(oi.getSkuId());
 			noi.setQuantity(oi.getQuantity());
+			noi.setCouponActivityId(oi.getCouponActId());
 			o.orderItems.add(noi);
 		}
 
 		return o;
+	}
+
+	public OrderDto toOrderDto() {
+		OrderDto dto = new OrderDto();
+		dto.setId(id);
+		dto.setCustomerId(customer == null ? null : customer.getId());
+		dto.setShopId(shop == null ? null : shop.getId());
+		dto.setOrderSn(orderSn);
+
+		if (subOrders != null) {
+			List<OrderDto> sub = new ArrayList<>();
+			for (Order o : subOrders) {
+				OrderDto d = o.toOrderDto();
+				d.setCustomerId(dto.getCustomerId());
+				sub.add(d);
+			}
+			dto.setSubOrders(sub);
+		}
+
+		dto.setPid(pid);
+		dto.setConsignee(consignee);
+		dto.setRegionId(regionId);
+		dto.setAddress(address);
+		dto.setMobile(mobile);
+		dto.setMessage(message);
+		dto.setOrderType(orderType);
+		dto.setFreightPrice(freightPrice);
+		dto.setCouponId(couponId);
+		dto.setCouponActivityId(couponActivityId);
+		dto.setDiscountPrice(discountPrice);
+		dto.setOriginPrice(originPrice);
+		dto.setPresaleId(presaleId);
+		dto.setGrouponId(grouponId);
+		dto.setGrouponDiscount(grouponDiscount);
+		dto.setRebateNum(rebateNum);
+		dto.setConfirmTime(confirmTime);
+		dto.setShipmentSn(shipmentSn);
+		dto.setState(state);
+		dto.setSubState(subState);
+		dto.setBeDeleted(beDeleted);
+
+		if (orderItems != null) {
+			List<OrderItemDto> items = new ArrayList<>();
+			for (OrderItem oi : orderItems) {
+				items.add(oi.orderItemDto());
+			}
+			dto.setOrderItems(items);
+		}
+
+		return dto;
 	}
 }

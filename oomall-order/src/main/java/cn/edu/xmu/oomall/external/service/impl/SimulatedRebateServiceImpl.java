@@ -12,6 +12,6 @@ public class SimulatedRebateServiceImpl implements IRebateService {
 
 	@Override
 	public Integer useRebate(Long customerId, Integer num) {
-		return 1;
+		return num;
 	}
 }

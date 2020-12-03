@@ -29,8 +29,8 @@ public class DeleteFreightModelTest {
     private MockMvc mvc;
 
     @Test
-    public void cloneFreightModel() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/1/freightmodels/1"))
+    public void deleteFreightModel() throws Exception{
+        String responseString = this.mvc.perform(delete("/shops/1/freightmodels/200"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -39,4 +39,17 @@ public class DeleteFreightModelTest {
         String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+
+    @Test
+    public void deleteFreightModel1() throws Exception{
+        String responseString = this.mvc.perform(delete("/shops/1/freightmodels/9"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
 }

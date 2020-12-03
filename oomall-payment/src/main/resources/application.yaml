@@ -48,7 +48,6 @@ dubbo:
     port: 19400
 
 oomall:
-  producer:
-    freight-service: oomall-freight
-    seckill-service:
-      version: 0.0.1-SNAPSHOT
+  external:
+    payment-service:
+      name: SimplePaymentImpl

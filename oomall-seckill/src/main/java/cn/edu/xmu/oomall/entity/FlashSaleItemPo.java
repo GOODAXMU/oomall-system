@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 /**
  * @author xincong yao
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "good_flash_sale_item")
+@Table(name = "flash_sale_item")
 public class FlashSaleItemPo {
 
 	@Id
@@ -28,6 +29,10 @@ public class FlashSaleItemPo {
 	private Long price;
 
 	private Integer quantity;
+
+	private LocalDateTime gmtCreate;
+
+	private LocalDateTime gmtModified;
 
 	public FlashSaleItemPo(Long id, Integer quantity) {
 		this.id = id;

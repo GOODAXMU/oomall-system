@@ -1,13 +1,16 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import org.junit.Test;
+
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,15 +31,39 @@ public class CloneFreightModelTest {
     @Autowired
     private MockMvc mvc;
 
+    /**
+     * 测试克隆模板功能
+     * 资源不存在
+     *
+     * @throws Exception
+     */
     @Test
     public void cloneFreightModel() throws Exception{
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/clone"))
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone"))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false );
+    }
+
+    /**
+     * 测试克隆模板功能
+     * 成功
+     *
+     * @throws Exception
+     */
+    @Test
+    public void cloneFreightModel1() throws Exception{
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 }

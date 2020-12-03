@@ -46,8 +46,17 @@ public class SpecificationFactory {
 			if (payment.getOrderId() != null) {
 				predicates.add(builder.equal(root.get("orderId"), payment.getOrderId()));
 			}
+			if (payment.getAftersaleId() != null) {
+				predicates.add(builder.equal(root.get("aftersaleId"), payment.getAftersaleId()));
+			}
 			if (payment.getState() != null) {
 				predicates.add(builder.equal(root.get("state"), payment.getState()));
+			}
+			if (payment.getGmtCreated() != null) {
+				predicates.add(builder.equal(root.get("gmtCreated"), payment.getGmtCreated()));
+			}
+			if (payment.getGmtModified() != null) {
+				predicates.add(builder.equal(root.get("gmtModified"), payment.getGmtModified()));
 			}
 
 			return builder.and(predicates.toArray(new Predicate[0]));
@@ -67,11 +76,20 @@ public class SpecificationFactory {
 			if (refund.getPaySn() != null) {
 				predicates.add(builder.equal(root.get("paySn"), refund.getPaySn()));
 			}
-			if (refund.getBillId() != null) {
-				predicates.add(builder.equal(root.get("billId"), refund.getBillId()));
+			if (refund.getOrderId() != null) {
+				predicates.add(builder.equal(root.get("orderId"), refund.getOrderId()));
+			}
+			if (refund.getAftersaleId() != null) {
+				predicates.add(builder.equal(root.get("aftersaleId"), refund.getAftersaleId()));
 			}
 			if (refund.getState() != null) {
 				predicates.add(builder.equal(root.get("state"), refund.getState()));
+			}
+			if (refund.getGmtCreated() != null) {
+				predicates.add(builder.equal(root.get("gmtCreated"), refund.getGmtCreated()));
+			}
+			if (refund.getGmtModified() != null) {
+				predicates.add(builder.equal(root.get("gmtModified"), refund.getGmtModified()));
 			}
 
 			return builder.and(predicates.toArray(new Predicate[0]));

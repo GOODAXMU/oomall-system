@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public class SeckillResult {
 
-	private final static String statusIndex = "status";
+	private final static String STATUS = "status";
 
-	private final static String dataIndex = "data";
+	private final static String DATA = "data";
 
 	public static Map<String, Object> getResult(SeckillResponseStatus status) {
 		return getResult(status, null);
@@ -25,13 +25,13 @@ public class SeckillResult {
 
 	public static Map<String, Object> getResult(SeckillResponseStatus status, Object data) {
 		Map<String, Object> r = new HashMap<>(2);
-		r.put(statusIndex, status);
-		r.put(dataIndex, data);
+		r.put(STATUS, status);
+		r.put(DATA, data);
 		return r;
 	}
 
 	public static SeckillResponseStatus getStatus(Map<String, Object> map) {
-		Object o = map.get(statusIndex);
+		Object o = map.get(STATUS);
 		if (o instanceof SeckillResponseStatus) {
 			return (SeckillResponseStatus) o;
 		}
@@ -39,7 +39,7 @@ public class SeckillResult {
 	}
 
 	public static Object getData(Map<String, Object> map) {
-		return map.get(dataIndex);
+		return map.get(DATA);
 	}
 
 	@Data

@@ -11,6 +11,14 @@
 
     <artifactId>oomall-freight-common</artifactId>
     <version>0.0.1-SNAPSHOT</version>
+    <dependencies>
+        <dependency>
+            <groupId>cn.edu.xmu</groupId>
+            <artifactId>oomall-common</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+    </dependencies>
     <name>oomall-freight-common</name>
     <description>Object Oriented Mall Freight Common</description>
 

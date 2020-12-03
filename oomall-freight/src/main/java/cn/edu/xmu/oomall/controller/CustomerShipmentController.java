@@ -4,8 +4,6 @@ import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.service.FreightService;
 import cn.edu.xmu.oomall.vo.FreightCalculateRequest;
-import cn.edu.xmu.oomall.vo.FreightCalculateResponse;
-import cn.edu.xmu.oomall.vo.FreightModelSummaryGetResponse;
 import cn.edu.xmu.oomall.vo.Reply;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -27,7 +25,6 @@ import java.util.List;
 @Api(value = "供买家访问的运费api")
 @Validated
 @RestController
-@RequestMapping("/freightmodels")
 public class CustomerShipmentController {
 
     @Autowired
@@ -36,7 +33,7 @@ public class CustomerShipmentController {
     @ApiOperation(value = "计算一批商品的运费")
     @PostMapping(value = "/region/{rid}/price", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Reply<FreightCalculateResponse> calculateFreight(
+    public Reply<Long> calculateFreight(
             @Valid @RequestBody List<FreightCalculateRequest> items,
             @NotNull @Min(value = 0) @PathVariable Long rid) {
 
@@ -44,20 +41,18 @@ public class CustomerShipmentController {
         for (FreightCalculateRequest item : items) {
             purchaseItems.add(new PurchaseItem(item));
         }
-
-        FreightCalculateResponse freightCalculateResponse = new FreightCalculateResponse();
-        freightCalculateResponse.setFreight(freightService.calFreight(purchaseItems, rid).getData());
-        return new Reply<>(freightCalculateResponse);
+        return new Reply<>(freightService.calFreight(purchaseItems, rid).getData());
     }
 
     @ApiOperation(value = "获取运费模板概要")
-    @GetMapping(value = "/{id}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "freightmodels/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Reply getFreightModelSummary(
             @NotNull @Min(value = 0) @PathVariable Long id) {
         Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id);
-        if (!freightModelReply.isOk())
+        if (!freightModelReply.isOk()) {
             return freightModelReply;
+        }
         return new Reply<>(freightModelReply.getData().createSummaryGetResponse());
     }
 

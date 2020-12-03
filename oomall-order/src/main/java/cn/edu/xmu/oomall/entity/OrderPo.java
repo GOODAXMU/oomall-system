@@ -72,9 +72,14 @@ public class OrderPo {
 
 	private Integer beDeleted;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
+
+	public OrderPo(String orderSn, Long shopId) {
+		this.orderSn = orderSn;
+		this.shopId = shopId;
+	}
 
 	public static OrderPo toOrderPo(Order o) {
 		if (o == null) {
@@ -106,7 +111,7 @@ public class OrderPo {
 		po.setState(o.getState());
 		po.setSubState(o.getSubState());
 		po.setBeDeleted(o.getBeDeleted());
-		po.setGmtCreated(o.getGmtCreated());
+		po.setGmtCreate(o.getGmtCreated());
 		po.setGmtModified(o.getGmtModified());
 		return po;
 	}

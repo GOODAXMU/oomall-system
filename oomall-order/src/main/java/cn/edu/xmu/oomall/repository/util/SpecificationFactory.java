@@ -12,6 +12,7 @@ import java.util.List;
 /**
  * @author xincong yao
  * @date 2020-11-10
+ * @modified by Jianheng HUANG, date: 2020-11-27
  * <p>
  * 不支持根据id查询
  * 构造复杂对象来执行id查询性能低
@@ -137,11 +138,14 @@ public class SpecificationFactory {
 	}
 
 	public static Specification<OrderPo> get(
-			String orderSn, Integer state,
+			Long customerId, String orderSn, Integer state,
 			LocalDateTime beginTime, LocalDateTime endTime) {
 		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
 			List<Predicate> predicates = new ArrayList<>();
 
+			if (customerId != null) {
+				predicates.add(builder.equal(root.get("customerId"), customerId));
+			}
 			if (orderSn != null) {
 				predicates.add(builder.equal(root.get("orderSn"), orderSn));
 			}
@@ -159,4 +163,28 @@ public class SpecificationFactory {
 		};
 	}
 
+	public static Specification<OrderPo> get(
+			Long shopId, Long customerId, String orderSn,
+			LocalDateTime beginTime, LocalDateTime endTime) {
+		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+			if (shopId != null) {
+				predicates.add(builder.equal(root.get("shopId"), shopId));
+			}
+			if (customerId != null) {
+				predicates.add(builder.equal(root.get("customerId"), customerId));
+			}
+			if (orderSn != null) {
+				predicates.add(builder.equal(root.get("orderSn"), orderSn));
+			}
+			if (beginTime != null) {
+				predicates.add(builder.greaterThanOrEqualTo(root.get("gmtCreate"), beginTime));
+			}
+			if (endTime != null) {
+				predicates.add(builder.lessThanOrEqualTo(root.get("gmtCreate"), endTime));
+			}
+
+			return builder.and(predicates.toArray(new Predicate[0]));
+		};
+	}
 }

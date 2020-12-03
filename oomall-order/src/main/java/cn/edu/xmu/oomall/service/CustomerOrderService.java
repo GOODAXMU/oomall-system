@@ -2,11 +2,14 @@ package cn.edu.xmu.oomall.service;
 
 import cn.edu.xmu.oomall.bo.Customer;
 import cn.edu.xmu.oomall.bo.Order;
+import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
 import cn.edu.xmu.oomall.external.service.ICustomerService;
+import cn.edu.xmu.oomall.external.service.IFlashSaleService;
+import cn.edu.xmu.oomall.external.service.IShareService;
 import cn.edu.xmu.oomall.external.service.IShopService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
@@ -23,7 +26,7 @@ import java.util.List;
  * @date 2020-11-25
  */
 @Service
-public class OrderService {
+public class CustomerOrderService {
 
 	@Autowired
 	private ServiceFactory serviceFactory;
@@ -33,22 +36,27 @@ public class OrderService {
 
 	private ICustomerService customerService;
 	private IShopService shopService;
+	private IFlashSaleService flashSaleService;
+	private IShareService shareService;
 
 	@PostConstruct
 	public void init() {
 		customerService = (ICustomerService) serviceFactory.get(ICustomerService.class);
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
+		flashSaleService = (IFlashSaleService) serviceFactory.get(IFlashSaleService.class);
+		shareService = (IShareService) serviceFactory.get(IShareService.class);
 	}
 
-	public Reply<List<Order>> getOrders(String orderSn, Integer state,
-										LocalDateTime beginTime,
-										LocalDateTime endTime,
-										PageInfo pageInfo, Boolean withParent) {
-		return orderDao.getOrders(orderSn, state, beginTime, endTime, pageInfo, withParent);
+	public Reply<List<Order>> getOrders(
+			Long customerId, String orderSn, Integer state,
+			LocalDateTime beginTime,
+			LocalDateTime endTime,
+			PageInfo pageInfo, Boolean withParent) {
+		return orderDao.getOrders(customerId, orderSn, state, beginTime, endTime, pageInfo, withParent);
 	}
 
-	public Reply<Order> getOrderById(Long id) {
-		Reply<Order> r = orderDao.getOrderById(id);
+	public Reply<Order> getOrderByIdAndCustomerId(Long id, Long customerId) {
+		Reply<Order> r = orderDao.getOrderByIdAndCustomerId(id, customerId);
 		Order o = r.getData();
 		if (o == null) {
 			return r;
@@ -67,10 +75,10 @@ public class OrderService {
 		return orderDao.updateOrderDeliveryInformation(o);
 	}
 
-	public Reply<Object> deleteOrCancelSelfOrder(Long id) {
-		int s = orderDao.getOrderStateById(id);
+	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
+		int s = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
 
-		if (s == OrderStatus.COMPLETE.value()) {
+		if (s == OrderStatus.RECEIVED.value()) {
 			return orderDao.deleteSelfOrder(id);
 		} else if (s < OrderStatus.DELIVERED.value()) {
 			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value());
@@ -79,11 +87,32 @@ public class OrderService {
 		}
 	}
 
-	public Reply<Object> confirmOrder(Long id) {
+	public Reply<Object> confirmOrder(Long id, Long customerId) {
+		Reply<Order> r = orderDao.getOrderByIdAndCustomerId(id, customerId);
+		if (!r.isOk()) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+
+		Order order = r.getData();
+
+		// todo 沟通分享模块接口
+
+		// 添加分享记录
+		for (OrderItem oi : order.getOrderItems()) {
+			Long beSharedId = oi.getBeShareId();
+			if (beSharedId != null) {
+				shareService.sendShareMessage(oi);
+				oi.setBeShareId(beSharedId);
+			}
+		}
 		return orderDao.confirmOrder(id);
 	}
 
-	public Reply<Object> groupon2Normal(Long id) {
-		return orderDao.updateOrderType(id);
+	public Reply<Object> groupon2Normal(Long id, Long customerId) {
+		return orderDao.updateOrderType(id, customerId);
+	}
+
+	public Long getSeckillId(Long skuId) {
+		return flashSaleService.getSeckillId(skuId);
 	}
 }

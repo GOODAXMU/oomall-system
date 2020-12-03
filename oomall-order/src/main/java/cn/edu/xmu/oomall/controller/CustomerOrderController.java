@@ -1,9 +1,12 @@
 package cn.edu.xmu.oomall.controller;
 
 
+import cn.edu.xmu.oomall.annotation.Audit;
+import cn.edu.xmu.oomall.annotation.LoginUser;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.constant.OrderStatus;
-import cn.edu.xmu.oomall.service.OrderService;
+import cn.edu.xmu.oomall.service.IOrderService;
+import cn.edu.xmu.oomall.service.CustomerOrderService;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.*;
@@ -12,9 +15,14 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * @author xincong yao
@@ -26,8 +34,17 @@ import java.util.List;
 @RequestMapping("/orders")
 public class CustomerOrderController {
 
-    @Autowired
-    private OrderService orderService;
+	@Autowired
+	private CustomerOrderService customerOrderService;
+
+	@Resource(name = "normalOrderServiceImpl")
+	private IOrderService normalOrderService;
+	@Resource(name = "grouponOrderServiceImpl")
+	private IOrderService grouponOrderService;
+	@Resource(name = "seckillOrderServiceImpl")
+	private IOrderService seckillOrderService;
+	@Resource(name = "presaleOrderServiceImpl")
+	private IOrderService presaleOrderService;
 
 
 	@ApiOperation(value = "获得订单所有状态", produces = "application/json;charset=UTF-8")
@@ -49,6 +66,7 @@ public class CustomerOrderController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家查询名下订单（概要）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -68,21 +86,24 @@ public class CustomerOrderController {
 			@RequestParam(required = false) String beginTime,
 			@RequestParam(required = false) String endTime,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
-			@RequestParam(required = false, defaultValue = "20") Integer pageSize) {
+			@RequestParam(required = false, defaultValue = "20") Integer pageSize,
+			@LoginUser Long customerId) {
 		PageInfo pageInfo = new PageInfo(page, pageSize);
-        List<Order> os = orderService.getOrders(orderSn, state,
-                beginTime == null ? null : LocalDateTime.parse(beginTime),
-                endTime == null ? null : LocalDateTime.parse(endTime),
-                pageInfo, false).getData();
+		List<Order> os = customerOrderService.getOrders(
+				customerId, orderSn, state,
+				beginTime == null ? null : LocalDateTime.parse(beginTime),
+				endTime == null ? null : LocalDateTime.parse(endTime),
+				pageInfo, false).getData();
 
-        OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
-        vo.setSummaryList(os);
-        vo.setPageInfo(pageInfo);
+		OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
+		vo.setSummaryList(os);
+		vo.setPageInfo(pageInfo);
 
 		return new Reply<>(vo);
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家申请建立订单（普通，团购，预售）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -93,11 +114,28 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
-	public OrderDetailGetResponse createOrder(@RequestBody OrderPostRequest orderInfo) {
-		return null;
+	public Reply<OrderDetailGetResponse> createOrder(
+			@RequestBody @Valid OrderPostRequest request,
+			@LoginUser Long customerId
+	) throws InterruptedException, ExecutionException {
+		Order order = Order.toOrder(request);
+		order.getCustomer().setId(customerId);
+
+		IOrderService orderService = getOrderService(order);
+
+		Reply<Order> reply = orderService.createOrder(order);
+		if (!reply.isOk()) {
+			return new Reply<>(reply.getHttpStatus(), reply.getResponseStatus());
+		}
+
+		Order o = reply.getData();
+		OrderDetailGetResponse vo = new OrderDetailGetResponse();
+		vo.setAll(o);
+		return new Reply<>(vo);
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家查询订单完整信息（普通，团购，预售）", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -108,8 +146,10 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Reply<OrderDetailGetResponse> getOrderDetails(@PathVariable Long id) {
-		Reply<Order> r = orderService.getOrderById(id);
+	public Reply<OrderDetailGetResponse> getOrderDetails(
+			@PathVariable @NotNull @Min(value = 1) Long id,
+			@LoginUser Long customerId) {
+		Reply<Order> r = customerOrderService.getOrderByIdAndCustomerId(id, customerId);
 		Order o = r.getData();
 		if (o == null) {
 			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
@@ -122,6 +162,7 @@ public class CustomerOrderController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家修改本人名下订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -132,14 +173,19 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Reply<Object> updateSelfOrder(@RequestBody OrderPutRequest request, @PathVariable Long id) {
-		Order o =Order.toOrder(request);
+	public Reply<Object> updateSelfOrder(
+			@RequestBody @Valid OrderPutRequest request,
+			@PathVariable @NotNull @Min(value = 1) Long id,
+			@LoginUser Long customerId) {
+		Order o = Order.toOrder(request);
+		o.getCustomer().setId(customerId);
 		o.setId(id);
 		// todo 发货前仅允许修改一次
-		return orderService.updateOrderDeliveryInformation(o);
+		return customerOrderService.updateOrderDeliveryInformation(o);
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家删除本人名下订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -150,11 +196,14 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@DeleteMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Object deleteSelfOrder(@PathVariable Long id) {
-		return orderService.deleteOrCancelSelfOrder(id);
+	public Object deleteSelfOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id,
+			@LoginUser Long customerId) {
+		return customerOrderService.deleteOrCancelSelfOrder(id, customerId);
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家标记确认收货", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -165,11 +214,14 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping(value = "{id}/confirm", produces = "application/json;charset=UTF-8")
-	public Reply<Object> confirmOrder(@PathVariable Long id) {
-		return orderService.confirmOrder(id);
+	public Reply<Object> confirmOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id,
+			@LoginUser Long customerId) {
+		return customerOrderService.confirmOrder(id, customerId);
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家将团购订单转为普通订单", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -180,7 +232,30 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "{id}/groupon-normal", produces = "application/json;charset=UTF-8")
-	public Reply<Object> transferOrder(@PathVariable Long id) {
-		return orderService.groupon2Normal(id);
+	public Reply<Object> transferOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id,
+			@LoginUser Long customerId) {
+		return customerOrderService.groupon2Normal(id, customerId);
+	}
+
+	/**
+	 * 如果是秒杀活动, 为order设置seckillId
+	 *
+	 * @param order
+	 * @return
+	 */
+	private IOrderService getOrderService(Order order) {
+		if (order.getPresaleId() != null) {
+			return presaleOrderService;
+		}
+		if (order.getGrouponId() != null) {
+			return grouponOrderService;
+		}
+		if (order.getOrderItems().size() == 1) {
+			order.setSeckillId(customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId()));
+			return seckillOrderService;
+		}
+
+		return normalOrderService;
 	}
 }
