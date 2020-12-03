@@ -36,6 +36,7 @@
         <module>oomall-activity-common</module>
         <module>oomall-order-common</module>
         <module>oomall-order-consumer</module>
+        <module>oomall-gateway</module>
     </modules>
 
     <properties>

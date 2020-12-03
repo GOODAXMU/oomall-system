@@ -24,6 +24,7 @@ public class CustomerOrderControllerTest {
 	@Test
 	public void createNormalOrderTest() throws Exception {
 		String response = mvc.perform(post("/orders")
+				.header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"orderItems\": [{\"skuId\": 123213, \"quantity\": 12, \"couponActId\": 542342}, {\"skuId\": 123214, \"quantity\": 13, \"couponActId\": 542343}, {\"skuId\": 123215, \"quantity\": 14, \"couponActId\": 542344}, {\"skuId\": 123216, \"quantity\": 15, \"couponActId\": 542345}], \"consignee\": \"consigneeee\", \"regionId\": 100222, \"address\": \"addresssss\", \"mobile\": \"13333333\", \"message\": \"messageeeee\", \"couponId\": 123123}")
 				.contentType("application/json"))
 				.andExpect(status().isCreated())
@@ -38,6 +39,7 @@ public class CustomerOrderControllerTest {
 	@Test
 	public void createGrouponOrderTest() throws Exception {
 		String response = mvc.perform(post("/orders")
+				.header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"orderItems\": [{\"skuId\": 123213, \"quantity\": 12, \"couponActId\": 542342}, {\"skuId\": 123214, \"quantity\": 13, \"couponActId\": 542343}, {\"skuId\": 123215, \"quantity\": 14, \"couponActId\": 542344}, {\"skuId\": 123216, \"quantity\": 15, \"couponActId\": 542345}], \"consignee\": \"consigneeee\", \"regionId\": 100222, \"address\": \"addresssss\", \"mobile\": \"13333333\", \"message\": \"messageeeee\", \"couponId\": 123123, \"grouponId\": 12333}")
 				.contentType("application/json"))
 				.andExpect(status().isCreated())
@@ -52,6 +54,7 @@ public class CustomerOrderControllerTest {
 	@Test
 	public void createPresaleOrderTest() throws Exception {
 		String response = mvc.perform(post("/orders")
+				.header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"orderItems\": [{\"skuId\": 123213, \"quantity\": 12, \"couponActId\": 542342}, {\"skuId\": 123214, \"quantity\": 13, \"couponActId\": 542343}, {\"skuId\": 123215, \"quantity\": 14, \"couponActId\": 542344}, {\"skuId\": 123216, \"quantity\": 15, \"couponActId\": 542345}], \"consignee\": \"consigneeee\", \"regionId\": 100222, \"address\": \"addresssss\", \"mobile\": \"13333333\", \"message\": \"messageeeee\", \"couponId\": 123123, \"presaleId\": 12333}")
 				.contentType("application/json"))
 				.andExpect(status().isCreated())
@@ -67,6 +70,7 @@ public class CustomerOrderControllerTest {
 	public void createSeckillOrderTest() throws Exception {
 
 		String response = mvc.perform(post("/orders")
+				.header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"orderItems\": [{\"skuId\": 1, \"quantity\": 1566, \"couponActId\": 542345}], \"consignee\": \"consigneeee\", \"regionId\": 100222, \"address\": \"addresssss\", \"mobile\": \"13333333\", \"message\": \"messageeeee\", \"couponId\": 123123}")
 				.contentType("application/json"))
 				.andExpect(status().isCreated())
@@ -91,7 +95,7 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void getAllOrdersTest() throws Exception {
-		String response = mvc.perform(get("/orders"))
+		String response = mvc.perform(get("/orders").header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
@@ -102,7 +106,7 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void getOrderDetailsTest() throws Exception {
-		String response = mvc.perform(get("/orders/{id}", 1L))
+		String response = mvc.perform(get("/orders/{id}", 1L).header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
@@ -116,6 +120,7 @@ public class CustomerOrderControllerTest {
 	@Test
 	public void updateSelfOrderTest() throws Exception {
 		String response = mvc.perform(put("/orders/{id}", 1L)
+				.header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"consignee\": \"consigneeeee\",\"regionId\": 100,\"address\": \"xiamen\",\"mobile\": \"1334567890\"}").contentType("application/json"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -128,7 +133,7 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void deleteSelfOrder() throws Exception {
-		String response = mvc.perform(delete("/orders/{id}", 1L))
+		String response = mvc.perform(delete("/orders/{id}", 1L).header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
@@ -140,7 +145,7 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void confirmOrderTest() throws Exception {
-		String response = mvc.perform(put("/orders/{id}/confirm", 1L))
+		String response = mvc.perform(put("/orders/{id}/confirm", 1L).header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
@@ -152,7 +157,7 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void transferOrderTest() throws Exception {
-		String response = mvc.perform(post("/orders/{id}/groupon-normal", 1L))
+		String response = mvc.perform(post("/orders/{id}/groupon-normal", 1L).header("authentication", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
