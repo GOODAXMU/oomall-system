@@ -40,7 +40,7 @@ public class OrderItemPo {
 
 	private Long beShareId;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
 }

@@ -15,6 +15,9 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -106,7 +109,9 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
-	public Reply<OrderDetailGetResponse> createOrder(@RequestBody OrderPostRequest request) throws InterruptedException, ExecutionException {
+	public Reply<OrderDetailGetResponse> createOrder(
+			@RequestBody @Valid OrderPostRequest request
+	) throws InterruptedException, ExecutionException {
 		Order order = Order.toOrder(request);
 
 		IOrderService orderService = getOrderService(order);
@@ -133,7 +138,8 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Reply<OrderDetailGetResponse> getOrderDetails(@PathVariable Long id) {
+	public Reply<OrderDetailGetResponse> getOrderDetails(
+			@PathVariable @NotNull @Min(value = 1) Long id) {
 		Reply<Order> r = customerOrderService.getOrderById(id);
 		Order o = r.getData();
 		if (o == null) {
@@ -157,7 +163,9 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Reply<Object> updateSelfOrder(@RequestBody OrderPutRequest request, @PathVariable Long id) {
+	public Reply<Object> updateSelfOrder(
+			@RequestBody @Valid OrderPutRequest request,
+			@PathVariable @NotNull @Min(value = 1) Long id) {
 		Order o =Order.toOrder(request);
 		o.setId(id);
 		// todo 发货前仅允许修改一次
@@ -175,7 +183,8 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@DeleteMapping(value = "{id}", produces = "application/json;charset=UTF-8")
-	public Object deleteSelfOrder(@PathVariable Long id) {
+	public Object deleteSelfOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id) {
 		return customerOrderService.deleteOrCancelSelfOrder(id);
 	}
 
@@ -190,7 +199,8 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@PutMapping(value = "{id}/confirm", produces = "application/json;charset=UTF-8")
-	public Reply<Object> confirmOrder(@PathVariable Long id) {
+	public Reply<Object> confirmOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id) {
 		return customerOrderService.confirmOrder(id);
 	}
 
@@ -205,7 +215,8 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "{id}/groupon-normal", produces = "application/json;charset=UTF-8")
-	public Reply<Object> transferOrder(@PathVariable Long id) {
+	public Reply<Object> transferOrder(
+			@PathVariable @NotNull @Min(value = 1) Long id) {
 		return customerOrderService.groupon2Normal(id);
 	}
 
@@ -214,7 +225,7 @@ public class CustomerOrderController {
 	 * @param order
 	 * @return
 	 */
-	public IOrderService getOrderService(Order order) {
+	private IOrderService getOrderService(Order order) {
 		if (order.getPresaleId() != null) {
 			return presaleOrderService;
 		}
