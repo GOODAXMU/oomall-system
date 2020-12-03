@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.entity;
 
+import cn.edu.xmu.oomall.bo.WeightFreightModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,5 +45,19 @@ public class WeightFreightModelPo {
 	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
+
+	public WeightFreightModelPo(WeightFreightModel weightFreightModel){
+		id=weightFreightModel.getId();
+		freightModelId=weightFreightModel.getFreightModelId();
+		firstWeight=weightFreightModel.getFirstWeight();
+		firstWeightFreight=weightFreightModel.getFirstWeightFreight();
+		tenPrice=weightFreightModel.getTenPrice();
+		fiftyPrice=weightFreightModel.getFiftyPrice();
+		hundredPrice=weightFreightModel.getHundredPrice();
+		trihunPrice=weightFreightModel.getTrihunPrice();
+		abovePrice=weightFreightModel.getAbovePrice();
+		regionId=weightFreightModel.getRid();
+		gmtModified=LocalDateTime.now();
+	}
 
 }

@@ -39,7 +39,7 @@ public class SpecificationFactory {
 				predicates.add(builder.equal(root.get("weightUnit"), freightModel.getWeightUnit()));
 			}
             if (freightModel.getGmtCreate() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), freightModel.getGmtCreate()));
+                predicates.add(builder.equal(root.get("gmtCreate"), freightModel.getGmtCreate()));
             }
             if (freightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), freightModel.getGmtModified()));
@@ -80,7 +80,7 @@ public class SpecificationFactory {
                 predicates.add(builder.equal(root.get("regionId"), weightFreightModel.getRegionId()));
             }
             if (weightFreightModel.getGmtCreate() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), weightFreightModel.getGmtCreate()));
+                predicates.add(builder.equal(root.get("gmtCreate"), weightFreightModel.getGmtCreate()));
             }
             if (weightFreightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), weightFreightModel.getGmtModified()));
@@ -112,7 +112,7 @@ public class SpecificationFactory {
                 predicates.add(builder.equal(root.get("regionId"), pieceFreightModel.getRegionId()));
             }
             if (pieceFreightModel.getGmtCreate() != null) {
-                predicates.add(builder.equal(root.get("gmtCreated"), pieceFreightModel.getGmtCreate()));
+                predicates.add(builder.equal(root.get("gmtCreate"), pieceFreightModel.getGmtCreate()));
             }
             if (pieceFreightModel.getGmtModified() != null) {
                 predicates.add(builder.equal(root.get("gmtModified"), pieceFreightModel.getGmtModified()));

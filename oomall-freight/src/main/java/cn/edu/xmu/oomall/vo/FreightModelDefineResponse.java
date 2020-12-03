@@ -18,4 +18,5 @@ public class FreightModelDefineResponse {
     private Integer defaultModel;
     private String gmtCreate;
     private String gmtModified;
+
 }

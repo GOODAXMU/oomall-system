@@ -33,7 +33,7 @@ public class FreightModel {
 
     private Long unit;
 
-    private LocalDateTime gmtCreated;
+    private LocalDateTime gmtCreate;
 
     private LocalDateTime gmtModified;
 
@@ -49,7 +49,7 @@ public class FreightModel {
         shopId = freightModelPo.getShopId();
         unit = freightModelPo.getWeightUnit();
         isDefault = freightModelPo.getDefaultModel();
-        gmtCreated = freightModelPo.getGmtCreate();
+        gmtCreate = freightModelPo.getGmtCreate();
         gmtModified = freightModelPo.getGmtModified();
     }
 
@@ -84,7 +84,7 @@ public class FreightModel {
         freightModelPo.setId(id);
         freightModelPo.setShopId(shopId);
         freightModelPo.setDefaultModel(isDefault);
-        freightModelPo.setGmtCreate(gmtCreated);
+        freightModelPo.setGmtCreate(gmtCreate);
         freightModelPo.setGmtModified(gmtModified);
         freightModelPo.setName(name);
         freightModelPo.setType(type);
@@ -109,7 +109,7 @@ public class FreightModel {
     public FreightModelSummaryGetResponse createSummaryGetResponse(){
         FreightModelSummaryGetResponse freightModelSummaryGetResponse = new FreightModelSummaryGetResponse();
         freightModelSummaryGetResponse.setDefaultModel(isDefault);
-        freightModelSummaryGetResponse.setGmtCreate(gmtCreated);
+        freightModelSummaryGetResponse.setGmtCreate(gmtCreate);
         freightModelSummaryGetResponse.setGmtModified(gmtModified);
         freightModelSummaryGetResponse.setId(id);
         freightModelSummaryGetResponse.setName(name);
@@ -120,7 +120,7 @@ public class FreightModel {
     public FreightModelCloneResponse createCloneResponse(){
         FreightModelCloneResponse freightModelCloneResponse = new FreightModelCloneResponse();
         freightModelCloneResponse.setDefaultModel(isDefault);
-        freightModelCloneResponse.setGmtCreate(gmtCreated);
+        freightModelCloneResponse.setGmtCreate(gmtCreate);
         freightModelCloneResponse.setGmtModified(gmtModified);
         freightModelCloneResponse.setId(id);
         freightModelCloneResponse.setName(name);
