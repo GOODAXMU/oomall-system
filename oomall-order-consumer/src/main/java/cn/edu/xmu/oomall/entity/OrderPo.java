@@ -1,6 +1,6 @@
 package cn.edu.xmu.oomall.entity;
 
-import cn.edu.xmu.ooamll.dto.OrderDto;
+import cn.edu.xmu.oomall.dto.OrderDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

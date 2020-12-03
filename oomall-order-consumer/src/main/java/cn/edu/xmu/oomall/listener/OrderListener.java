@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.listener;
 
-import cn.edu.xmu.ooamll.dto.OrderDto;
-import cn.edu.xmu.ooamll.dto.OrderItemDto;
+import cn.edu.xmu.oomall.dto.OrderDto;
+import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
