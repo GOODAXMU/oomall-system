@@ -27,7 +27,8 @@ import java.util.Optional;
  * @date 2020-11-17
  * @modified by Jianheng HUANG, date: 2020-11-27
  * @modified by Jianheng HUANG, date: 2020-11-29
- * TODO: 用户和店家的权限检查
+ * @modified by xincong yao, date: 2020-12-3
+ * TODO: 店家的权限检查
  */
 @Component
 public class OrderDao {
@@ -42,12 +43,12 @@ public class OrderDao {
         return order;
     }
 
-    public Reply<List<Order>> getOrders(String orderSn, Integer state,
+    public Reply<List<Order>> getOrders(Long customerId, String orderSn, Integer state,
                                         LocalDateTime beginTime, LocalDateTime endTime,
                                         PageInfo pageInfo, Boolean withParent) {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
-                SpecificationFactory.get(orderSn, state, beginTime, endTime),
+                SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime),
                 PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
 
         pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
@@ -90,9 +91,9 @@ public class OrderDao {
         return new Reply<>(orders);
     }
 
-    public Reply<Order> getOrderById(Long id) {
-        Optional<OrderPo> orderPo = orderRepository.findById(id);
-        Order o = Order.toOrder(orderPo.orElse(null));
+    public Reply<Order> getOrderByIdAndCustomerId(Long id, Long customerId) {
+        OrderPo t = orderRepository.findByIdAndCustomerId(id, customerId);
+        Order o = Order.toOrder(t);
         if (o == null) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
@@ -231,9 +232,9 @@ public class OrderDao {
         }
     }
 
-    public Reply<Object> updateOrderType(Long id) {
+    public Reply<Object> updateOrderType(Long id, Long customerId) {
         int r = orderRepository.updateGroupon2NormalWhenStateLessThan(
-                id, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
+                id, customerId, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -242,8 +243,8 @@ public class OrderDao {
         }
     }
 
-    public int getOrderStateById(Long id) {
-        return orderRepository.findOrderStateById(id);
+    public int getOrderStateByIdAndCustomerId(Long id, Long customerId) {
+        return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
     }
 
     public Reply<Object> updateOrderState(Long id, Integer state) {

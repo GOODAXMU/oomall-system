@@ -47,15 +47,16 @@ public class CustomerOrderService {
 		shareService = (IShareService) serviceFactory.get(IShareService.class);
 	}
 
-	public Reply<List<Order>> getOrders(String orderSn, Integer state,
-										LocalDateTime beginTime,
-										LocalDateTime endTime,
-										PageInfo pageInfo, Boolean withParent) {
-		return orderDao.getOrders(orderSn, state, beginTime, endTime, pageInfo, withParent);
+	public Reply<List<Order>> getOrders(
+			Long customerId, String orderSn, Integer state,
+			LocalDateTime beginTime,
+			LocalDateTime endTime,
+			PageInfo pageInfo, Boolean withParent) {
+		return orderDao.getOrders(customerId, orderSn, state, beginTime, endTime, pageInfo, withParent);
 	}
 
-	public Reply<Order> getOrderById(Long id) {
-		Reply<Order> r = orderDao.getOrderById(id);
+	public Reply<Order> getOrderByIdAndCustomerId(Long id, Long customerId) {
+		Reply<Order> r = orderDao.getOrderByIdAndCustomerId(id, customerId);
 		Order o = r.getData();
 		if (o == null) {
 			return r;
@@ -74,8 +75,8 @@ public class CustomerOrderService {
 		return orderDao.updateOrderDeliveryInformation(o);
 	}
 
-	public Reply<Object> deleteOrCancelSelfOrder(Long id) {
-		int s = orderDao.getOrderStateById(id);
+	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
+		int s = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
 
 		if (s == OrderStatus.RECEIVED.value()) {
 			return orderDao.deleteSelfOrder(id);
@@ -86,8 +87,8 @@ public class CustomerOrderService {
 		}
 	}
 
-	public Reply<Object> confirmOrder(Long id) {
-		Reply<Order> r = orderDao.getOrderById(id);
+	public Reply<Object> confirmOrder(Long id, Long customerId) {
+		Reply<Order> r = orderDao.getOrderByIdAndCustomerId(id, customerId);
 		if (!r.isOk()) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
@@ -107,8 +108,8 @@ public class CustomerOrderService {
 		return orderDao.confirmOrder(id);
 	}
 
-	public Reply<Object> groupon2Normal(Long id) {
-		return orderDao.updateOrderType(id);
+	public Reply<Object> groupon2Normal(Long id, Long customerId) {
+		return orderDao.updateOrderType(id, customerId);
 	}
 
 	public Long getSeckillId(Long skuId) {

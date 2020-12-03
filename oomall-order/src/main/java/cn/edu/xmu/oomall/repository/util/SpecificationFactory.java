@@ -138,11 +138,14 @@ public class SpecificationFactory {
 	}
 
 	public static Specification<OrderPo> get(
-			String orderSn, Integer state,
+			Long customerId, String orderSn, Integer state,
 			LocalDateTime beginTime, LocalDateTime endTime) {
 		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
 			List<Predicate> predicates = new ArrayList<>();
 
+			if (customerId != null) {
+				predicates.add(builder.equal(root.get("customerId"), customerId));
+			}
 			if (orderSn != null) {
 				predicates.add(builder.equal(root.get("orderSn"), orderSn));
 			}
