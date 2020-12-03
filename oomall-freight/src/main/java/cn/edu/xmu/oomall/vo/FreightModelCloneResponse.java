@@ -17,7 +17,7 @@ public class FreightModelCloneResponse {
     private Long id;
     private String name;
     private Integer type;
-    private Boolean defaultModel;
+    private Integer defaultModel;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 }

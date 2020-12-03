@@ -41,7 +41,7 @@ public class WeightFreightModelPo {
 
 	private Long regionId;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
 

@@ -29,7 +29,7 @@ public class FreightModel {
 
     private Integer type;
 
-    private Boolean isDefault;
+    private Integer isDefault;
 
     private Long unit;
 
@@ -49,7 +49,7 @@ public class FreightModel {
         shopId = freightModelPo.getShopId();
         unit = freightModelPo.getWeightUnit();
         isDefault = freightModelPo.getDefaultModel();
-        gmtCreated = freightModelPo.getGmtCreated();
+        gmtCreated = freightModelPo.getGmtCreate();
         gmtModified = freightModelPo.getGmtModified();
     }
 
@@ -84,7 +84,7 @@ public class FreightModel {
         freightModelPo.setId(id);
         freightModelPo.setShopId(shopId);
         freightModelPo.setDefaultModel(isDefault);
-        freightModelPo.setGmtCreated(gmtCreated);
+        freightModelPo.setGmtCreate(gmtCreated);
         freightModelPo.setGmtModified(gmtModified);
         freightModelPo.setName(name);
         freightModelPo.setType(type);
