@@ -118,4 +118,7 @@ public interface OrderRepository extends
 	OrderPo findOrderSnAndShopIdById(Long orderId);
 
 	OrderPo findByIdAndCustomerId(Long id, Long customerId);
+
+	@Query(value = "SELECT o.customerId FROM OrderPo o WHERE o.id = :id")
+	Long findCustomerIdById(Long id);
 }

@@ -252,8 +252,11 @@ public class CustomerOrderController {
 			return grouponOrderService;
 		}
 		if (order.getOrderItems().size() == 1) {
-			order.setSeckillId(customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId()));
-			return seckillOrderService;
+			Long seckillId = customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId());
+			if (seckillId != null && seckillId >= 0) {
+				order.setSeckillId(seckillId);
+				return seckillOrderService;
+			}
 		}
 
 		return normalOrderService;

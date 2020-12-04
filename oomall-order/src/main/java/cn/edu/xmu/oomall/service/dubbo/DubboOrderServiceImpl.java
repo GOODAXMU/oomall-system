@@ -45,4 +45,16 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 		return dto;
 	}
+
+	@Override
+	public Boolean isCustomerOwnOrderItem(Long customerId, Long orderItemId) {
+		Long orderId = orderItemRepository.findOrderIdById(orderItemId);
+		if (orderId == null) {
+			return false;
+		}
+
+		Long cId = orderRepository.findCustomerIdById(orderId);
+
+		return cId != null && cId.equals(customerId);
+	}
 }
