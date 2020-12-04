@@ -5,7 +5,6 @@ import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.service.FreightService;
 import org.junit.Assert;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,7 +19,6 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @SpringBootTest(classes = OomallOrderFreightApplication.class)
 @Transactional
-@RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
 public class CalActivityFreightTest {
     @Autowired
@@ -37,5 +35,7 @@ public class CalActivityFreightTest {
         Long rid = Long.valueOf(200);
         Long result = freightService.calActivityFreight(purchaseItem,rid).getData();
         Assert.assertEquals(result,Long.valueOf(11));
+
+
     }
 }

@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.annotation.LoginUser;
 import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.service.FreightService;
@@ -35,7 +36,8 @@ public class CustomerShipmentController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public Reply<Long> calculateFreight(
             @Valid @RequestBody List<FreightCalculateRequest> items,
-            @NotNull @Min(value = 0) @PathVariable Long rid) {
+            @NotNull @Min(value = 0) @PathVariable Long rid,
+            @LoginUser Long userId) {
 
         List<PurchaseItem> purchaseItems = new ArrayList<PurchaseItem>();
         for (FreightCalculateRequest item : items) {

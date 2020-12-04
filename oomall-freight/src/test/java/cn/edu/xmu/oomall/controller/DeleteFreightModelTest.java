@@ -30,7 +30,7 @@ public class DeleteFreightModelTest {
 
     @Test
     public void deleteFreightModel() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/1/freightmodels/1"))
+        String responseString = this.mvc.perform(delete("/shops/1/freightmodels/200"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()

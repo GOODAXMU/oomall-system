@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.entity;
 
+import cn.edu.xmu.oomall.bo.PieceFreightModel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,8 +35,17 @@ public class PieceFreightModelPo {
 
 	private Long regionId;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
+
+	public PieceFreightModelPo(PieceFreightModel pieceFreightModel){
+		id = pieceFreightModel.getId();
+		firstItems = pieceFreightModel.getFirstItem();
+		firstItemsPrice = pieceFreightModel.getAdditionalItemsPrice();
+		additionalItems = pieceFreightModel.getAdditionalItems();
+		regionId = pieceFreightModel.getRid();
+		gmtModified = LocalDateTime.now();
+	}
 
 }

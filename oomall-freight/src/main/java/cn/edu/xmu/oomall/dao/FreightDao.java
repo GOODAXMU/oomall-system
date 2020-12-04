@@ -12,8 +12,9 @@ import cn.edu.xmu.oomall.repository.PieceModelRepository;
 import cn.edu.xmu.oomall.repository.WeightModelRepository;
 import cn.edu.xmu.oomall.repository.util.SpecificationFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
-import cn.edu.xmu.oomall.vo.Reply;
+import cn.edu.xmu.oomall.vo.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhibin lan
@@ -115,7 +119,7 @@ public class FreightDao {
 
         FreightModelPo freightModelPo = freightModel.createPo();
         freightModelPo.setGmtModified(LocalDateTime.now());
-        freightModelPo.setGmtCreated(LocalDateTime.now());
+        freightModelPo.setGmtCreate(LocalDateTime.now());
         Reply reply = new Reply<FreightModel>();
         //判断模板名是否重复
         if (isFreightModelNameExit(freightModelPo.getName())) {
@@ -231,14 +235,9 @@ public class FreightDao {
      * @return
      */
     public Reply deleteWeightFreightModel(Long id) {
-        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
-        weightFreightModelPo.setFreightModelId(id);
-        try {
-            weightModelRepository.delete(weightFreightModelPo);
-        } catch (Exception e) {
-            log.debug("删除失败: " + e.getMessage());
-            return new Reply(ResponseStatus.INTERNAL_SERVER_ERR);
-        }
+        int res = weightModelRepository.delete(id);
+        if (res == 0)
+            return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         return new Reply(ResponseStatus.OK);
     }
 
@@ -249,13 +248,9 @@ public class FreightDao {
      * @return
      */
     public Reply deletePieceFreightModel(Long id) {
-        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
-        pieceFreightModelPo.setFreightModelId(id);
-        try {
-            pieceModelRepository.delete(pieceFreightModelPo);
-        } catch (Exception e) {
-            log.debug("删除失败: " + e.getMessage());
-            return new Reply(ResponseStatus.INTERNAL_SERVER_ERR);
+        int res = pieceModelRepository.delete(id);
+        if (res == 0) {
+            return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         return new Reply(ResponseStatus.OK);
     }
@@ -271,7 +266,7 @@ public class FreightDao {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setId(id);
-        freightModelPo.setDefaultModel(true);
+        freightModelPo.setDefaultModel(1);
         int ret = freightModelRepository.update(freightModelPo);
         if (ret <= 0) {
             log.debug("设置默认运费模板失败: " + ret);
@@ -279,4 +274,136 @@ public class FreightDao {
         }
         return new Reply(ResponseStatus.OK);
     }
+
+    /**
+     * 定义重量运费模板
+     *
+     * @param WeightFreightModel
+     * @return WeightFreightModel
+     */
+    public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel WeightFreightModel) {
+        WeightFreightModelPo WeightFreightModelPo = new WeightFreightModelPo(WeightFreightModel);
+        WeightFreightModelPo.setGmtModified(LocalDateTime.now());
+        WeightFreightModelPo.setGmtCreate(LocalDateTime.now());
+
+        Reply<WeightFreightModel> reply = new Reply<>();
+        try {
+            reply.setData(new WeightFreightModel(weightModelRepository.saveAndFlush(WeightFreightModelPo)));
+            log.debug("insert data: " + reply.getData());
+        } catch (Exception e) {
+            log.debug("数据库错误: " + e.getMessage());
+            return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
+        }
+        return reply;
+    }
+
+    /**
+     * 通过运费模板id查询重量运费模板
+     *
+     * @param id 运费模板id
+     * @return WeightFreightModel
+     */
+    public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModelByFreightModelId(Long id) {
+        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
+        weightFreightModelPo.setFreightModelId(id);
+        List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo));
+        if (weightFreightModelPos.isEmpty())
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        return new Reply<>(new WeightFreightModelQueryResponse().WeightFreightModelQueryResponseListTransfer(weightFreightModelPos));
+    }
+
+    /**
+     * 通过运费模板id查询计件运费模板
+     *
+     * @param id 运费模板id
+     * @return PieceFreightModel
+     */
+    public Reply<List<PieceFreightQueryResponse>> getPieceFreightModelByFreightModelId(Long id) {
+        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
+        pieceFreightModelPo.setFreightModelId(id);
+        List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo));
+        if (pieceFreightModelPos.isEmpty())
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        return new Reply<>(new PieceFreightQueryResponse(pieceFreightModelPo).PieceFreightQueryResponseListTransfer(pieceFreightModelPos));
+    }
+
+    /**
+     * 修改重量运费模板
+     *
+     * @param weightFreightModel
+     */
+
+    public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel) {
+        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
+        int res = weightModelRepository.update(weightFreightModelPo);
+        if (res == 0)
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+
+        return new Reply<>(ResponseStatus.OK);
+    }
+
+    /**
+     * 修改计件运费模板
+     *
+     * @param pieceFreightModel
+     */
+    public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel) {
+        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
+        pieceFreightModelPo.setGmtCreate(LocalDateTime.now());
+        int res = pieceModelRepository.update(pieceFreightModelPo);
+        if (res <= 0)
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        return new Reply<>(ResponseStatus.OK);
+    }
+
+    /**
+     * 通过重量运费模板id查询重量运费模板
+     *
+     * @param id 重量运费模板id
+     * @return WeightFreightModel
+     */
+    public Reply<WeightFreightModel> getWeightFreightModelById(Long id) {
+        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
+        weightFreightModelPo.setId(id);
+        List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo));
+        Reply<WeightFreightModel> reply = new Reply<>(new WeightFreightModel(weightFreightModelPos.get(0)));
+        return reply;
+    }
+
+    /**
+     * 定义计件运费模板
+     *
+     * @param pieceFreightModel
+     * @return PieceFreightModel
+     */
+    public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel) {
+        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
+        pieceFreightModelPo.setGmtModified(LocalDateTime.now());
+        pieceFreightModelPo.setGmtCreate(LocalDateTime.now());
+        Reply reply = new Reply<PieceFreightModel>();
+        try {
+            reply.setData(new PieceFreightModel(pieceModelRepository.saveAndFlush(pieceFreightModelPo)));
+            log.debug("insert data: " + reply.getData());
+        } catch (Exception e) {
+            log.debug("数据库错误: " + e.getMessage());
+            return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
+        }
+        return reply;
+    }
+
+    /**
+     * 通过计件运费模板id查询计件运费模板
+     *
+     * @param id 计件运费模板id
+     * @return WeightFreightModel
+     */
+    public Reply<PieceFreightModel> getPieceFreightModelById(Long id) {
+        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
+        pieceFreightModelPo.setId(id);
+        List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo));
+        Reply<PieceFreightModel> reply = new Reply<>(new PieceFreightModel(pieceFreightModelPos.get(0)));
+        return reply;
+    }
+
+
 }

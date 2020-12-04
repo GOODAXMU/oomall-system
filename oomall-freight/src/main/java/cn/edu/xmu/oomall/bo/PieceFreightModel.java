@@ -1,9 +1,13 @@
 package cn.edu.xmu.oomall.bo;
 
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
+import cn.edu.xmu.oomall.vo.PieceItemRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhibin lan
@@ -39,4 +43,28 @@ public class PieceFreightModel {
         additionalItemsPrice = pieceFreightModelPo.getAdditionalItemsPrice();
     }
 
+    /**
+     * 构造函数
+     * @param pieceFreightModelinfo Po对象,id Long
+     */
+    public PieceFreightModel(PieceItemRequest pieceFreightModelInfo,Long id){
+        this.id = id;
+        rid = pieceFreightModelInfo.getRegionId();
+        firstItem = pieceFreightModelInfo.getFirstItem();
+        firstItemPrice = pieceFreightModelInfo.getFirstItemPrice();
+        additionalItems = pieceFreightModelInfo.getAdditionalItems();
+        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemPrice();
+    }
+
+    /**
+     *
+     * @param pieceFreightModelPos Po对象列表
+     */
+    public List<PieceFreightModel> pieceFreightModelPoListToBoList(List<PieceFreightModelPo> pieceFreightModelPos){
+        List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
+        for(PieceFreightModelPo w: pieceFreightModelPos){
+            pieceFreightModels.add(new PieceFreightModel(w));
+        }
+        return pieceFreightModels;
+    }
 }

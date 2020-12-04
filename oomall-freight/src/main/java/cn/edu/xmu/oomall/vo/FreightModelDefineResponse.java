@@ -15,7 +15,8 @@ public class FreightModelDefineResponse {
     private Long id;
     private String name;
     private Integer type;
-    private Boolean defaultModel;
+    private Integer defaultModel;
     private String gmtCreate;
     private String gmtModified;
+
 }
