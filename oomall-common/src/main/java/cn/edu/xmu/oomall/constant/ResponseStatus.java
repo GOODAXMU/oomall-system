@@ -29,6 +29,7 @@ public enum ResponseStatus {
 	FREIGHT_NAME_EXIST(802,"运费模板名重复"),
 	REGION_EXIST(803,"运费模板中该地区已经定义"),
 	REFUND_EXCESS(804,"退款金额超过支付金额"),
+	REGION_NOT_REACH(805,"该地区不可达"),
 
 
 	/******************************
