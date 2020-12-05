@@ -200,6 +200,7 @@ public class Order {
 
 	public static Order toOrder(OrderPutRequest vo) {
 		Order o = new Order();
+		o.setCustomer(new Customer());
 		o.setConsignee(vo.getConsignee());
 		o.setAddress(vo.getAddress());
 		o.setMobile(vo.getMobile());

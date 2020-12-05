@@ -180,7 +180,6 @@ public class CustomerOrderController {
 		Order o = Order.toOrder(request);
 		o.getCustomer().setId(customerId);
 		o.setId(id);
-		// todo 发货前仅允许修改一次
 		return customerOrderService.updateOrderDeliveryInformation(o);
 	}
 
