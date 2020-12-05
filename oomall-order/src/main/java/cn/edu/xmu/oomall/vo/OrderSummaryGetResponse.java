@@ -8,8 +8,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.ZoneOffset;
-import java.time.temporal.ChronoField;
-import java.time.temporal.TemporalField;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class OrderSummaryGetResponse {
         private Integer subState;
         private Long gmtCreate;
 
-        private Long originalPrice;
+        private Long originPrice;
         private Long discountPrice;
         private Long freightPrice;
     }
@@ -69,7 +67,7 @@ public class OrderSummaryGetResponse {
             summary.setState(o.getState());
             summary.setSubState(o.getSubState());
             summary.setGmtCreate(o.getGmtCreated().toEpochSecond(ZoneOffset.UTC));
-            summary.setOriginalPrice(o.getOriginPrice());
+            summary.setOriginPrice(o.getOriginPrice());
             summary.setDiscountPrice(o.getDiscountPrice());
             summary.setFreightPrice(o.getFreightPrice());
 

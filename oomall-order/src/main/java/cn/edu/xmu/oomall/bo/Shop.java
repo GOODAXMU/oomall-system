@@ -14,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class Shop {
 	private Long id;
 	private String name;
+	private Integer state;
 	private String gmtCreateTime;
 	private String gmtModiTime;
 
