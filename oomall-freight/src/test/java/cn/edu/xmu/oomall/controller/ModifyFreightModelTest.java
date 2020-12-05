@@ -1,8 +1,10 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
+import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
 import cn.edu.xmu.oomall.vo.FreightModelPutRequest;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -26,17 +28,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@Slf4j
 public class ModifyFreightModelTest {
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void modifyFreightModel() throws Exception{
+        String token = creatTestToken(1L,1L,1000);
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试名");
         freightModelPutRequest.setUnit(Long.valueOf(500));
         String json = JSON.toJSONString(freightModelPutRequest);
-        String responseString = this.mvc.perform(put("/shops/1/freightmodels/200")
+        String responseString = this.mvc.perform(put("/shops/1/freightmodels/200").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())
@@ -50,11 +54,12 @@ public class ModifyFreightModelTest {
 
     @Test
     public void modifyFreightModel1() throws Exception{
+        String token = creatTestToken(1L,1L,1000);
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试名");
         freightModelPutRequest.setUnit(Long.valueOf(550));
         String json = JSON.toJSONString(freightModelPutRequest);
-        String responseString = this.mvc.perform(put("/shops/1/freightmodels/9")
+        String responseString = this.mvc.perform(put("/shops/1/freightmodels/9").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())
@@ -68,11 +73,12 @@ public class ModifyFreightModelTest {
 
     @Test
     public void modifyFreightModel2() throws Exception{
+        String token = creatTestToken(1L,1L,1000);
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试模板");
         freightModelPutRequest.setUnit(Long.valueOf(550));
         String json = JSON.toJSONString(freightModelPutRequest);
-        String responseString = this.mvc.perform(put("/shops/1/freightmodels/9")
+        String responseString = this.mvc.perform(put("/shops/1/freightmodels/9").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())
@@ -82,5 +88,12 @@ public class ModifyFreightModelTest {
                 .getContentAsString();
         String expectedResponse = "{\"code\":802,\"message\":\"运费模板名重复\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+
+    private final String creatTestToken(Long userId, Long departId, int expireTime) {
+        String token = new JwtHelper().createToken(userId, departId, expireTime);
+        log.debug(token);
+        return token;
     }
 }

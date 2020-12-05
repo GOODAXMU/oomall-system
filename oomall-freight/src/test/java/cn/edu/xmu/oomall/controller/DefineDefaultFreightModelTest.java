@@ -1,6 +1,8 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
+import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -24,6 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@Slf4j
 public class DefineDefaultFreightModelTest {
     @Autowired
     private MockMvc mvc;
@@ -35,7 +38,8 @@ public class DefineDefaultFreightModelTest {
      */
     @Test
     public void defineDefaultFreightModel() throws Exception {
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/default"))
+        String token = creatTestToken(1L,1L,1000);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/default").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -52,7 +56,8 @@ public class DefineDefaultFreightModelTest {
      */
     @Test
     public void defineDefaultFreightModel1() throws Exception {
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/default"))
+        String token = creatTestToken(1L,1L,1000);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/default").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -60,5 +65,11 @@ public class DefineDefaultFreightModelTest {
                 .getContentAsString();
         String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    private final String creatTestToken(Long userId, Long departId, int expireTime) {
+        String token = new JwtHelper().createToken(userId, departId, expireTime);
+        log.debug(token);
+        return token;
     }
 }

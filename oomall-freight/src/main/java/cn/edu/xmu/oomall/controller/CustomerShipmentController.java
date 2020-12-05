@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.annotation.Audit;
+import cn.edu.xmu.oomall.annotation.Depart;
 import cn.edu.xmu.oomall.annotation.LoginUser;
 import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PurchaseItem;
@@ -36,8 +38,7 @@ public class CustomerShipmentController {
     @ResponseStatus(value = HttpStatus.CREATED)
     public Reply<Long> calculateFreight(
             @Valid @RequestBody List<FreightCalculateRequest> items,
-            @NotNull @Min(value = 0) @PathVariable Long rid,
-            @LoginUser Long userId) {
+            @NotNull @Min(value = 0) @PathVariable Long rid) {
 
         List<PurchaseItem> purchaseItems = new ArrayList<PurchaseItem>();
         for (FreightCalculateRequest item : items) {
@@ -49,9 +50,11 @@ public class CustomerShipmentController {
     @ApiOperation(value = "获取运费模板概要")
     @GetMapping(value = "freightmodels/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
+    @Audit
     public Reply getFreightModelSummary(
-            @NotNull @Min(value = 0) @PathVariable Long id) {
-        Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id);
+            @NotNull @Min(value = 0) @PathVariable Long id,
+            @Depart Long shopId) {
+        Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id,shopId);
         if (!freightModelReply.isOk()) {
             return freightModelReply;
         }
