@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.service.FreightService;
 import org.junit.Assert;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2020-11-24
  */
 @SpringBootTest(classes = OomallOrderFreightApplication.class)
+@RunWith(SpringRunner.class)
 @Transactional
 @AutoConfigureMockMvc
 public class CalActivityFreightTest {

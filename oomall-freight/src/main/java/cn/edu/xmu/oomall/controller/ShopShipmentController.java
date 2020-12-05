@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.annotation.Audit;
+import cn.edu.xmu.oomall.annotation.Depart;
 import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PieceFreightModel;
 import cn.edu.xmu.oomall.bo.WeightFreightModel;
@@ -49,7 +51,7 @@ public class ShopShipmentController {
     }
 
 
-    @ApiOperation(value = "获得店铺中商品的运费模板")
+    @ApiOperation(value = "获得店铺中所有的运费模板")
     @GetMapping(value = "/shops/{id}/freightmodels", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Reply<FreightModelGetResponse> getFreightModels(
@@ -69,6 +71,7 @@ public class ShopShipmentController {
     @ApiOperation(value = "管理员克隆店铺的运费模板")
     @PostMapping(value = "/shops/{shopId}/freightmodels/{id}/clone", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
+    @Audit
     public Reply<FreightModelCloneResponse> cloneFreightModel(
             @NotNull @Min(value = 0) @PathVariable Long id,
             @NotNull @Min(value = 0) @PathVariable Long shopId) {

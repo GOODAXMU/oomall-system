@@ -1,6 +1,8 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
+import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -23,13 +25,15 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@Slf4j
 public class GetFreightModelTest {
     @Autowired
     private MockMvc mvc;
 
     @Test
     public void getFreightModels() throws Exception{
-        String responseString = this.mvc.perform(get("/shops/1/freightmodels"))
+        String token = creatTestToken(1L,1L,1000);
+        String responseString = this.mvc.perform(get("/shops/1/freightmodels").header("authorization",token))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -39,4 +43,9 @@ public class GetFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    private final String creatTestToken(Long userId, Long departId, int expireTime) {
+        String token = new JwtHelper().createToken(userId, departId, expireTime);
+        log.debug(token);
+        return token;
+    }
 }
