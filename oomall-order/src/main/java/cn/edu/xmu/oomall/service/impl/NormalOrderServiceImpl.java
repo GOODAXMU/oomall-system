@@ -66,6 +66,14 @@ public class NormalOrderServiceImpl implements IOrderService {
 		CompletableFuture<Map<Long, Long>> activity
 				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
 
+		// 设置订单的客户
+		Long customerId = order.getCustomer().getId();
+		Customer customer = customerService.getCustomer(customerId);
+		if (customer == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setCustomer(customer, true);
+
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
 		if (orderItems.size() == 0) {
@@ -91,14 +99,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 		CompletableFuture<Map<Long, Long>> discount
 				= discountService.calcDiscountAsynchronous(
 				order.getOrderItems());
-
-		// 设置订单的客户
-		Long customerId = order.getCustomer().getId();
-		Customer customer = customerService.getCustomer(customerId);
-		if (customer == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
-		order.setCustomer(customer, true);
 
 		// 分配订单流水号
 		for (Order subOrder : order.getSubOrders()) {
@@ -148,10 +148,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 		}
 
 		// 订单写入消息队列
-		List<OrderItem> oi = order.getOrderItems();
-		order.setOrderItems(null);
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
-		order.setOrderItems(oi);
 
 		return new Reply<>(order);
 	}

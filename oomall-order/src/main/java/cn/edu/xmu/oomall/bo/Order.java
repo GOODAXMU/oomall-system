@@ -273,14 +273,6 @@ public class Order {
 		dto.setSubState(subState);
 		dto.setBeDeleted(beDeleted);
 
-		if (orderItems != null) {
-			List<OrderItemDto> items = new ArrayList<>();
-			for (OrderItem oi : orderItems) {
-				items.add(oi.orderItemDto());
-			}
-			dto.setOrderItems(items);
-		}
-
 		return dto;
 	}
 }

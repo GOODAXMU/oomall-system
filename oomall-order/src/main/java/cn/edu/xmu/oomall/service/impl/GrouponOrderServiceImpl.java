@@ -38,6 +38,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 	private IShopService shopService;
 	private IFreightService freightService;
 	private IGoodsService goodsService;
+	private IShareService shareService;
 
 	private static final String TOPIC = "order";
 
@@ -48,6 +49,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		goodsService = (IGoodsService) serviceFactory.get(IGoodsService.class);
+		shareService = (IShareService) serviceFactory.get(IShareService.class);
 	}
 
 	@Override
@@ -91,6 +93,14 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, false);
 		order.setOrderType(OrderType.GROUPON, false);
+
+		// 设置分享记录
+		for (OrderItem oi : order.getOrderItems()) {
+			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
+			if (beSharedId != null) {
+				oi.setBeShareId(beSharedId);
+			}
+		}
 
 		// 获取并设置运费
 		order.setFreightPrice(freights.get());
