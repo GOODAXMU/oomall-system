@@ -12,6 +12,8 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -44,8 +46,8 @@ public class ShopOrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @GetMapping(value = "/{shopId}/orders", produces = "application/json;charset=UTF-8")
     public Reply<OrderSummaryGetResponse> getAllShopOrders(
-            @PathVariable Long shopId,
-            @RequestParam(required = false) Long customerId,
+            @PathVariable @Min(value = 1) Long shopId,
+            @RequestParam(required = false) @Min(value = 1) Long customerId,
             @RequestParam(required = false) String orderSn,
             @RequestParam(required = false) String beginTime,
             @RequestParam(required = false) String endTime,
@@ -65,23 +67,6 @@ public class ShopOrderController {
         return new Reply<>(vo);
     }
 
-    @ApiOperation(value = "管理员建立售后订单。")
-    @ApiImplicitParams({
-            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能操作本商铺)", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "ShopPostRequest", name = "orderInfo", value = "指定新订单的资料", required = true)
-    })
-    @ApiResponses({
-            @ApiResponse(code = 0, message = "成功"),
-    })
-    @ResponseStatus(value = HttpStatus.CREATED)
-    @PostMapping(value = "/{shopId}/orders", produces = "application/json;charset=UTF-8")
-    public OrderDetailGetResponse createShopOrder(
-            @PathVariable Long shopId,
-            @RequestBody ShopOrderPostRequest orderInfo) {
-
-        return null;
-    }
 
     @ApiOperation(value = "店家修改订单 (留言)。")
     @ApiImplicitParams({
@@ -94,8 +79,8 @@ public class ShopOrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @PutMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
     public Reply<Object> addShopOrderMessage(
-            @PathVariable Long shopId,
-            @PathVariable Long id,
+            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 1) Long id,
             @RequestBody ShopOrderMessageAddRequest orderInfo) {
         String message=orderInfo.getMessage();
         return shopOrderService.addShopOrderMessage(shopId, id, message);
@@ -115,8 +100,8 @@ public class ShopOrderController {
 	@ResponseStatus(value = HttpStatus.OK)
 	//API标准 v1.0.6 返回类型有误
     public Reply<OrderDetailGetResponse> getShopOrderDetails(
-            @PathVariable Long shopId,
-            @PathVariable Long id) {
+            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 1) Long id) {
     	Reply<Order> r=shopOrderService.getShopOrderById(shopId, id);
         Order o = r.getData();
         if (o == null) {
@@ -141,8 +126,8 @@ public class ShopOrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @DeleteMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
     public Reply<Object> cancelShopOrder(
-            @PathVariable Long shopId,
-            @PathVariable Long id) {
+            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 1) Long id) {
         return shopOrderService.cancelShopOrder(shopId, id);
     }
 
@@ -160,8 +145,8 @@ public class ShopOrderController {
     @ResponseStatus(value = HttpStatus.OK)
     @PutMapping(value = "/{shopId}/orders/{id}/deliver", produces = "application/json;charset=UTF-8")
     public Reply<Object> markShopOrderDeliver(
-            @PathVariable Long shopId,
-            @PathVariable Long id,
+            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 1) Long id,
             @RequestBody ShopOrderDeliverPutRequest body) {
         String sn= body.getFreightSn();
         return shopOrderService.markShopOrderDelivered(shopId, id, sn);
