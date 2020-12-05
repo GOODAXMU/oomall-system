@@ -111,8 +111,8 @@ public class ShopOrderController {
 	@ApiResponses({
 			@ApiResponse(code = 0, message = "成功"),
 	})
-    @ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
+	@ResponseStatus(value = HttpStatus.OK)
 	//API标准 v1.0.6 返回类型有误
     public Reply<OrderDetailGetResponse> getShopOrderDetails(
             @PathVariable Long shopId,

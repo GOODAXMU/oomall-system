@@ -1,8 +1,10 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
+import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
 import cn.edu.xmu.oomall.vo.FreightModelDefineRequest;
 import com.alibaba.fastjson.JSON;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -26,6 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@Slf4j
 public class DefineFreightModelTest {
     @Autowired
     private MockMvc mvc;
@@ -37,12 +40,13 @@ public class DefineFreightModelTest {
      */
     @Test
     public void defineFreightModel() throws Exception {
+        String token = creatTestToken(1L,1L,100);
         FreightModelDefineRequest freightModelDefineRequest = new FreightModelDefineRequest();
         freightModelDefineRequest.setName("测试名");
         freightModelDefineRequest.setType(0);
         freightModelDefineRequest.setUnit(Long.valueOf(500));
         String json = JSON.toJSONString(freightModelDefineRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -61,12 +65,13 @@ public class DefineFreightModelTest {
      */
     @Test
     public void defineFreightModel1() throws Exception {
+        String token = creatTestToken(1L,1L,1000);
         FreightModelDefineRequest freightModelDefineRequest = new FreightModelDefineRequest();
         freightModelDefineRequest.setName("测试模板");
         freightModelDefineRequest.setType(0);
         freightModelDefineRequest.setUnit(Long.valueOf(500));
         String json = JSON.toJSONString(freightModelDefineRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -78,4 +83,9 @@ public class DefineFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    private final String creatTestToken(Long userId, Long departId, int expireTime) {
+        String token = new JwtHelper().createToken(userId, departId, expireTime);
+        log.debug(token);
+        return token;
+    }
 }

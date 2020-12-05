@@ -37,6 +37,7 @@
         <module>oomall-order-common</module>
         <module>oomall-order-consumer</module>
         <module>oomall-gateway</module>
+        <module>oomall-test</module>
     </modules>
 
     <properties>

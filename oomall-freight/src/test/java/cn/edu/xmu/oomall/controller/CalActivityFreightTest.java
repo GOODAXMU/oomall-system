@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
  * @date 2020-11-24
  */
 @SpringBootTest(classes = OomallOrderFreightApplication.class)
-@Transactional
 @RunWith(SpringRunner.class)
+@Transactional
 @AutoConfigureMockMvc
 public class CalActivityFreightTest {
     @Autowired
@@ -37,5 +37,7 @@ public class CalActivityFreightTest {
         Long rid = Long.valueOf(200);
         Long result = freightService.calActivityFreight(purchaseItem,rid).getData();
         Assert.assertEquals(result,Long.valueOf(11));
+
+
     }
 }

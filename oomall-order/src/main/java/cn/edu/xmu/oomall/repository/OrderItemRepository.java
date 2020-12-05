@@ -34,4 +34,7 @@ public interface OrderItemRepository extends
 
 	List<OrderItemPo> findByOrderId(Long id);
 
+	@Query(value = "SELECT o.orderId FROM OrderItemPo o WHERE o.id = :id")
+	Long findOrderIdById(Long id);
+
 }

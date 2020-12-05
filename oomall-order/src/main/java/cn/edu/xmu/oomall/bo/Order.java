@@ -200,6 +200,7 @@ public class Order {
 
 	public static Order toOrder(OrderPutRequest vo) {
 		Order o = new Order();
+		o.setCustomer(new Customer());
 		o.setConsignee(vo.getConsignee());
 		o.setAddress(vo.getAddress());
 		o.setMobile(vo.getMobile());
@@ -271,14 +272,6 @@ public class Order {
 		dto.setState(state);
 		dto.setSubState(subState);
 		dto.setBeDeleted(beDeleted);
-
-		if (orderItems != null) {
-			List<OrderItemDto> items = new ArrayList<>();
-			for (OrderItem oi : orderItems) {
-				items.add(oi.orderItemDto());
-			}
-			dto.setOrderItems(items);
-		}
 
 		return dto;
 	}

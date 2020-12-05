@@ -1,13 +1,18 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import org.junit.Test;
+
+import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -24,6 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Transactional
 @RunWith(SpringRunner.class)
 @AutoConfigureMockMvc
+@Slf4j
 public class CloneFreightModelTest {
     @Autowired
     private MockMvc mvc;
@@ -36,7 +42,8 @@ public class CloneFreightModelTest {
      */
     @Test
     public void cloneFreightModel() throws Exception{
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone"))
+        String token = creatTestToken(1L,1L,1000);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -54,7 +61,8 @@ public class CloneFreightModelTest {
      */
     @Test
     public void cloneFreightModel1() throws Exception{
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone"))
+        String token = creatTestToken(1L,1L,1000);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -62,5 +70,11 @@ public class CloneFreightModelTest {
                 .getContentAsString();
         String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    private final String creatTestToken(Long userId, Long departId, int expireTime) {
+        String token = new JwtHelper().createToken(userId, departId, expireTime);
+        log.debug(token);
+        return token;
     }
 }

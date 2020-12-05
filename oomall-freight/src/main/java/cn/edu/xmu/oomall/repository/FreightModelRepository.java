@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.sql.SQLIntegrityConstraintViolationException;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
@@ -28,8 +30,8 @@ public interface FreightModelRepository extends
 			"THEN fm.type ELSE :#{#freightModel.type} END, " +
 			"fm.weightUnit = CASE WHEN :#{#freightModel.weightUnit} IS NULL " +
 			"THEN fm.weightUnit ELSE :#{#freightModel.weightUnit} END, " +
-			"fm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
-			"THEN fm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
+			"fm.gmtCreate = CASE WHEN :#{#freightModel.gmtCreate} IS NULL " +
+			"THEN fm.gmtCreate ELSE :#{#freightModel.gmtCreate} END, " +
 			"fm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +
 			"THEN fm.gmtModified ELSE :#{#freightModel.gmtModified} END " +
 			"WHERE fm.id = :#{#freightModel.id}")

@@ -28,7 +28,7 @@ public class OrderDetailGetResponse {
 	private static class Customer {
 		private Long id;
 		private String userName;
-		private String realName;
+		private String name;
 
 		static Customer toCustomer(cn.edu.xmu.oomall.bo.Customer c) {
 			if (c == null) {
@@ -36,7 +36,7 @@ public class OrderDetailGetResponse {
 			}
 			Customer customer = new Customer();
 			customer.setId(c.getId());
-			customer.setRealName(c.getRealName());
+			customer.setName(c.getRealName());
 			customer.setUserName(c.getUserName());
 			return customer;
 		}
@@ -48,6 +48,7 @@ public class OrderDetailGetResponse {
 	private static class Shop {
 		private Long id;
 		private String name;
+		private Integer state;
 		private String gmtCreate;
 		private String gmtModified;
 
@@ -58,6 +59,7 @@ public class OrderDetailGetResponse {
 			Shop shop = new Shop();
 			shop.setId(s.getId());
 			shop.setName(s.getName());
+			shop.setState(s.getState());
 			shop.setGmtCreate(s.getGmtCreateTime());
 			shop.setGmtModified(s.getGmtModiTime());
 			return shop;
@@ -74,8 +76,8 @@ public class OrderDetailGetResponse {
 		private Integer quantity;
 		private Long price;
 		private Long discount;
-		private Long couponActivityId;
-		private Long beShareId;
+		private Long couponActId;
+		private Long beSharedId;
 
 		static OrderItem toOrderItem(cn.edu.xmu.oomall.bo.OrderItem oi) {
 			if (oi == null) {
@@ -88,8 +90,8 @@ public class OrderDetailGetResponse {
 			r.setQuantity(oi.getQuantity());
 			r.setPrice(oi.getPrice());
 			r.setDiscount(oi.getDiscount());
-			r.setCouponActivityId(oi.getCouponActivityId());
-			r.setBeShareId(oi.getBeShareId());
+			r.setCouponActId(oi.getCouponActivityId());
+			r.setBeSharedId(oi.getBeShareId());
 			return r;
 		}
 	}

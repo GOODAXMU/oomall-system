@@ -180,7 +180,6 @@ public class CustomerOrderController {
 		Order o = Order.toOrder(request);
 		o.getCustomer().setId(customerId);
 		o.setId(id);
-		// todo 发货前仅允许修改一次
 		return customerOrderService.updateOrderDeliveryInformation(o);
 	}
 
@@ -252,8 +251,11 @@ public class CustomerOrderController {
 			return grouponOrderService;
 		}
 		if (order.getOrderItems().size() == 1) {
-			order.setSeckillId(customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId()));
-			return seckillOrderService;
+			Long seckillId = customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId());
+			if (seckillId != null && seckillId >= 0) {
+				order.setSeckillId(seckillId);
+				return seckillOrderService;
+			}
 		}
 
 		return normalOrderService;

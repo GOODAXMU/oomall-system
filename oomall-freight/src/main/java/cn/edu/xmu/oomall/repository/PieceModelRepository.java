@@ -29,11 +29,16 @@ public interface PieceModelRepository extends
 			"THEN pfm.additionalItemsPrice ELSE :#{#pieceFreightModel.additionalItemsPrice} END, " +
 			"pfm.regionId = CASE WHEN :#{#pieceFreightModel.regionId} IS NULL " +
 			"THEN pfm.regionId ELSE :#{#pieceFreightModel.regionId} END ," +
-			"pfm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
-			"THEN pfm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
-			"pfm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +
-			"THEN pfm.gmtModified ELSE :#{#freightModel.gmtModified} END " +
+			"pfm.gmtCreate = CASE WHEN :#{#pieceFreightModel.gmtCreate} IS NULL " +
+			"THEN pfm.gmtCreate ELSE :#{#pieceFreightModel.gmtCreate} END, " +
+			"pfm.gmtModified = CASE WHEN :#{#pieceFreightModel.gmtModified} IS NULL " +
+			"THEN pfm.gmtModified ELSE :#{#pieceFreightModel.gmtModified} END " +
 			"WHERE pfm.id = :#{#pieceFreightModel.id}")
 	int update(PieceFreightModelPo pieceFreightModel);
+
+	@Modifying
+	@Transactional
+	@Query(value = "DELETE FROM PieceFreightModelPo pfm where pfm.freightModelId=:freightModelId" )
+	int delete(Long freightModelId);
 
 }

@@ -76,7 +76,11 @@ public class CustomerOrderService {
 	}
 
 	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
-		int s = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
+		Integer s = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
+
+		if (s == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
 
 		if (s == OrderStatus.RECEIVED.value()) {
 			return orderDao.deleteSelfOrder(id);

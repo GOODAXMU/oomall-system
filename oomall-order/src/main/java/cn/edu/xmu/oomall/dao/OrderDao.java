@@ -134,9 +134,7 @@ public class OrderDao {
 
     public Reply<Object> updateOrderDeliveryInformation(Order o) {
         OrderPo po = OrderPo.toOrderPo(o);
-        if (po == null) {
-            return new Reply<>(ResponseStatus.INTERNAL_SERVER_ERR);
-        }
+        po.setGmtModified(LocalDateTime.now());
 
         int r = orderRepository.updateWhenStateLessThan(
                 po, OrderStatus.DELIVERED.value());
@@ -173,9 +171,9 @@ public class OrderDao {
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-        } else {
-            return new Reply<>(ResponseStatus.OK);
         }
+
+        return new Reply<>(ResponseStatus.OK);
     }
 
     public Reply<Object> confirmOrder(Long id) {
@@ -243,14 +241,16 @@ public class OrderDao {
         }
     }
 
-    public int getOrderStateByIdAndCustomerId(Long id, Long customerId) {
+    public Integer getOrderStateByIdAndCustomerId(Long id, Long customerId) {
         return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
     }
 
     public Reply<Object> updateOrderState(Long id, Integer state) {
         int r = orderRepository.updateOrderState(id, state);
 
-        // todo 数据库返回值校验
+        if (r <= 0) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
 
         return new Reply<>(ResponseStatus.OK);
     }

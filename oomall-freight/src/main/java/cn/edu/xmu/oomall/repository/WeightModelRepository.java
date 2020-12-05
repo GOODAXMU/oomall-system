@@ -36,10 +36,15 @@ public interface WeightModelRepository extends
 			"THEN wfm.abovePrice ELSE :#{#weightFreightModel.abovePrice} END, " +
 			"wfm.regionId = CASE WHEN :#{#weightFreightModel.regionId} IS NULL " +
 			"THEN wfm.regionId ELSE :#{#weightFreightModel.regionId} END ," +
-			"wfm.gmtCreated = CASE WHEN :#{#freightModel.gmtCreated} IS NULL " +
-			"THEN wfm.gmtCreated ELSE :#{#freightModel.gmtCreated} END, " +
-			"wfm.gmtModified = CASE WHEN :#{#freightModel.gmtModified} IS NULL " +
-			"THEN wfm.gmtModified ELSE :#{#freightModel.gmtModified} END " +
+			"wfm.gmtCreate = CASE WHEN :#{#weightFreightModel.gmtCreate} IS NULL " +
+			"THEN wfm.gmtCreate ELSE :#{#weightFreightModel.gmtCreate} END, " +
+			"wfm.gmtModified = CASE WHEN :#{#weightFreightModel.gmtModified} IS NULL " +
+			"THEN wfm.gmtModified ELSE :#{#weightFreightModel.gmtModified} END " +
 			"WHERE wfm.id = :#{#weightFreightModel.id}")
 	int update(WeightFreightModelPo weightFreightModel);
+
+	@Modifying
+	@Transactional
+	@Query(value = "DELETE FROM WeightFreightModelPo wfm where wfm.freightModelId=:freightModelId" )
+	int delete(Long freightModelId);
 }

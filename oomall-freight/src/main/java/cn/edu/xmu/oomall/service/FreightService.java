@@ -128,6 +128,7 @@ public class FreightService {
 
         String key = prifix + delimiter + purchaseItem.getSkuId() + delimiter + rid;
         if (!redisTemplate.hasKey(key)) {
+            log.debug("not in redis");
             //redis中未存储则计算运费
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(purchaseItem.getSkuId())).getData();
             purchaseItem.setWeight(goodService.getGoodsSkuWeightById(purchaseItem.getSkuId()) * freightModel.getUnit());
@@ -150,6 +151,7 @@ public class FreightService {
             redisTemplate.expire(key, 3, TimeUnit.MINUTES);
             return new Reply<>(freight);
         }
+        log.debug("in redis");
         return new Reply<>(Long.parseLong((redisTemplate.opsForValue().get(key)).toString()));
     }
 
@@ -180,6 +182,18 @@ public class FreightService {
      */
     public Reply<List<FreightModel>> findAllFreightModels(PageInfo pageInfo, String name, Long shopId) {
         return freightDao.findAllFreightModels(pageInfo, name, shopId);
+    }
+
+    /**
+     * 查询指定运费模板
+     *
+     * @param id
+     * @param shopId
+     * @return
+     * @author zhibin lan
+     */
+    public Reply<FreightModel> getFreightModelById(Long id, Long shopId) {
+        return freightDao.getFreightModelById(id, shopId);
     }
 
     /**
@@ -227,7 +241,7 @@ public class FreightService {
      * @author zhibin lan
      */
     public Reply deleteFreightModel(Long id, Long shopId) {
-        Reply reply = freightDao.deleteFreightModel(id);
+        Reply reply = freightDao.deleteFreightModel(id, shopId);
         if (!reply.isOk()) {
             return reply;
         }

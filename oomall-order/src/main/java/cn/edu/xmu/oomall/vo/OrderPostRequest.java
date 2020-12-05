@@ -45,7 +45,7 @@ public class OrderPostRequest {
     @NotEmpty
     private String consignee;
     @NotNull
-    @Size(min = 1)
+    @Min(value = 1)
     private Long regionId;
     @NotEmpty
     private String address;
