@@ -105,12 +105,17 @@ public class FreightDao {
      * @return
      * @author zhibin lan
      */
-    public WeightFreightModel getWeightFreightModel(FreightModel freightModel) {
+    public Reply<WeightFreightModel> getWeightFreightModel(FreightModel freightModel) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
         weightFreightModelPo.setFreightModelId(freightModel.getId());
         weightFreightModelPo.setRegionId(freightModel.getRid());
-        WeightFreightModel weightFreightModel = new WeightFreightModel(weightModelRepository.findOne(SpecificationFactory.get(weightFreightModelPo)).get());
-        return weightFreightModel;
+        WeightFreightModel weightFreightModel;
+        try {
+            weightFreightModel = new WeightFreightModel(weightModelRepository.findOne(SpecificationFactory.get(weightFreightModelPo)).get());
+        } catch (NoSuchElementException e) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
+        return new Reply<>(weightFreightModel);
     }
 
     /**
@@ -120,13 +125,18 @@ public class FreightDao {
      * @return
      * @author zhibin lan
      */
-    public PieceFreightModel getPieceFreightModel(FreightModel freightModel) {
+    public Reply<PieceFreightModel> getPieceFreightModel(FreightModel freightModel) {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
         pieceFreightModelPo.setFreightModelId(freightModel.getId());
         pieceFreightModelPo.setRegionId(freightModel.getRid());
-        PieceFreightModel pieceFreightModel = new PieceFreightModel(
-                pieceModelRepository.findOne(SpecificationFactory.get(pieceFreightModelPo)).get());
-        return pieceFreightModel;
+        PieceFreightModel pieceFreightModel;
+        try {
+            pieceFreightModel = new PieceFreightModel(
+                    pieceModelRepository.findOne(SpecificationFactory.get(pieceFreightModelPo)).get());
+        } catch (NoSuchElementException e) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
+        return new Reply<>(pieceFreightModel);
     }
 
     /**
@@ -315,8 +325,9 @@ public class FreightDao {
      */
     public Reply deleteWeightFreightModel(Long id) {
         int res = weightModelRepository.delete(id);
-        if (res == 0)
+        if (res == 0) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         return new Reply(ResponseStatus.OK);
     }
 

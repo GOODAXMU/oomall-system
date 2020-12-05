@@ -35,7 +35,7 @@ public class FreightServiceImpl implements IFreightService {
             purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
         }
         Reply<Long> r = freightService.calFreight(purchaseItems, rid);
-        return r.getData() == null ? 0L : r.getData();
+        return r.getData() == null ? -1L : r.getData();
     }
 
     /**
@@ -50,7 +50,7 @@ public class FreightServiceImpl implements IFreightService {
         purchaseItem.setCount(calculateFreightRequest.getCount());
         purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
         Reply<Long> r = freightService.calActivityFreight(purchaseItem, rid);
-        return r.getData() == null ? 0L : r.getData();
+        return r.getData() == null ? -1L : r.getData();
     }
 
 

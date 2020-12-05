@@ -99,15 +99,19 @@ public class FreightService {
         for (FreightModel freightModel : freightModels) {
             freightModel.setRid(rid);
             if (freightModel.getType() == weightModel) {
-                WeightFreightModel weightFreightModel = freightDao.getWeightFreightModel(freightModel);
-                if (null != weightFreightModel) {
-                    weightFreightModels.add(weightFreightModel);
+                Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
+                if (!reply.isOk()) {
+                    return new Reply<>(reply.getResponseStatus());
                 }
+                WeightFreightModel weightFreightModel = reply.getData();
+                weightFreightModels.add(weightFreightModel);
             } else if (freightModel.getType() == pieceModel) {
-                PieceFreightModel pieceFreightModel = freightDao.getPieceFreightModel(freightModel);
-                if (null != pieceFreightModel) {
-                    pieceFreightModels.add(pieceFreightModel);
+                Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
+                if (!reply.isOk()) {
+                    return new Reply<>(reply.getResponseStatus());
                 }
+                PieceFreightModel pieceFreightModel = reply.getData();
+                pieceFreightModels.add(pieceFreightModel);
             }
         }
 
@@ -140,15 +144,22 @@ public class FreightService {
 
             Long freight = Long.valueOf(0);
             if (freightModel.getType() == weightModel) {
-                WeightFreightModel weightFreightModel = freightDao.getWeightFreightModel(freightModel);
+                Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
+                if (!reply.isOk()) {
+                    return new Reply<>(reply.getResponseStatus());
+                }
+                WeightFreightModel weightFreightModel = reply.getData();
                 freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
-
             } else if (freightModel.getType() == pieceModel) {
-                PieceFreightModel pieceFreightModel = freightDao.getPieceFreightModel(freightModel);
+                Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
+                if (!reply.isOk()) {
+                    return new Reply<>(reply.getResponseStatus());
+                }
+                PieceFreightModel pieceFreightModel = reply.getData();
                 freight = freightCalculate.calActivityFreightByPiece(purchaseItem, pieceFreightModel);
             }
             redisTemplate.opsForValue().set(key, freight);
-            redisTemplate.expire(key, 3, TimeUnit.MINUTES);
+            redisTemplate.expire(key, 1, TimeUnit.MINUTES);
             return new Reply<>(freight);
         }
         log.debug("in redis");
