@@ -4,6 +4,7 @@ import cn.edu.xmu.oomall.dto.OrderDto;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
+import cn.edu.xmu.oomall.processor.OrderPostProcessor;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
 import cn.edu.xmu.oomall.repository.OrderRepository;
 import com.alibaba.fastjson.JSON;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "${rocketmq.consumer.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.group}")
+@RocketMQMessageListener(topic = "${rocketmq.consumer.order.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.group}")
 public class OrderListener implements RocketMQListener<String>, RocketMQPushConsumerLifecycleListener {
 
 	@Autowired
@@ -33,6 +34,9 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 
 	@Autowired
 	private OrderItemRepository orderItemRepository;
+
+	@Autowired
+	private OrderPostProcessor orderPostProcessor;
 
 	@Override
 	public void onMessage(String message) {
@@ -51,6 +55,7 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 
 		children = orderRepository.saveAll(children);
 
+		List<OrderItemPo> orderItems = new ArrayList<>();
 		int i = 0;
 		for (OrderDto sub : dto.getSubOrders()) {
 			List<OrderItemPo> items = new ArrayList<>();
@@ -59,13 +64,15 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 				po.setOrderId(children.get(i).getId());
 				items.add(po);
 			}
-			orderItemRepository.saveAll(items);
+			orderItems = orderItemRepository.saveAll(items);
 			i++;
 		}
+
+		orderPostProcessor.sendBeShareIdSetRequest(orderItems, parent.getCustomerId());
 	}
 
 	@Override
 	public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
-		log.info("prepareStart: consumerGroup = " + defaultMQPushConsumer.getConsumerGroup());
+		log.info("OrderListener prepareStart: consumerGroup = " + defaultMQPushConsumer.getConsumerGroup());
 	}
 }

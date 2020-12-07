@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.service;
 
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.dto.OrderItemDto;
 
 /**
  * @author xincong yao
@@ -22,4 +23,11 @@ public interface IDubboOrderService {
 	 * @return
 	 */
 	Boolean isCustomerOwnOrderItem(Long customerId, Long orderItemId);
+
+	/**
+	 * 获取订单项信息
+	 * @param orderItemId
+	 * @return
+	 */
+	OrderItemDto getOrderItem(Long orderItemId);
 }

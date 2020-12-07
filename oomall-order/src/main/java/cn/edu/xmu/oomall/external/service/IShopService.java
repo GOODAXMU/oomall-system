@@ -22,6 +22,7 @@ public interface IShopService {
 	/**
 	 * 根据sku所属商铺划分orderItem
 	 * 返回的OrderItem需要skuId, name, quantity, price
+	 * 返回的OrderItem对象必须与传入的对象一致
 	 * @param orderItems
 	 * @return
 	 */

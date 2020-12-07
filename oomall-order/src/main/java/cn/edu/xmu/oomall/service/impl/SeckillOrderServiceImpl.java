@@ -93,14 +93,6 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		order.setOrderStatus(OrderStatus.NEW, false);
 		order.setOrderType(OrderType.NORMAL, false);
 
-		// 设置分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
-			if (beSharedId != null) {
-				oi.setBeShareId(beSharedId);
-			}
-		}
-
 		// 获取并设置运费
 		order.setFreightPrice(freights.get());
 

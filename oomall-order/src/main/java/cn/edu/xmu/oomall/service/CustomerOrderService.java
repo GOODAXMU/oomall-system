@@ -99,9 +99,7 @@ public class CustomerOrderService {
 
 		Order order = r.getData();
 
-		// todo 沟通分享模块接口
-
-		// 添加分享记录
+		// todo 发送分享成功消息
 		for (OrderItem oi : order.getOrderItems()) {
 			Long beSharedId = oi.getBeShareId();
 			if (beSharedId != null) {
