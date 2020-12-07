@@ -105,6 +105,13 @@ public class NormalOrderServiceImpl implements IOrderService {
 			subOrder.createAndGetOrderSn();
 		}
 
+		// 异步计算运费
+		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
+		for (Order subOrder : order.getSubOrders()) {
+			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
+			freights.put(subOrder.getOrderSn(), cf);
+		}
+
 		// 获取并设置折扣
 		Map<Long, Long> sku2Discount = discount.get();
 		for (OrderItem oi : order.getOrderItems()) {
@@ -116,26 +123,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 		// 计算价格
 		order.calcAndSetSubOrdersOriginPrice();
 		order.calcAndSetParentOrderOriginPrice();
-
-		// 异步计算运费
-		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
-		for (Order subOrder : order.getSubOrders()) {
-			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
-			freights.put(subOrder.getOrderSn(), cf);
-		}
-
-		// 设置分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
-			if (beSharedId != null) {
-				oi.setBeShareId(beSharedId);
-			}
-		}
-
-		// 使用返点
-		Integer rebate = order.calcAndGetRebate();
-		rebate = rebateService.useRebate(order.getCustomer().getId(), rebate);
-		order.calcAndSetRebateNum(rebate);
 
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, true);
