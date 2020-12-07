@@ -32,7 +32,7 @@ public class FreightModelGetResponse {
         for (FreightModel freightModel : freightModels) {
             FreightModelInner freightModelInner = new FreightModelInner(
                     freightModel.getId(), freightModel.getName(),
-                    freightModel.getType(), freightModel.getIsDefault(),
+                    freightModel.getType(), freightModel.getIsDefault() == 1,
                     freightModel.getGmtCreate(), freightModel.getGmtModified());
             list.add(freightModelInner);
         }

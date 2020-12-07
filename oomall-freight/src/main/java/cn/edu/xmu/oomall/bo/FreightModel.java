@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.bo;
 
 
+import cn.edu.xmu.oomall.dto.FreightModelDto;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
 import cn.edu.xmu.oomall.vo.*;
 import lombok.AllArgsConstructor;
@@ -99,16 +100,20 @@ public class FreightModel {
      */
     public FreightModelDefineResponse createDefineResponse() {
         FreightModelDefineResponse freightModelDefineResponse = new FreightModelDefineResponse();
-        freightModelDefineResponse.setDefaultModel(isDefault);
+        if (isDefault == null) {
+            freightModelDefineResponse.setDefaultModel(false);
+        } else {
+            freightModelDefineResponse.setDefaultModel(isDefault == 1 ? true : false);
+        }
         freightModelDefineResponse.setId(id);
         freightModelDefineResponse.setName(name);
         freightModelDefineResponse.setType(type);
         return freightModelDefineResponse;
     }
 
-    public FreightModelSummaryGetResponse createSummaryGetResponse(){
+    public FreightModelSummaryGetResponse createSummaryGetResponse() {
         FreightModelSummaryGetResponse freightModelSummaryGetResponse = new FreightModelSummaryGetResponse();
-        freightModelSummaryGetResponse.setDefaultModel(isDefault);
+        freightModelSummaryGetResponse.setDefaultModel(isDefault == 1);
         freightModelSummaryGetResponse.setGmtCreate(gmtCreate);
         freightModelSummaryGetResponse.setGmtModified(gmtModified);
         freightModelSummaryGetResponse.setId(id);
@@ -117,14 +122,26 @@ public class FreightModel {
         return freightModelSummaryGetResponse;
     }
 
-    public FreightModelCloneResponse createCloneResponse(){
+    public FreightModelCloneResponse createCloneResponse() {
         FreightModelCloneResponse freightModelCloneResponse = new FreightModelCloneResponse();
-        freightModelCloneResponse.setDefaultModel(isDefault);
+        freightModelCloneResponse.setDefaultModel(isDefault == 1);
         freightModelCloneResponse.setGmtCreate(gmtCreate);
         freightModelCloneResponse.setGmtModified(gmtModified);
         freightModelCloneResponse.setId(id);
         freightModelCloneResponse.setName(name);
         freightModelCloneResponse.setType(type);
         return freightModelCloneResponse;
+    }
+
+    public FreightModelDto createFreightModelDto() {
+        FreightModelDto freightModelDto = new FreightModelDto();
+        freightModelDto.setDefaultModel(isDefault == 1);
+        freightModelDto.setGmtCreate(gmtCreate);
+        freightModelDto.setGmtModified(gmtModified);
+        freightModelDto.setId(id);
+        freightModelDto.setName(name);
+        freightModelDto.setType(type);
+        freightModelDto.setUnit(unit);
+        return freightModelDto;
     }
 }

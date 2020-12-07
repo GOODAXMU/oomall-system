@@ -1,23 +1,33 @@
-package cn.edu.xmu.oomall.vo;
+package cn.edu.xmu.oomall.dto;
+
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.jni.Local;
 
 import java.time.LocalDateTime;
 
 /**
- * @author yan song
- * @date 2020-11-9
+ * @author zhibin lan
+ * @date 2020-12-06
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class FreightModelCloneResponse {
+public class FreightModelDto {
     private Long id;
+
     private String name;
+
     private Integer type;
+
+    private Long unit;
+
     private Boolean defaultModel;
+
     private LocalDateTime gmtCreate;
+
     private LocalDateTime gmtModified;
+
 }

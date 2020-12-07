@@ -15,6 +15,7 @@ import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.FreightModelDefineResponse;
 import cn.edu.xmu.oomall.vo.Reply;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -43,7 +44,10 @@ public class FreightService {
     @Autowired
     private ServiceFactory serviceFactory;
 
+
     private IGoodService goodService;
+
+
     private IFreightCalculate freightCalculate;
 
     @Autowired
