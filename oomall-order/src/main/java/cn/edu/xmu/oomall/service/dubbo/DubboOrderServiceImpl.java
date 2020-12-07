@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.service.IDubboOrderService;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
@@ -56,5 +57,25 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		Long cId = orderRepository.findCustomerIdById(orderId);
 
 		return cId != null && cId.equals(customerId);
+	}
+
+	@Override
+	public OrderItemDto getOrderItem(Long orderItemId) {
+		Optional<OrderItemPo> orderItem = orderItemRepository.findById(orderItemId);
+		if (orderItem.isEmpty()) {
+			return null;
+		}
+		OrderItemPo po = orderItem.get();
+		OrderItemDto dto = new OrderItemDto();
+		dto.setId(po.getId());
+		dto.setSkuId(po.getGoodsSkuId());
+		dto.setOrderId(po.getOrderId());
+		dto.setName(po.getName());
+		dto.setQuantity(po.getQuantity());
+		dto.setPrice(po.getPrice());
+		dto.setDiscount(po.getDiscount());
+		dto.setCouponActivityId(po.getCouponActivityId());
+		dto.setBeShareId(po.getBeShareId());
+		return dto;
 	}
 }
