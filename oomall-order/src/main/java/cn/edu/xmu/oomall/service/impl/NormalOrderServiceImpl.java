@@ -62,13 +62,12 @@ public class NormalOrderServiceImpl implements IOrderService {
 
 	@Override
 	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		// 设置订单的客户
+		// 获取订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
 		if (customer == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
-		order.setCustomer(customer, true);
 
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
@@ -87,6 +86,9 @@ public class NormalOrderServiceImpl implements IOrderService {
 		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
 			order.createAndAddSubOrder(e.getKey(), e.getValue());
 		}
+
+		// 设置订单客户
+		order.setCustomer(customer, true);
 
 		// 获取可用的优惠活动并设置
 		Map<Long, Long> sku2Activity = activity.get();

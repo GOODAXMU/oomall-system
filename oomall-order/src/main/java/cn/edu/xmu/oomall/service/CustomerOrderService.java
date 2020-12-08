@@ -99,13 +99,17 @@ public class CustomerOrderService {
 
 		Order order = r.getData();
 
-		for (OrderItem oi : order.getOrderItems()) {
-			if (oi.getBeShareId() != null) {
-				shareService.sendShareMessage(oi);
+		Reply<Object> reply = orderDao.confirmOrder(id);
+
+		if (reply.isOk()) {
+			for (OrderItem oi : order.getOrderItems()) {
+				if (oi.getBeShareId() != null) {
+					shareService.sendShareMessage(oi);
+				}
 			}
 		}
 
-		return orderDao.confirmOrder(id);
+		return reply;
 	}
 
 	public Reply<Object> groupon2Normal(Long id, Long customerId) {

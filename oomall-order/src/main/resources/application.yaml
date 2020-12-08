@@ -91,3 +91,13 @@ oomall:
     version: 0.0.1-SNAPSHOT
   seckill:
     version: 0.0.1-SNAPSHOT
+  goods:
+    version: 0.0.1-SNAPSHOT
+  activity:
+    version: 0.0.1-SNAPSHOT
+  discount:
+    version: 0.0.1-SNAPSHOT
+  shop:
+    version: 0.0.1-SNAPSHOT
+  inventory:
+    version: 0.0.1-SNAPSHOT
