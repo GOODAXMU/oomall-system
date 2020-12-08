@@ -37,7 +37,6 @@ public class SeckillOrderServiceImpl implements IOrderService {
 	private IShopService shopService;
 	private IFreightService freightService;
 	private IFlashSaleService flashSaleService;
-	private IShareService shareService;
 
 	private static final String TOPIC = "order";
 
@@ -48,13 +47,10 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		flashSaleService = (IFlashSaleService) serviceFactory.get(IFlashSaleService.class);
-		shareService = (IShareService) serviceFactory.get(IShareService.class);
 	}
 
 	@Override
 	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		OrderItem orderItem = order.getOrderItems().get(0);
-
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -63,12 +59,14 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		}
 		order.setCustomer(customer);
 
+		OrderItem orderItem = order.getOrderItems().get(0);
+
 		// 设置商铺
 		Shop shop = shopService.getShop(orderItem.getSkuId());
 		if (shop == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
-		order.setCustomer(customer);
+		order.setShop(shop);
 
 		// 扣库存
 		Boolean r = seckillService.deductInventory(orderItem.getSkuId(), orderItem.getQuantity(), order.getSeckillId());

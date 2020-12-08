@@ -56,7 +56,6 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 			Class[] interfaces = o.getClass().getInterfaces();
 			for (Class clz : interfaces) {
 				if (clz.equals(c)) {
-					log.info(o.getClass().getSimpleName() + " load successfully");
 					return o;
 				}
 			}

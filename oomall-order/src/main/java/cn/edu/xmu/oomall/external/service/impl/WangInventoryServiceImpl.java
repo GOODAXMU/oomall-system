@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.external.service.IInventoryService;
-import cn.xmu.edu.goods.client.dubbo.OrderItemDTO;
+import cn.edu.xmu.goods.client.dubbo.OrderItemDTO;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +17,8 @@ import java.util.List;
 public class WangInventoryServiceImpl implements IInventoryService {
 
 	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.activity.version}", cache = "false", async = true, timeout = 5000)
-	private cn.xmu.edu.goods.client.IInventoryService inventoryService;
+	// @DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", async = true, timeout = 5000)
+	private cn.edu.xmu.goods.client.IInventoryService inventoryService;
 
 
 	@Override

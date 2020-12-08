@@ -37,4 +37,18 @@ public interface IActivityService {
 	 * @return
 	 */
 	Boolean useCoupon(Long couponId);
+
+	/**
+	 * 根据skuId获取团购活动id
+	 * @param skuId
+	 * @return 不存在返回null
+	 */
+	Long getGrouponId(Long skuId);
+
+	/**
+	 * 根据skuId获取预售活动id
+	 * @param skuId
+	 * @return 不存在返回null
+	 */
+	Long getPreSale(Long skuId);
 }

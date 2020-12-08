@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.external.service.IDiscountService;
-import cn.xmu.edu.goods.client.dubbo.OrderItemDTO;
+import cn.edu.xmu.goods.client.dubbo.OrderItemDTO;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.stereotype.Component;
@@ -20,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
 public class WangDiscountServiceImpl implements IDiscountService {
 
 	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.discount.version}", cache = "false", async = true, timeout = 5000)
-	private cn.xmu.edu.goods.client.IDiscountService discountService;
+	// @DubboReference(version = "${oomall.external.discount-service.version}", cache = "false", async = true, timeout = 5000)
+	private cn.edu.xmu.goods.client.IDiscountService discountService;
 
 	@Override
 	public Map<Long, Long> calcDiscount(List<OrderItem> orderItems) {

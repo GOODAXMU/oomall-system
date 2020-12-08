@@ -1,5 +1,9 @@
 package cn.edu.xmu.oomall.external.service;
 
+import cn.edu.xmu.oomall.bo.OrderItem;
+
+import java.util.List;
+
 /**
  * @author xincong yao
  * @date 2020-11-28
@@ -12,4 +16,11 @@ public interface IGoodsService {
 	 * @return
 	 */
 	Long getPrice(Long skuId);
+
+	/**
+	 * 设置OrderItems需要的sku信息
+	 * @param orderItems
+	 * @return
+	 */
+	void setSkuInformation(List<OrderItem> orderItems);
 }
