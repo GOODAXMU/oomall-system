@@ -80,6 +80,7 @@ oomall:
   goods:
     version: 0.0.1-SNAPSHOT
 
+  freight:
     #模式
     model:
       #重量运费模式
