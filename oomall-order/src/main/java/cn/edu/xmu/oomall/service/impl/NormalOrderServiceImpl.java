@@ -42,8 +42,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 	private IInventoryService inventoryService;
 	private IFreightService freightService;
 	private IDiscountService discountService;
-	private IRebateService rebateService;
-	private IShareService shareService;
 	private IActivityService activityService;
 
 	private final static String TOPIC = "order";
@@ -55,8 +53,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 		inventoryService = (IInventoryService) serviceFactory.get(IInventoryService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		discountService = (IDiscountService) serviceFactory.get(IDiscountService.class);
-		rebateService = (IRebateService) serviceFactory.get(IRebateService.class);
-		shareService = (IShareService) serviceFactory.get(IShareService.class);
 		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
 	}
 
@@ -103,6 +99,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 				order.getOrderItems());
 
 		// 分配订单流水号
+		order.createAndGetOrderSn();
 		for (Order subOrder : order.getSubOrders()) {
 			subOrder.createAndGetOrderSn();
 		}
@@ -134,6 +131,12 @@ public class NormalOrderServiceImpl implements IOrderService {
 		for (Order subOrder : order.getSubOrders()) {
 			Long f = freights.get(subOrder.getOrderSn()).get();
 			subOrder.setFreightPrice(f);
+		}
+
+		// 单店不拆单
+		if (order.getSubOrders().size() == 1) {
+			order = order.getSubOrders().get(0);
+			order.setPid(0L);
 		}
 
 		// 订单写入消息队列

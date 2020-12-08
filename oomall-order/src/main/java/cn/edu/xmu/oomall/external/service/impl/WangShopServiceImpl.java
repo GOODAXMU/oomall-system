@@ -3,8 +3,8 @@ package cn.edu.xmu.oomall.external.service.impl;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.external.service.IShopService;
-import cn.xmu.edu.goods.client.dubbo.OrderItemDTO;
-import cn.xmu.edu.goods.client.dubbo.ShopDTO;
+import cn.edu.xmu.goods.client.dubbo.OrderItemDTO;
+import cn.edu.xmu.goods.client.dubbo.ShopDTO;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
@@ -21,15 +21,15 @@ import java.util.Map;
 public class WangShopServiceImpl implements IShopService {
 
 	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.shop.version}", cache = "false", async = true, timeout = 5000)
-	private cn.xmu.edu.goods.client.IShopService shopService;
+	// @DubboReference(version = "${oomall.external.shop-service.version}", cache = "false", async = true, timeout = 5000)
+	private cn.edu.xmu.goods.client.IShopService shopService;
 
-	@DubboReference(version = "${oomall.goods.version}", cache = "false", async = true, timeout = 5000)
-	private cn.xmu.edu.goods.client.IGoodsService goodsService;
+	// @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", async = true, timeout = 5000)
+	private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
 	@Override
 	public Shop getShop(Long skuId) {
-		ShopDTO shopDTO = shopService.getShop(skuId);
+		ShopDTO shopDTO = shopService.getShopById(skuId);
 		return toShop(shopDTO);
 	}
 

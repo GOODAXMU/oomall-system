@@ -239,19 +239,25 @@ public class CustomerOrderController {
 
 	/**
 	 * 如果是秒杀活动, 为order设置seckillId
-	 *
 	 * @param order
 	 * @return
 	 */
 	private IOrderService getOrderService(Order order) {
-		if (order.getPresaleId() != null) {
-			return presaleOrderService;
+		int size = order.getOrderItems().size();
+		Long skuId = order.getOrderItems().get(0).getSkuId();
+
+		if (order.getPresaleId() != null && size == 1) {
+			if (customerOrderService.getPreSaleId(skuId) != null) {
+				return presaleOrderService;
+			}
 		}
-		if (order.getGrouponId() != null) {
-			return grouponOrderService;
+		if (order.getGrouponId() != null && size == 1) {
+			if (customerOrderService.getGrouponId(skuId) != null) {
+				return grouponOrderService;
+			}
 		}
-		if (order.getOrderItems().size() == 1) {
-			Long seckillId = customerOrderService.getSeckillId(order.getOrderItems().get(0).getSkuId());
+		if (size == 1 && order.getOrderItems().get(0).getQuantity() == 1) {
+			Long seckillId = customerOrderService.getSeckillId(skuId);
 			if (seckillId != null && seckillId >= 0) {
 				order.setSeckillId(seckillId);
 				return seckillOrderService;

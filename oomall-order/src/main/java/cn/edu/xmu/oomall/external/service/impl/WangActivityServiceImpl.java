@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.external.service.IActivityService;
-import cn.xmu.edu.goods.client.dubbo.OrderItemDTO;
+import cn.edu.xmu.goods.client.dubbo.OrderItemDTO;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.apache.dubbo.rpc.RpcContext;
 import org.springframework.stereotype.Component;
@@ -20,8 +20,8 @@ import java.util.concurrent.CompletableFuture;
 public class WangActivityServiceImpl implements IActivityService {
 
 	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.activity.version}", cache = "false", async = true, timeout = 5000)
-	private cn.xmu.edu.goods.client.IActivityService activityService;
+	// @DubboReference(version = "${oomall.external.activity-service.version}", cache = "false", async = true, timeout = 5000)
+	private cn.edu.xmu.goods.client.IActivityService activityService;
 
 	@Override
 	public Map<Long, Long> validateActivity(List<OrderItem> orderItems, Long couponId) {
@@ -46,6 +46,16 @@ public class WangActivityServiceImpl implements IActivityService {
 	@Override
 	public Boolean useCoupon(Long couponId) {
 		return false;
+	}
+
+	@Override
+	public Long getGrouponId(Long skuId) {
+		return null;
+	}
+
+	@Override
+	public Long getPreSale(Long skuId) {
+		return null;
 	}
 
 	private OrderItemDTO toOrderItemDTO(OrderItem oi) {
