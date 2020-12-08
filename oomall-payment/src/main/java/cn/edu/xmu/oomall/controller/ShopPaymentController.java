@@ -50,7 +50,6 @@ public class ShopPaymentController {
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
 		// todo 检查 shopId 是否正确
-
 		List<Payment> payments = paymentService.getPayments(id).getData();
 		if (null == payments) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -81,7 +80,6 @@ public class ShopPaymentController {
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
 		// todo 检查 shopId 是否正确
-
 		List<Payment> payments = paymentService.getAftersalePayments(id).getData();
 		if (null == payments) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -113,6 +111,7 @@ public class ShopPaymentController {
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable String shopId) {
 
+		// todo 检查 shopId 是否正确
 		Reply<List<Long>> rIds = paymentService.getOrderIdByPaymentId(id);
 		if (!rIds.isOk() || null == rIds.getData()) {
 			return new Reply<>(rIds.getResponseStatus());
@@ -151,8 +150,8 @@ public class ShopPaymentController {
 	public Reply<List<RefundResponse>> getRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
-		// todo 检查 shopId 是否正确
 
+		// todo 检查 shopId 是否正确
 		List<Refund> refunds = paymentService.getRefunds(id).getData();
 		if (null == refunds) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -183,7 +182,6 @@ public class ShopPaymentController {
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
 		// todo 检查 shopId 是否正确
-
 		List<Refund> refunds = paymentService.getAftersaleRefunds(id).getData();
 		if (null == refunds) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -196,6 +194,5 @@ public class ShopPaymentController {
 
 		return new Reply<>(paymentResponses);
 	}
-
 
 }

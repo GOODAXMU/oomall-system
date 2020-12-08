@@ -66,6 +66,7 @@ public class CustomerPaymentController {
 			@Valid @RequestBody PaymentPostRequest request,
 			@NotNull @Min(value = 0) @PathVariable Long id) {
 
+		// todo 检查 orderId 是否为 token 用户所有
 		Payment payment = new Payment(id, request, Payment.Type.NORMAL);
 
 		Reply<Payment> r = paymentService.createPayment(payment);
@@ -90,6 +91,8 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/orders/{id}/payments", produces = "application/json;charset=UTF-8")
 	public Reply<List<PaymentResponse>> getPayment(
 			@NotNull @Min(value = 0) @PathVariable Long id) {
+
+		// todo 检查 orderId 是否为 token 用户所有
 		List<Payment> payments = paymentService.getPayments(id).getData();
 		if (null == payments) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -138,6 +141,7 @@ public class CustomerPaymentController {
 			@Valid @RequestBody PaymentPostRequest request,
 			@NotNull @Min(value = 0) @PathVariable Long id) {
 
+		// todo 检查 aftersaleId 是否为 token 用户所有
 		Payment payment = new Payment(id, request, Payment.Type.AFTERSALE);
 
 		Reply<Payment> r = paymentService.createPayment(payment);
@@ -162,6 +166,8 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/aftersales/{id}/payments", produces = "application/json;charset=UTF-8")
 	public Reply<List<PaymentResponse>> getAftersalePayment(
 			@NotNull @Min(value = 0) @PathVariable Long id) {
+
+		// todo 检查 aftersaleId 是否为 token 用户所有
 		List<Payment> payments = paymentService.getAftersalePayments(id).getData();
 		if (null == payments) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -188,6 +194,8 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/orders/{id}/refunds", produces = "application/json;charset=UTF-8")
 	public Reply<List<RefundResponse>> getRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id) {
+
+		// todo 检查 orderId 是否为 token 用户所有
 		List<Refund> refunds = paymentService.getRefunds(id).getData();
 		if (null == refunds) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -214,6 +222,8 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/aftersales/{id}/refunds", produces = "application/json;charset=UTF-8")
 	public Reply<List<RefundResponse>> getAftersaleRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id) {
+
+		// todo 检查 aftersaleId 是否为 token 用户所有
 		List<Refund> refunds = paymentService.getAftersaleRefunds(id).getData();
 		if (null == refunds) {
 			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -226,6 +236,5 @@ public class CustomerPaymentController {
 
 		return new Reply<>(refundResponses);
 	}
-
 
 }
