@@ -105,12 +105,17 @@ public class FreightDao {
      * @return
      * @author zhibin lan
      */
-    public WeightFreightModel getWeightFreightModel(FreightModel freightModel) {
+    public Reply<WeightFreightModel> getWeightFreightModel(FreightModel freightModel) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
         weightFreightModelPo.setFreightModelId(freightModel.getId());
         weightFreightModelPo.setRegionId(freightModel.getRid());
-        WeightFreightModel weightFreightModel = new WeightFreightModel(weightModelRepository.findOne(SpecificationFactory.get(weightFreightModelPo)).get());
-        return weightFreightModel;
+        WeightFreightModel weightFreightModel;
+        try {
+            weightFreightModel = new WeightFreightModel(weightModelRepository.findOne(SpecificationFactory.get(weightFreightModelPo)).get());
+        } catch (NoSuchElementException e) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
+        return new Reply<>(weightFreightModel);
     }
 
     /**
@@ -120,13 +125,18 @@ public class FreightDao {
      * @return
      * @author zhibin lan
      */
-    public PieceFreightModel getPieceFreightModel(FreightModel freightModel) {
+    public Reply<PieceFreightModel> getPieceFreightModel(FreightModel freightModel) {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
         pieceFreightModelPo.setFreightModelId(freightModel.getId());
         pieceFreightModelPo.setRegionId(freightModel.getRid());
-        PieceFreightModel pieceFreightModel = new PieceFreightModel(
-                pieceModelRepository.findOne(SpecificationFactory.get(pieceFreightModelPo)).get());
-        return pieceFreightModel;
+        PieceFreightModel pieceFreightModel;
+        try {
+            pieceFreightModel = new PieceFreightModel(
+                    pieceModelRepository.findOne(SpecificationFactory.get(pieceFreightModelPo)).get());
+        } catch (NoSuchElementException e) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
+        return new Reply<>(pieceFreightModel);
     }
 
     /**
@@ -280,6 +290,7 @@ public class FreightDao {
         FreightModel freightModel = freightModelReply.getData();
         freightModel.setId(null);
         freightModel.setShopId(shopId);
+        freightModel.setIsDefault(0);
         freightModel.setName(freightModel.getName() + UUID.randomUUID());
         return createFreightModel(freightModel);
     }
@@ -315,8 +326,9 @@ public class FreightDao {
      */
     public Reply deleteWeightFreightModel(Long id) {
         int res = weightModelRepository.delete(id);
-        if (res == 0)
+        if (res == 0) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         return new Reply(ResponseStatus.OK);
     }
 
@@ -336,7 +348,7 @@ public class FreightDao {
     }
 
     /**
-     * 设置默认运费模板
+     * 设置默认运费模板，并取消原来的默认运费模板
      *
      * @param id     模板id
      * @param shopId 商铺id
@@ -348,6 +360,20 @@ public class FreightDao {
         if (!reply.isOk()) {
             return reply;
         }
+        FreightModelPo cancelFreightModelPo = new FreightModelPo();
+        cancelFreightModelPo.setShopId(shopId);
+        cancelFreightModelPo.setDefaultModel(1);
+        //原来是否存在默认运费模板
+        Boolean isExist = true;
+        try {
+            cancelFreightModelPo = freightModelRepository.findOne(SpecificationFactory.get(cancelFreightModelPo)).get();
+        } catch (NoSuchElementException e) {
+            isExist = false;
+        }
+
+        if (cancelFreightModelPo.getId().equals(id)) {
+            return new Reply(ResponseStatus.OK);
+        }
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setId(id);
@@ -356,6 +382,10 @@ public class FreightDao {
         if (ret <= 0) {
             log.debug("设置默认运费模板失败: " + ret);
             return new Reply(ResponseStatus.INTERNAL_SERVER_ERR);
+        }
+        if (isExist) {
+            cancelFreightModelPo.setDefaultModel(0);
+            freightModelRepository.update(cancelFreightModelPo);
         }
         return new Reply(ResponseStatus.OK);
     }
@@ -393,8 +423,9 @@ public class FreightDao {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
         weightFreightModelPo.setFreightModelId(id);
         List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo));
-        if (weightFreightModelPos.isEmpty())
+        if (weightFreightModelPos.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         return new Reply<>(new WeightFreightModelQueryResponse().WeightFreightModelQueryResponseListTransfer(weightFreightModelPos));
     }
 
@@ -408,8 +439,9 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
         pieceFreightModelPo.setFreightModelId(id);
         List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo));
-        if (pieceFreightModelPos.isEmpty())
+        if (pieceFreightModelPos.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         return new Reply<>(new PieceFreightQueryResponse(pieceFreightModelPo).PieceFreightQueryResponseListTransfer(pieceFreightModelPos));
     }
 
@@ -422,9 +454,9 @@ public class FreightDao {
     public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
         int res = weightModelRepository.update(weightFreightModelPo);
-        if (res == 0)
+        if (res == 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-
+        }
         return new Reply<>(ResponseStatus.OK);
     }
 
@@ -437,8 +469,9 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
         pieceFreightModelPo.setGmtCreate(LocalDateTime.now());
         int res = pieceModelRepository.update(pieceFreightModelPo);
-        if (res <= 0)
+        if (res <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         return new Reply<>(ResponseStatus.OK);
     }
 

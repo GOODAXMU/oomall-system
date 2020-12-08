@@ -7,10 +7,7 @@ import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
-import cn.edu.xmu.oomall.external.service.ICustomerService;
-import cn.edu.xmu.oomall.external.service.IFlashSaleService;
-import cn.edu.xmu.oomall.external.service.IShareService;
-import cn.edu.xmu.oomall.external.service.IShopService;
+import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.Reply;
@@ -38,6 +35,7 @@ public class CustomerOrderService {
 	private IShopService shopService;
 	private IFlashSaleService flashSaleService;
 	private IShareService shareService;
+	private IActivityService activityService;
 
 	@PostConstruct
 	public void init() {
@@ -45,6 +43,7 @@ public class CustomerOrderService {
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		flashSaleService = (IFlashSaleService) serviceFactory.get(IFlashSaleService.class);
 		shareService = (IShareService) serviceFactory.get(IShareService.class);
+		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
 	}
 
 	public Reply<List<Order>> getOrders(
@@ -99,17 +98,17 @@ public class CustomerOrderService {
 
 		Order order = r.getData();
 
-		// todo 沟通分享模块接口
+		Reply<Object> reply = orderDao.confirmOrder(id);
 
-		// 添加分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = oi.getBeShareId();
-			if (beSharedId != null) {
-				shareService.sendShareMessage(oi);
-				oi.setBeShareId(beSharedId);
+		if (reply.isOk()) {
+			for (OrderItem oi : order.getOrderItems()) {
+				if (oi.getBeShareId() != null) {
+					shareService.sendShareMessage(oi);
+				}
 			}
 		}
-		return orderDao.confirmOrder(id);
+
+		return reply;
 	}
 
 	public Reply<Object> groupon2Normal(Long id, Long customerId) {
@@ -118,5 +117,13 @@ public class CustomerOrderService {
 
 	public Long getSeckillId(Long skuId) {
 		return flashSaleService.getSeckillId(skuId);
+	}
+
+	public Long getGrouponId(Long skuId) {
+		return activityService.getGrouponId(skuId);
+	}
+
+	public Long getPreSaleId(Long skuId) {
+		return activityService.getPreSale(skuId);
 	}
 }

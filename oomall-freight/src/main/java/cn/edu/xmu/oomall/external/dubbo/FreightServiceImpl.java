@@ -1,7 +1,9 @@
 package cn.edu.xmu.oomall.external.dubbo;
 
+import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.dto.CalculateFreightRequest;
+import cn.edu.xmu.oomall.dto.FreightModelDto;
 import cn.edu.xmu.oomall.service.FreightService;
 import cn.edu.xmu.oomall.service.IFreightService;
 import cn.edu.xmu.oomall.vo.Reply;
@@ -35,7 +37,7 @@ public class FreightServiceImpl implements IFreightService {
             purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
         }
         Reply<Long> r = freightService.calFreight(purchaseItems, rid);
-        return r.getData() == null ? 0L : r.getData();
+        return r.getData() == null ? -1L : r.getData();
     }
 
     /**
@@ -50,8 +52,18 @@ public class FreightServiceImpl implements IFreightService {
         purchaseItem.setCount(calculateFreightRequest.getCount());
         purchaseItem.setSkuId(calculateFreightRequest.getSkuId());
         Reply<Long> r = freightService.calActivityFreight(purchaseItem, rid);
-        return r.getData() == null ? 0L : r.getData();
+        return r.getData() == null ? -1L : r.getData();
     }
 
-
+    /**
+     * 获取运费模板
+     *
+     * @param id 运费模板id
+     * @return FreightModelDto 运费模板
+     */
+    @Override
+    public FreightModelDto getFreightModel(Long id) {
+        FreightModel freightModel = freightService.getFreightModelById(id).getData();
+        return freightModel.createFreightModelDto();
+    }
 }

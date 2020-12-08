@@ -44,4 +44,14 @@ public class SimulatedActivityServiceImpl implements IActivityService {
 	public Boolean useCoupon(Long couponId) {
 		return true;
 	}
+
+	@Override
+	public Long getGrouponId(Long skuId) {
+		return null;
+	}
+
+	@Override
+	public Long getPreSale(Long skuId) {
+		return null;
+	}
 }

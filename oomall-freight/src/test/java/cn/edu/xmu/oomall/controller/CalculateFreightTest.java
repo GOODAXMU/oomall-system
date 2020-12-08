@@ -50,7 +50,7 @@ public class CalculateFreightTest {
 				.andReturn()
 				.getResponse()
 				.getContentAsString();
-		String expectedResponse = "{\"code\":0,\"message\":\"成功\",\"data\":11}";
+		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":11}";
 		JSONAssert.assertEquals(expectedResponse, responseString, true);
 	}
 }

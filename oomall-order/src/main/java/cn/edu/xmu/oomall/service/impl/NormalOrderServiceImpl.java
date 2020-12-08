@@ -42,8 +42,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 	private IInventoryService inventoryService;
 	private IFreightService freightService;
 	private IDiscountService discountService;
-	private IRebateService rebateService;
-	private IShareService shareService;
 	private IActivityService activityService;
 
 	private final static String TOPIC = "order";
@@ -55,24 +53,17 @@ public class NormalOrderServiceImpl implements IOrderService {
 		inventoryService = (IInventoryService) serviceFactory.get(IInventoryService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		discountService = (IDiscountService) serviceFactory.get(IDiscountService.class);
-		rebateService = (IRebateService) serviceFactory.get(IRebateService.class);
-		shareService = (IShareService) serviceFactory.get(IShareService.class);
 		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
 	}
 
 	@Override
 	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		// 异步校验优惠活动与优惠卷
-		CompletableFuture<Map<Long, Long>> activity
-				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
-
-		// 设置订单的客户
+		// 获取订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
 		if (customer == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
-		order.setCustomer(customer, true);
 
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
@@ -81,12 +72,9 @@ public class NormalOrderServiceImpl implements IOrderService {
 		}
 		order.setOrderItems(orderItems);
 
-		// 获取可用的优惠活动并设置
-		Map<Long, Long> sku2Activity = activity.get();
-		for (OrderItem oi : order.getOrderItems()) {
-			Long act = sku2Activity.get(oi.getSkuId());
-			oi.setCouponActivityId(act);
-		}
+		// 异步校验优惠活动与优惠卷
+		CompletableFuture<Map<Long, Long>> activity
+				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
 
 		// 根据sku所属商铺划分orderItem并创建子订单, 设置orderItem的price字段
 		Map<Shop, List<OrderItem>> shop2OrderItems =
@@ -95,14 +83,32 @@ public class NormalOrderServiceImpl implements IOrderService {
 			order.createAndAddSubOrder(e.getKey(), e.getValue());
 		}
 
+		// 设置订单客户
+		order.setCustomer(customer, true);
+
+		// 获取可用的优惠活动并设置
+		Map<Long, Long> sku2Activity = activity.get();
+		for (OrderItem oi : order.getOrderItems()) {
+			Long act = sku2Activity.get(oi.getSkuId());
+			oi.setCouponActivityId(act);
+		}
+
 		// 异步计算折扣
 		CompletableFuture<Map<Long, Long>> discount
 				= discountService.calcDiscountAsynchronous(
 				order.getOrderItems());
 
 		// 分配订单流水号
+		order.createAndGetOrderSn();
 		for (Order subOrder : order.getSubOrders()) {
 			subOrder.createAndGetOrderSn();
+		}
+
+		// 异步计算运费
+		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
+		for (Order subOrder : order.getSubOrders()) {
+			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
+			freights.put(subOrder.getOrderSn(), cf);
 		}
 
 		// 获取并设置折扣
@@ -117,26 +123,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 		order.calcAndSetSubOrdersOriginPrice();
 		order.calcAndSetParentOrderOriginPrice();
 
-		// 异步计算运费
-		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
-		for (Order subOrder : order.getSubOrders()) {
-			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
-			freights.put(subOrder.getOrderSn(), cf);
-		}
-
-		// 设置分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
-			if (beSharedId != null) {
-				oi.setBeShareId(beSharedId);
-			}
-		}
-
-		// 使用返点
-		Integer rebate = order.calcAndGetRebate();
-		rebate = rebateService.useRebate(order.getCustomer().getId(), rebate);
-		order.calcAndSetRebateNum(rebate);
-
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, true);
 		order.setOrderType(OrderType.NORMAL, true);
@@ -145,6 +131,12 @@ public class NormalOrderServiceImpl implements IOrderService {
 		for (Order subOrder : order.getSubOrders()) {
 			Long f = freights.get(subOrder.getOrderSn()).get();
 			subOrder.setFreightPrice(f);
+		}
+
+		// 单店不拆单
+		if (order.getSubOrders().size() == 1) {
+			order = order.getSubOrders().get(0);
+			order.setPid(0L);
 		}
 
 		// 订单写入消息队列

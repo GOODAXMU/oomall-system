@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.service;
 
 
 import cn.edu.xmu.oomall.dto.CalculateFreightRequest;
+import cn.edu.xmu.oomall.dto.FreightModelDto;
 import cn.edu.xmu.oomall.vo.Reply;
 
 import java.util.List;
@@ -30,4 +31,13 @@ public interface IFreightService {
      * @return Long 运费
      */
     Long calActivityFreight(CalculateFreightRequest calculateFreightRequest, Long rid);
+
+
+    /**
+     * 获取运费模板
+     *
+     * @param id 运费模板id
+     * @return FreightModelDto 运费模板
+     */
+    FreightModelDto getFreightModel(Long id);
 }

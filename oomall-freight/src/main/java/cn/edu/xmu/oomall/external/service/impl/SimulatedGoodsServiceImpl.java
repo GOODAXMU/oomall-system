@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.constant.ResponseStatus;
-import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.IGoodService;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.stereotype.Component;

@@ -62,32 +62,40 @@ oomall:
   external:
     customer-service:
       name: SimulatedCustomerServiceImpl
+      version: 0.0.1-SNAPSHOT
     shop-service:
       name: SimulatedShopServiceImpl
+      version: 0.0.1-SNAPSHOT
     inventory-service:
       name: SimulatedInventoryServiceImpl
+      version: 0.0.1-SNAPSHOT
     freight-service:
       name: SimulatedFreightServiceImpl
+      version: 0.0.1-SNAPSHOT
     discount-service:
       name: SimulatedDiscountServiceImpl
+      version: 0.0.1-SNAPSHOT
     rebate-service:
       name: SimulatedRebateServiceImpl
+      version: 0.0.1-SNAPSHOT
     shipment-service:
       name: SimulatedShipmentServiceImpl
+      version: 0.0.1-SNAPSHOT
     share-service:
       name: SimulatedShareServiceImpl
+      version: 0.0.1-SNAPSHOT
     activity-service:
       name: SimulatedActivityServiceImpl
+      version: 0.0.1-SNAPSHOT
     flash-sale-service:
       name: SimulatedFlashSaleServiceImpl
+      version: 0.0.1-SNAPSHOT
     seckill-service:
       name: SimulatedSeckillServiceImpl
+      version: 0.0.1-SNAPSHOT
     goods-service:
       name: SimulatedGoodsServiceImpl
+      version: 0.0.1-SNAPSHOT
 
   order:
-    version: 0.0.1-SNAPSHOT
-  freight:
-    version: 0.0.1-SNAPSHOT
-  seckill:
     version: 0.0.1-SNAPSHOT

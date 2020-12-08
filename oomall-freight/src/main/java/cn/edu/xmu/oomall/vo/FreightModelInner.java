@@ -17,7 +17,7 @@ public class FreightModelInner {
     private Long id;
     private String name;
     private Integer type;
-    private Integer defaultModel;
+    private Boolean defaultModel;
     private LocalDateTime gmtCreate;
     private LocalDateTime gmtModified;
 }

@@ -40,7 +40,6 @@ public class PresaleOrderServiceImpl implements IOrderService {
 	private IShopService shopService;
 	private IFreightService freightService;
 	private IGoodsService goodsService;
-	private IShareService shareService;
 
 	private static final String TOPIC = "order";
 
@@ -51,13 +50,10 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
 		goodsService = (IGoodsService) serviceFactory.get(IGoodsService.class);
-		shareService = (IShareService) serviceFactory.get(IShareService.class);
 	}
 
 	@Override
 	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		OrderItem orderItem = order.getOrderItems().get(0);
-
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -67,11 +63,11 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		order.setCustomer(customer);
 
 		// 设置商铺
-		Shop shop = shopService.getShop(orderItem.getSkuId());
+		Shop shop = shopService.getShop(order.getOrderItems().get(0).getSkuId());
 		if (shop == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
-		order.setCustomer(customer);
+		order.setShop(shop);
 
 		// 扣库存
 		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems());
@@ -82,27 +78,18 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		// 异步计算运费
 		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
 
-		// 获取价格
-		Long price = goodsService.getPrice(orderItem.getSkuId());
-		orderItem.setPrice(price);
+		// 设置价格和名称
+		goodsService.setSkuInformation(order.getOrderItems());
 
 		// 设置订单流水号
 		order.createAndGetOrderSn();
 
-		// 计算价格
+		// todo 计算预售价格
 		order.calcAndSetParentOrderOriginPrice();
 
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, false);
 		order.setOrderType(OrderType.PRESALE, false);
-
-		// 设置分享记录
-		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = shareService.getBeSharedId(order.getCustomer().getId(), oi.getSkuId());
-			if (beSharedId != null) {
-				oi.setBeShareId(beSharedId);
-			}
-		}
 
 		// 获取并设置运费
 		order.setFreightPrice(freights.get());
