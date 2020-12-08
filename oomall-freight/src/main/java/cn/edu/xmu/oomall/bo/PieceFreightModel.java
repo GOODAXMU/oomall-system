@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.bo;
 
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
+import cn.edu.xmu.oomall.vo.PieceFreightModelModifyRequest;
 import cn.edu.xmu.oomall.vo.PieceItemRequest;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,6 +14,11 @@ import java.util.List;
  * @author zhibin lan
  * @date 2020-11-23
  */
+
+/**
+ * modified by yan song
+ * @date 2020-12-05
+ */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,6 +27,8 @@ public class PieceFreightModel {
     private Long id;
 
     private Long rid;
+
+    private Long freightModelId;
 
     private Integer firstItem;
 
@@ -35,6 +43,7 @@ public class PieceFreightModel {
      * @param pieceFreightModelPo Po对象
      */
     public PieceFreightModel(PieceFreightModelPo pieceFreightModelPo){
+        freightModelId = pieceFreightModelPo.getFreightModelId();
         id = pieceFreightModelPo.getId();
         rid = pieceFreightModelPo.getRegionId();
         firstItem = pieceFreightModelPo.getFirstItems();
@@ -48,6 +57,19 @@ public class PieceFreightModel {
      * @param pieceFreightModelinfo Po对象,id Long
      */
     public PieceFreightModel(PieceItemRequest pieceFreightModelInfo,Long id){
+        this.freightModelId=id;
+        rid = pieceFreightModelInfo.getRegionId();
+        firstItem = pieceFreightModelInfo.getFirstItem();
+        firstItemPrice = pieceFreightModelInfo.getFirstItemPrice();
+        additionalItems = pieceFreightModelInfo.getAdditionalItems();
+        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemPrice();
+    }
+
+    /**
+     * 构造函数
+     * @param pieceFreightModelinfo Po对象,id Long
+     */
+    public PieceFreightModel(PieceFreightModelModifyRequest pieceFreightModelInfo,Long id){
         this.id = id;
         rid = pieceFreightModelInfo.getRegionId();
         firstItem = pieceFreightModelInfo.getFirstItem();

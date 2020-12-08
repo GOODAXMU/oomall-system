@@ -41,6 +41,7 @@ public class PieceFreightModelPo {
 
 	public PieceFreightModelPo(PieceFreightModel pieceFreightModel){
 		id = pieceFreightModel.getId();
+		freightModelId = pieceFreightModel.getFreightModelId();
 		firstItems = pieceFreightModel.getFirstItem();
 		firstItemsPrice = pieceFreightModel.getAdditionalItemsPrice();
 		additionalItems = pieceFreightModel.getAdditionalItems();

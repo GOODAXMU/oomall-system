@@ -119,7 +119,7 @@ public class ShopShipmentController {
             @Valid @RequestBody WeightFreightModelDefineRequest freightModelInfo,
             @NotNull @Min(value = 0) @PathVariable Long id, @PathVariable Long shopId) {
         WeightFreightModel weightFreightModel = new WeightFreightModel(freightModelInfo,id);
-        return new Reply<>(new WeightFreightModelDefineResponse(freightModelService.defineWeightFreightModel(weightFreightModel).getData()));
+        return new Reply<>(new WeightFreightModelDefineResponse(freightModelService.defineWeightFreightModel(weightFreightModel,shopId).getData()));
     }
 
     @ApiOperation(value = "店家或管理员查询重量模板的明细")
@@ -127,7 +127,7 @@ public class ShopShipmentController {
     @ResponseStatus(value = HttpStatus.OK)
     public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModel(
             @NotNull @Min(value = 0) @PathVariable Long id, @PathVariable Long shopId) {
-        return freightModelService.getWeightFreightModel(id);
+        return freightModelService.getWeightFreightModel(id,shopId);
     }
 
     @ApiOperation(value = "管理员定义件数模板明细")
@@ -138,7 +138,7 @@ public class ShopShipmentController {
             @NotNull @Min(value = 0) @PathVariable Long id,
             @Valid @RequestBody PieceItemRequest info) {
         PieceFreightModel pieceFreightModel = new PieceFreightModel(info,id);
-        return new Reply<>(new PieceItemResponse(freightModelService.definePieceFreightModel(pieceFreightModel).getData()));
+        return new Reply<>(new PieceItemResponse(freightModelService.definePieceFreightModel(pieceFreightModel,shopId).getData()));
     }
 
     @ApiOperation(value = "管理员查询件数模板明细")
@@ -148,7 +148,7 @@ public class ShopShipmentController {
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id) {
 
-        return freightModelService.queryPieceFreightModel(id);
+        return freightModelService.queryPieceFreightModel(id,shopId);
     }
 
     @ApiOperation(value = "管理员修改件数模板明细")
@@ -157,9 +157,9 @@ public class ShopShipmentController {
     public Reply modifyPieceItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id,
-            @Valid @RequestBody PieceItemRequest info) {
+            @Valid @RequestBody PieceFreightModelModifyRequest info) {
         PieceFreightModel pieceFreightModel = new PieceFreightModel(info,id);
-        return freightModelService.modifyPieceFreightModel(pieceFreightModel,id);
+        return freightModelService.modifyPieceFreightModel(pieceFreightModel,id,shopId);
     }
 
     @ApiOperation(value = "管理员删除件数模板明细")
@@ -168,7 +168,7 @@ public class ShopShipmentController {
     public Reply deletePieceItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id) {
-        return freightModelService.deletePieceFreightModel(id);
+        return freightModelService.deletePieceFreightModel(id,shopId);
     }
 
     @ApiOperation(value = "管理员修改重量模板明细")
@@ -179,7 +179,7 @@ public class ShopShipmentController {
             @NotNull @Min(value = 0) @PathVariable Long id,
             @Valid @RequestBody WeightItemRequest info) {
         WeightFreightModel weightFreightModel = new WeightFreightModel(info,id);
-        return freightModelService.modifyWeightFreightModel(weightFreightModel,id);
+        return freightModelService.modifyWeightFreightModel(weightFreightModel,id,shopId);
     }
 
     @ApiOperation(value = "管理员删除重量模板明细")
@@ -188,6 +188,6 @@ public class ShopShipmentController {
     public Reply deleteWeightItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id) {
-        return freightModelService.deleteWeightFreightModel(id);
+        return freightModelService.deleteWeightFreightModel(id,shopId);
     }
 }

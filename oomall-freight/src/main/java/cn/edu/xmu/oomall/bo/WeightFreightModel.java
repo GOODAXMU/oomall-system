@@ -52,6 +52,7 @@ public class WeightFreightModel {
      */
     public WeightFreightModel(WeightFreightModelPo weightFreightModelPo){
         id = weightFreightModelPo.getId();
+        freightModelId = weightFreightModelPo.getFreightModelId();
         firstWeight = weightFreightModelPo.getFirstWeight();
         firstWeightFreight = weightFreightModelPo.getFirstWeightFreight();
         tenPrice = weightFreightModelPo.getTenPrice();
@@ -67,7 +68,7 @@ public class WeightFreightModel {
      * @param weightFreightModelDefineRequest Po对象, id Long
      */
     public WeightFreightModel(WeightFreightModelDefineRequest weightFreightModelDefineRequest,Long id){
-        this.id=id;
+        freightModelId = id;
         firstWeight= Long.valueOf(weightFreightModelDefineRequest.getFirstWeight());
         firstWeightFreight= Long.valueOf(weightFreightModelDefineRequest.getFirstWeightFreight());
         tenPrice= Long.valueOf(weightFreightModelDefineRequest.getTenPrice());

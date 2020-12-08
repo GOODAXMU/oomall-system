@@ -25,8 +25,8 @@ public class FreightModelService {
 	 * @param weightFreightModel,id;
 	 * @return Reply<WeightFreightModel>;
 	 */
-	public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel){
-		Reply<WeightFreightModel> reply = freightDao.defineWeightFreightModel(weightFreightModel);
+	public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel,Long shopId){
+		Reply<WeightFreightModel> reply = freightDao.defineWeightFreightModel(weightFreightModel,shopId);
 		return reply;
 	}
 
@@ -36,8 +36,8 @@ public class FreightModelService {
 	 * @param id Long;
 	 * @return Reply<List<WeightFreightModel>>;
 	 */
-	public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModel(Long id){
-		return freightDao.getWeightFreightModelByFreightModelId(id);
+	public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModel(Long id,Long shopId){
+		return freightDao.getWeightFreightModelByFreightModelId(id,shopId);
 	}
 
 	/**
@@ -46,8 +46,8 @@ public class FreightModelService {
 	 * @param pieceFreightModel,id;
 	 * @return Reply<PieceFreightModel>;
 	 */
-	public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel){
-		return freightDao.definePieceFreightModel(pieceFreightModel);
+	public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel,Long shopId){
+		return freightDao.definePieceFreightModel(pieceFreightModel,shopId);
 	}
 
 	/**
@@ -56,8 +56,8 @@ public class FreightModelService {
 	 * @param id;
 	 * @return Reply<List<PieceFreightModel>>;
 	 */
-	public Reply<List<PieceFreightQueryResponse>> queryPieceFreightModel(Long id){
-		return freightDao.getPieceFreightModelByFreightModelId(id);
+	public Reply<List<PieceFreightQueryResponse>> queryPieceFreightModel(Long id,Long shopId){
+		return freightDao.getPieceFreightModelByFreightModelId(id,shopId);
 	}
 	/**
 	 * 店家或管理员修改重量运费模板明细
@@ -65,8 +65,8 @@ public class FreightModelService {
 	 * @param weightFreightModel,id;
 	 * @return Reply<>;
 	 */
-	public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel,Long id){
-		return freightDao.modifyWeightFreightModel(weightFreightModel);
+	public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel,Long id,Long shopId){
+		return freightDao.modifyWeightFreightModel(weightFreightModel,id,shopId);
 	}
 
 	/**
@@ -75,8 +75,8 @@ public class FreightModelService {
 	 * @param id;
 	 * @return Reply<>;
 	 */
-	public Reply deleteWeightFreightModel(Long id){
-		return freightDao.deleteWeightFreightModel(id);
+	public Reply deleteWeightFreightModel(Long id,Long shopId){
+		return freightDao.deleteWeightFreightModel(id,shopId);
 	}
 
 	/**
@@ -85,8 +85,8 @@ public class FreightModelService {
 	 * @param pieceFreightModel,id;
 	 * @return Reply<>;
 	 */
-	public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel,Long id){
-		return freightDao.modifyPieceFreightModel(pieceFreightModel);
+	public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel,Long id,Long shopId){
+		return freightDao.modifyPieceFreightModel(pieceFreightModel,id,shopId);
 	}
 
 	/**
@@ -95,8 +95,8 @@ public class FreightModelService {
 	 * @param id;
 	 * @return Reply<>;
 	 */
-	public Reply deletePieceFreightModel(Long id){
-		return freightDao.deletePieceFreightModel(id);
+	public Reply deletePieceFreightModel(Long id,Long shopId){
+		return freightDao.deletePieceFreightModel(id,shopId);
 	}
 
 }
