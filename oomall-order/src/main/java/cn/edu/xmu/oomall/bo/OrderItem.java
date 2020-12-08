@@ -42,7 +42,7 @@ public class OrderItem {
 		return oi;
 	}
 
-	public OrderItemDto orderItemDto() {
+	public OrderItemDto toOrderItemDto() {
 		OrderItemDto dto = new OrderItemDto();
 		dto.setId(id);
 		dto.setSkuId(skuId);

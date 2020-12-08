@@ -15,9 +15,4 @@ public class SimulatedShareServiceImpl implements IShareService {
 	public void sendShareMessage(OrderItem orderItem) {
 
 	}
-
-	@Override
-	public Long getBeSharedId(Long customerId, Long skuId) {
-		return 111L;
-	}
 }

@@ -62,10 +62,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 
 	@Override
 	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		// 异步校验优惠活动与优惠卷
-		CompletableFuture<Map<Long, Long>> activity
-				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
-
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -81,18 +77,22 @@ public class NormalOrderServiceImpl implements IOrderService {
 		}
 		order.setOrderItems(orderItems);
 
-		// 获取可用的优惠活动并设置
-		Map<Long, Long> sku2Activity = activity.get();
-		for (OrderItem oi : order.getOrderItems()) {
-			Long act = sku2Activity.get(oi.getSkuId());
-			oi.setCouponActivityId(act);
-		}
+		// 异步校验优惠活动与优惠卷
+		CompletableFuture<Map<Long, Long>> activity
+				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
 
 		// 根据sku所属商铺划分orderItem并创建子订单, 设置orderItem的price字段
 		Map<Shop, List<OrderItem>> shop2OrderItems =
 				shopService.classifySku(order.getOrderItems());
 		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
 			order.createAndAddSubOrder(e.getKey(), e.getValue());
+		}
+
+		// 获取可用的优惠活动并设置
+		Map<Long, Long> sku2Activity = activity.get();
+		for (OrderItem oi : order.getOrderItems()) {
+			Long act = sku2Activity.get(oi.getSkuId());
+			oi.setCouponActivityId(act);
 		}
 
 		// 异步计算折扣

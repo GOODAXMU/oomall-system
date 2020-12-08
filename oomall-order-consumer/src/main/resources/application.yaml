@@ -27,4 +27,4 @@ rocketmq:
     order:
       topic: order
     share:
-      topic: share-post
+      topic: share-response

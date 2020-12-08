@@ -13,12 +13,4 @@ public interface IShareService {
 	 * @param orderItem
 	 */
 	void sendShareMessage(OrderItem orderItem);
-
-	/**
-	 * 获取点击记录
-	 * @param customerId
-	 * @param skuId
-	 * @return
-	 */
-	Long getBeSharedId(Long customerId, Long skuId);
 }
