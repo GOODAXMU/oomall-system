@@ -18,7 +18,7 @@ public class OrderPostProcessor {
 	@Resource(name = "rocketMQSender")
 	private IMessageSender sender;
 
-	private static final String TOPIC = "share-pre";
+	private static final String TOPIC = "share-request";
 
 	public void sendBeShareIdSetRequest(List<OrderItemPo> orderItems, Long customerId) {
 		for (OrderItemPo oi : orderItems) {

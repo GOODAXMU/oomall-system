@@ -99,14 +99,12 @@ public class CustomerOrderService {
 
 		Order order = r.getData();
 
-		// todo 发送分享成功消息
 		for (OrderItem oi : order.getOrderItems()) {
-			Long beSharedId = oi.getBeShareId();
-			if (beSharedId != null) {
+			if (oi.getBeShareId() != null) {
 				shareService.sendShareMessage(oi);
-				oi.setBeShareId(beSharedId);
 			}
 		}
+
 		return orderDao.confirmOrder(id);
 	}
 
