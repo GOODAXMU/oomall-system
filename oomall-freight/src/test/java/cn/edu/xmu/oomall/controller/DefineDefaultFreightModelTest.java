@@ -1,7 +1,7 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
+
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -38,14 +38,14 @@ public class DefineDefaultFreightModelTest {
      */
     @Test
     public void defineDefaultFreightModel() throws Exception {
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/default").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
@@ -56,20 +56,14 @@ public class DefineDefaultFreightModelTest {
      */
     @Test
     public void defineDefaultFreightModel1() throws Exception {
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/default").header("authorization",token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
-    }
-
-    private final String creatTestToken(Long userId, Long departId, int expireTime) {
-        String token = new JwtHelper().createToken(userId, departId, expireTime);
-        log.debug(token);
-        return token;
     }
 }

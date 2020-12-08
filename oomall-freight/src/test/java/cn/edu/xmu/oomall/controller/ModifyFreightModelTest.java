@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
 import cn.edu.xmu.oomall.vo.FreightModelPutRequest;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -35,7 +34,7 @@ public class ModifyFreightModelTest {
 
     @Test
     public void modifyFreightModel() throws Exception{
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试名");
         freightModelPutRequest.setUnit(Long.valueOf(500));
@@ -48,13 +47,13 @@ public class ModifyFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":504,\"message\":\"操作的资源id不存在\"}";
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
     @Test
     public void modifyFreightModel1() throws Exception{
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试名");
         freightModelPutRequest.setUnit(Long.valueOf(550));
@@ -67,13 +66,14 @@ public class ModifyFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
     @Test
     public void modifyFreightModel2() throws Exception{
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTkzNzE3MzY2IiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTE4ODQsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY4MjM3fQ.m2rSuar_3X_zExpAgkc1qAO0qIrZ_eGd_QT8vYib4zE\n" +
+                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTkzNzE3MzY2IiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTE4ODQsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY4MjM3fQ.m2rSuar_3X_zExpAgkc1qAO0qIrZ_eGd_QT8vYib4zE";
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试模板");
         freightModelPutRequest.setUnit(Long.valueOf(550));
@@ -86,14 +86,8 @@ public class ModifyFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":802,\"message\":\"运费模板名重复\"}";
+        String expectedResponse = "{\"errno\":802,\"errmsg\":\"运费模板名重复\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
-
-    private final String creatTestToken(Long userId, Long departId, int expireTime) {
-        String token = new JwtHelper().createToken(userId, departId, expireTime);
-        log.debug(token);
-        return token;
-    }
 }

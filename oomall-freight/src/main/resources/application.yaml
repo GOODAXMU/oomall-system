@@ -56,12 +56,14 @@ management:
         include: '*'
 
 dubbo:
+
   application:
     name: dubbo-freight
   scan:
     base-packages: cn.edu.xmu.oomall.service
   registry:
-    address: nacos://localhost:8848
+#    address: nacos://localhost:8848
+    address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
     port: 19800
@@ -75,8 +77,8 @@ oomall:
     freight-calculate:
       name: FreightCalculateImpl
 
-  freight:
-    verision: 0.0.1-SNAPSHOP
+  goods:
+    version: 0.0.1-SNAPSHOT
 
     #模式
     model:

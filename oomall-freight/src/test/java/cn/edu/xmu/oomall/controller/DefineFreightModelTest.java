@@ -1,7 +1,6 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import cn.edu.xmu.oomall.freight.test.util.JwtHelper;
 import cn.edu.xmu.oomall.vo.FreightModelDefineRequest;
 import com.alibaba.fastjson.JSON;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,7 @@ public class DefineFreightModelTest {
      */
     @Test
     public void defineFreightModel() throws Exception {
-        String token = creatTestToken(1L,1L,100);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         FreightModelDefineRequest freightModelDefineRequest = new FreightModelDefineRequest();
         freightModelDefineRequest.setName("测试名");
         freightModelDefineRequest.setType(0);
@@ -54,7 +53,7 @@ public class DefineFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":0,\"message\":\"成功\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
@@ -65,7 +64,7 @@ public class DefineFreightModelTest {
      */
     @Test
     public void defineFreightModel1() throws Exception {
-        String token = creatTestToken(1L,1L,1000);
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
         FreightModelDefineRequest freightModelDefineRequest = new FreightModelDefineRequest();
         freightModelDefineRequest.setName("测试模板");
         freightModelDefineRequest.setType(0);
@@ -79,13 +78,8 @@ public class DefineFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"code\":802,\"message\":\"运费模板名重复\"}";
+        String expectedResponse = "{\"errno\":802,\"errmsg\":\"运费模板名重复\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
-    private final String creatTestToken(Long userId, Long departId, int expireTime) {
-        String token = new JwtHelper().createToken(userId, departId, expireTime);
-        log.debug(token);
-        return token;
-    }
 }
