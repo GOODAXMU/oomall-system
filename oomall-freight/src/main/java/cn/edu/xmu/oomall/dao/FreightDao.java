@@ -54,6 +54,7 @@ public class FreightDao {
     public FreightModel getDefaultFreightModel(Long shopId) {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
+        freightModelPo.setDefaultModel(1);
         FreightModel freightModel = new FreightModel(freightModelRepository.findOne(SpecificationFactory.get(freightModelPo)).get());
         return freightModel;
     }
