@@ -68,7 +68,8 @@ public class Payment {
     }
 
     public enum Pattern {
-        SIMPLE(0, "SimplePayment");
+        REBATE(0, "UserRebatePayment"),
+        SIMPLE(2, "SimplePayment");
 
         private static final Map<Integer, Payment.Pattern> stateMap;
 
