@@ -81,6 +81,12 @@ public class OrderPo {
 		this.shopId = shopId;
 	}
 
+	public OrderPo(Long id, Long originPrice, Long discountPrice) {
+		this.id = id;
+		this.originPrice = originPrice;
+		this.discountPrice = discountPrice;
+	}
+
 	public static OrderPo toOrderPo(Order o) {
 		if (o == null) {
 			return null;

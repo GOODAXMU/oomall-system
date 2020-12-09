@@ -19,7 +19,7 @@ public class SimulatedGoodsServiceImpl implements IGoodsService {
 	}
 
 	@Override
-	public void setSkuInformation(List<OrderItem> orderItems) {
+	public void setSkuInformation(List<OrderItem> orderItems, Integer type) {
 		for (OrderItem orderItem : orderItems) {
 			orderItem.setName("Asku");
 			orderItem.setPrice(12L);

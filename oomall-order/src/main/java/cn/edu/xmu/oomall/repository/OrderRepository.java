@@ -91,6 +91,12 @@ public interface OrderRepository extends
 
 	@Modifying
 	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.subState = :to " +
+			"WHERE p.id = :id AND p.subState = :s")
+	int changeOrderSubStateWhenSubStateEquals(Long id, Integer to, Integer s);
+
+	@Modifying
+	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
 			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
 			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND p.state < :state")
@@ -103,4 +109,10 @@ public interface OrderRepository extends
 
 	@Query(value = "SELECT o.customerId FROM OrderPo o WHERE o.id = :id")
 	Long findCustomerIdById(Long id);
+
+	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id")
+	Integer findOrderStatusById(Long id);
+
+	@Query(value = "SELECT new OrderPo(o.id, o.originPrice, o.originPrice) FROM OrderPo o WHERE id = :id")
+	OrderPo findPrice(Long id);
 }
