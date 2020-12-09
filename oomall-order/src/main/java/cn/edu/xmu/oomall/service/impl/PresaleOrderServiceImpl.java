@@ -79,7 +79,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
 
 		// 设置价格和名称
-		goodsService.setSkuInformation(order.getOrderItems());
+		goodsService.setSkuInformation(order.getOrderItems(), OrderType.PRESALE.value());
 
 		// 设置订单流水号
 		order.createAndGetOrderSn();

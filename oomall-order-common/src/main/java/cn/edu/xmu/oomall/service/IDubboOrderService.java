@@ -30,4 +30,26 @@ public interface IDubboOrderService {
 	 * @return
 	 */
 	OrderItemDto getOrderItem(Long orderItemId);
+
+
+	/**
+	 * 查看订单是否可以进行支付
+	 * @param id 订单id
+	 * @return
+	 */
+	Boolean orderCanBePaid(Long id);
+
+	/**
+	 * 根据已完成的支付数额修改订单状态
+	 * @param id 订单id
+	 * @param amount 已支付金额
+	 */
+	void checkOrderPaid(Long id, Long amount);
+
+	/**
+	 * 获取订单的价格(可以被返款的部分)
+	 * @param id
+	 * @return
+	 */
+	Long getOrderCanBeRefundPrice(Long id);
 }

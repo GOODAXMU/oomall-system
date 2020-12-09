@@ -51,4 +51,18 @@ public interface IActivityService {
 	 * @return 不存在返回null
 	 */
 	Long getPreSale(Long skuId);
+
+	/**
+	 * 获取预售活动的定金
+	 * @param preSaleId
+	 * @return
+	 */
+	Long getPreSaleDeposit(Long preSaleId);
+
+	/**
+	 * 获取预售活动的尾款
+	 * @param preSaleId
+	 * @return
+	 */
+	Long getPreSaleBalance(Long preSaleId);
 }
