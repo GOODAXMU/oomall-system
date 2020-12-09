@@ -123,9 +123,6 @@ public class SpecificationFactory {
 			if (orderItem.getName() != null) {
 				predicates.add(builder.equal(root.get("name"), orderItem.getName()));
 			}
-			if (orderItem.getCouponId() != null) {
-				predicates.add(builder.equal(root.get("couponId"), orderItem.getCouponId()));
-			}
 			if (orderItem.getCouponActivityId() != null) {
 				predicates.add(builder.equal(root.get("couponActivityId"), orderItem.getCouponActivityId()));
 			}

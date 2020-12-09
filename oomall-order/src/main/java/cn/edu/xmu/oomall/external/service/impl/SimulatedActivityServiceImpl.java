@@ -54,4 +54,14 @@ public class SimulatedActivityServiceImpl implements IActivityService {
 	public Long getPreSale(Long skuId) {
 		return null;
 	}
+
+	@Override
+	public Long getPreSaleDeposit(Long preSaleId) {
+		return null;
+	}
+
+	@Override
+	public Long getPreSaleBalance(Long preSaleId) {
+		return null;
+	}
 }

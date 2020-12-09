@@ -34,8 +34,6 @@ public class OrderItemPo {
 
 	private String name;
 
-	private Long couponId;
-
 	private Long couponActivityId;
 
 	private Long beShareId;
