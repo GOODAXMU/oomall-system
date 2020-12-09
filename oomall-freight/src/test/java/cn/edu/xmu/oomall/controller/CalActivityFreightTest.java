@@ -36,6 +36,7 @@ public class CalActivityFreightTest {
         purchaseItem.setCount(1);
         Long rid = Long.valueOf(200);
         Long result = freightService.calActivityFreight(purchaseItem,rid).getData();
+
         Assert.assertEquals(result,Long.valueOf(11));
 
 

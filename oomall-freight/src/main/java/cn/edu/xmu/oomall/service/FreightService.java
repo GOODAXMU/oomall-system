@@ -55,12 +55,30 @@ public class FreightService {
     @Autowired
     private RedisTemplate redisTemplate;
 
+    /**
+     * 模板类型
+     */
+    private enum ModelType {
 
-    @Value("${oomall.freight.model.weight}")
-    private int weightModel;
+        //计重
+        WEIGHT_MODEL(0),
 
-    @Value("${oomall.freight.model.piece}")
-    private int pieceModel;
+        //计件
+        PIECE_MODEL(1);
+
+        /**
+         * 类型
+         */
+        private final Integer type;
+
+        public Integer type() {
+            return this.type;
+        }
+
+        ModelType(Integer type) {
+            this.type = type;
+        }
+    }
 
     @Value("${oomall.redis.prifix}")
     private String prifix;
@@ -111,14 +129,14 @@ public class FreightService {
         List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
         for (FreightModel freightModel : freightModels) {
             freightModel.setRid(rid);
-            if (freightModel.getType() == weightModel) {
+            if (freightModel.getType().equals(ModelType.WEIGHT_MODEL.type)) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 weightFreightModels.add(weightFreightModel);
-            } else if (freightModel.getType() == pieceModel) {
+            } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type)) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
@@ -156,14 +174,14 @@ public class FreightService {
             freightModel.setRid(rid);
 
             Long freight = Long.valueOf(0);
-            if (freightModel.getType() == weightModel) {
+            if (freightModel.getType().equals(ModelType.WEIGHT_MODEL.type)) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
-            } else if (freightModel.getType() == pieceModel) {
+            } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type)) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
