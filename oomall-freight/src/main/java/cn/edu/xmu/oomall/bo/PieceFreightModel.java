@@ -17,6 +17,7 @@ import java.util.List;
 
 /**
  * modified by yan song
+ *
  * @date 2020-12-05
  */
 @Data
@@ -40,9 +41,10 @@ public class PieceFreightModel {
 
     /**
      * 构造函数
+     *
      * @param pieceFreightModelPo Po对象
      */
-    public PieceFreightModel(PieceFreightModelPo pieceFreightModelPo){
+    public PieceFreightModel(PieceFreightModelPo pieceFreightModelPo) {
         freightModelId = pieceFreightModelPo.getFreightModelId();
         id = pieceFreightModelPo.getId();
         rid = pieceFreightModelPo.getRegionId();
@@ -54,10 +56,12 @@ public class PieceFreightModel {
 
     /**
      * 构造函数
-     * @param pieceFreightModelinfo Po对象,id Long
+     *
+     * @param pieceFreightModelInfo Po对象,
+     * @param id                    Long
      */
-    public PieceFreightModel(PieceItemRequest pieceFreightModelInfo,Long id){
-        this.freightModelId=id;
+    public PieceFreightModel(PieceItemRequest pieceFreightModelInfo, Long id) {
+        this.freightModelId = id;
         rid = pieceFreightModelInfo.getRegionId();
         firstItem = pieceFreightModelInfo.getFirstItem();
         firstItemPrice = pieceFreightModelInfo.getFirstItemPrice();
@@ -67,9 +71,10 @@ public class PieceFreightModel {
 
     /**
      * 构造函数
+     *
      * @param pieceFreightModelinfo Po对象,id Long
      */
-    public PieceFreightModel(PieceFreightModelModifyRequest pieceFreightModelInfo,Long id){
+    public PieceFreightModel(PieceFreightModelModifyRequest pieceFreightModelInfo, Long id) {
         this.id = id;
         rid = pieceFreightModelInfo.getRegionId();
         firstItem = pieceFreightModelInfo.getFirstItem();
@@ -79,12 +84,11 @@ public class PieceFreightModel {
     }
 
     /**
-     *
      * @param pieceFreightModelPos Po对象列表
      */
-    public List<PieceFreightModel> pieceFreightModelPoListToBoList(List<PieceFreightModelPo> pieceFreightModelPos){
+    public List<PieceFreightModel> pieceFreightModelPoListToBoList(List<PieceFreightModelPo> pieceFreightModelPos) {
         List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
-        for(PieceFreightModelPo w: pieceFreightModelPos){
+        for (PieceFreightModelPo w : pieceFreightModelPos) {
             pieceFreightModels.add(new PieceFreightModel(w));
         }
         return pieceFreightModels;

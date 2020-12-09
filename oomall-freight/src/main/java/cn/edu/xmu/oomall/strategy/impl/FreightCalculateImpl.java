@@ -45,7 +45,7 @@ public class FreightCalculateImpl implements IFreightCalculate {
                                  List<PieceFreightModel> pieceFreightModels) {
         Long piecePrice = calculateByPieceModel(pieceFreightModels, items);
         Long weightPrice = calculateByWeightModel(weightFreightModels, items);
-        return piecePrice > weightPrice ? piecePrice : weightPrice;
+        return Long.max(piecePrice, weightPrice);
     }
 
 
