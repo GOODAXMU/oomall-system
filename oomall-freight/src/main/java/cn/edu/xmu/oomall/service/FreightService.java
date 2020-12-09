@@ -26,7 +26,9 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -86,14 +88,21 @@ public class FreightService {
         List<FreightModel> freightModels = new ArrayList<>();
         for (PurchaseItem item : purchaseItems) {
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(item.getSkuId())).getData();
-            freightModels.add(freightModel);
+            if (!freightModels.contains(freightModel)) {
+                freightModels.add(freightModel);
+            }
             item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
         }
 
+        List<Long> shopIds = new ArrayList<>();
         //没有定义模板则使用商家默认运费模板
         if (freightModels.isEmpty()) {
             for (PurchaseItem item : purchaseItems) {
-                freightModels.add(freightDao.getDefaultFreightModel(goodService.getShopId(item.getSkuId())));
+                Long shopId = goodService.getShopId(item.getSkuId());
+                if (!shopIds.contains(shopId)) {
+                    shopIds.add(shopId);
+                    freightModels.add(freightDao.getDefaultFreightModel(shopId));
+                }
             }
         }
 
