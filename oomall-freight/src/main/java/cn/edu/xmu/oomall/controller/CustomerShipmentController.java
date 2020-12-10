@@ -11,6 +11,7 @@ import cn.edu.xmu.oomall.vo.FreightModelSummaryGetResponse;
 import cn.edu.xmu.oomall.vo.Reply;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
@@ -29,6 +30,7 @@ import java.util.List;
 @Api(value = "供买家访问的运费api")
 @Validated
 @RestController
+@Slf4j
 public class CustomerShipmentController {
 
     @Autowired
@@ -59,6 +61,7 @@ public class CustomerShipmentController {
         if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }
+
         return new Reply<>(freightModelReply.getData().createSummaryGetResponse());
     }
 

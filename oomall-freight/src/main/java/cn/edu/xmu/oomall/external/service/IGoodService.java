@@ -43,5 +43,5 @@ public interface IGoodService {
      * @param shopId  商铺模板id
      * @return
      */
-    Reply deleteGoodsFreightModel(Long modelId, long shopId);
+    Boolean deleteGoodsFreightModel(Long modelId, long shopId);
 }

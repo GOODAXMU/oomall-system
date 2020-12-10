@@ -55,7 +55,11 @@ public class FreightDao {
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setDefaultModel(1);
-        FreightModel freightModel = new FreightModel(freightModelRepository.findOne(SpecificationFactory.get(freightModelPo)).get());
+        Optional<FreightModelPo> option = freightModelRepository.findOne(SpecificationFactory.get(freightModelPo));
+        if (option.isEmpty()) {
+            return null;
+        }
+        FreightModel freightModel = new FreightModel(option.get());
         return freightModel;
     }
 
@@ -71,7 +75,7 @@ public class FreightDao {
         FreightModel freightModel = new FreightModel();
         try {
             freightModel = new FreightModel(freightModelRepository.findById(id).get());
-            if (!freightModel.getShopId().equals(shopId)) {
+            if (freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
                 return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
             }
         } catch (NoSuchElementException e) {
@@ -195,7 +199,7 @@ public class FreightDao {
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (!freightModelPo.getShopId().equals(shopId)) {
+        if (freightModelPo.getShopId().equals(Long.valueOf(0)) && !freightModelPo.getShopId().equals(shopId)) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
@@ -215,7 +219,7 @@ public class FreightDao {
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (!freightModel.getShopId().equals(freightModelPo.getShopId())) {
+        if (freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(freightModelPo.getShopId())) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
@@ -325,10 +329,10 @@ public class FreightDao {
      * @return
      * @author yan song
      */
-    public Reply deleteWeightFreightModel(Long id,Long shopId) {
+    public Reply deleteWeightFreightModel(Long id, Long shopId) {
         WeightFreightModel weightFreightModel = getWeightFreightModelById(id).getData();
         FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
-        if(freightModel.getShopId().equals(shopId)){
+        if (freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         int res = weightModelRepository.delete(id);
@@ -351,6 +355,7 @@ public class FreightDao {
         }
         return new Reply(ResponseStatus.OK);
     }
+
     /**
      * 删除指定运费模板下的计件运费模板
      *
@@ -365,6 +370,7 @@ public class FreightDao {
         }
         return new Reply(ResponseStatus.OK);
     }
+
     /**
      * 删除指定运费模板下的计件运费模板
      *
@@ -372,10 +378,10 @@ public class FreightDao {
      * @return
      * @author yan song
      */
-    public Reply deletePieceFreightModel(Long id,Long shopId) {
+    public Reply deletePieceFreightModel(Long id, Long shopId) {
         PieceFreightModel pieceFreightModel = getPieceFreightModelById(id).getData();
         FreightModel freightModel = getFreightModelById(pieceFreightModel.getFreightModelId()).getData();
-        if(!freightModel.getShopId().equals(shopId)){
+        if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         int res = pieceModelRepository.delete(id);
