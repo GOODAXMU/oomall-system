@@ -21,7 +21,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/11/26
+ * modified 2020/12/10
  */
 
 @Service
@@ -46,33 +46,91 @@ public class CustomerPaymentService {
     }
 
     /**
-     * 根据所创建的 payment 完成支付
+     * 根据所创建的 payment 完成订单支付
      * @return
      */
-    public Reply<Payment> createPayment(Payment payment) {
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
+    public Reply<Payment> createOrderPayment(Payment payment, Long customerId) {
+        Long orderId = payment.getOrderId();
+        if (null == orderId) {
+            return new Reply<>(ResponseStatus.FIELD_INVALID);
+        }
 
-        // 根据插入数据库分配获得 id
-        payment = paymentDao.savePayment(payment).getData();
-        if (null == payment) {
+        // 检查用户和该订单是否匹配
+        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
+        // 根据订单状态确认是否允许支付
+        if (!orderService.orderCanBePaid(orderId)) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
+
+        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
+        payment.setState(Payment.State.WAITING);
+
+        // 进行支付
         if (externalPayment.pay(payment.getActualAmount()) > 0L) {
             payment.setPayTime(LocalDateTime.now());
             payment.setState(Payment.State.SUCCESS);
         }
         else {
+            payment.setPayTime(null);
             payment.setState(Payment.State.FAILED);
         }
 
-
-        if (paymentDao.updatePayment(payment).isOk()) {
-            return new Reply<>(payment);
+        // 支付成果才写入数据库
+        if (payment.isPaySuccess()) {
+            paymentDao.savePayment(payment);
         }
 
-        return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        // 提醒订单服务器检查支付状态
+        orderService.checkOrderPaid(orderId, paymentDao.calcOrderPayments(orderId));
+
+        return new Reply<>(payment);
+    }
+
+    /**
+     * 根据所创建的 payment 完成订单支付
+     * @return
+     */
+    public Reply<Payment> createAfterSalePayment(Payment payment, Long customerId) {
+        Long afterSaleId = payment.getAfterSaleId();
+        if (null == afterSaleId) {
+            return new Reply<>(ResponseStatus.FIELD_INVALID);
+        }
+
+        // 检查用户和该售后是否匹配
+        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        // 根据订单状态确认是否允许支付
+        if (!afterSaleServer.afterSaleCanBePaid(afterSaleId)) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
+
+        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
+        payment.setState(Payment.State.WAITING);
+
+        // 进行支付
+        if (externalPayment.pay(payment.getActualAmount()) > 0L) {
+            payment.setPayTime(LocalDateTime.now());
+            payment.setState(Payment.State.SUCCESS);
+        }
+        else {
+            payment.setPayTime(null);
+            payment.setState(Payment.State.FAILED);
+        }
+
+        // 支付成果才写入数据库
+        if (payment.isPaySuccess()) {
+            paymentDao.savePayment(payment);
+        }
+
+        // 提醒订单服务器检查支付状态
+        afterSaleServer.checkAfterSalePaid(afterSaleId, paymentDao.calcAfterSalePayments(afterSaleId));
+
+        return new Reply<>(payment);
     }
 
     /**
@@ -100,36 +158,6 @@ public class CustomerPaymentService {
         }
 
         return paymentDao.getPaymentsByAfterSaleId(afterSaleId);
-    }
-
-    /**
-     * 根据所创建的 refund 完成返款
-     * @param refund
-     * @return
-     */
-    public Reply<Refund> createRefund(Refund refund) {
-        refund.setPaySn("refund" + UUID.randomUUID().toString());
-        refund.setState(Refund.State.WAITING);
-
-        // 根据插入数据库分配获得 id
-        refund = refundDao.saveRefund(refund).getData();
-        if (null == refund) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-        }
-
-        // 返款是否成功
-        if (externalPayment.pay(refund.getAmount()) > 0L) {
-            refund.setState(Refund.State.SUCCESS);
-        }
-        else {
-            refund.setState(Refund.State.FAILED);
-        }
-
-        if (refundDao.updateRefund(refund).isOk()) {
-            return new Reply<>(refund);
-        }
-
-        return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
     }
 
     /**

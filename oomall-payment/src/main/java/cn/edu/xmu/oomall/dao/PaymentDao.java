@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/11/30
+ * modified 2020/12/10
  */
 
 @Component
@@ -83,5 +83,25 @@ public class PaymentDao {
         paymentRepository.update(payment.createPo());
 
         return new Reply<>();
+    }
+
+    public Long calcOrderPayments(Long orderId) {
+        Long price = 0L;
+
+        for (PaymentPo po : paymentRepository.findAllByOrderId(orderId)) {
+            price += po.getActualAmount();
+        }
+
+        return  price;
+    }
+
+    public Long calcAfterSalePayments(Long afterSaleId) {
+        Long price = 0L;
+
+        for (PaymentPo po : paymentRepository.findAllByAfterSaleId(afterSaleId)) {
+            price += po.getActualAmount();
+        }
+
+        return  price;
     }
 }

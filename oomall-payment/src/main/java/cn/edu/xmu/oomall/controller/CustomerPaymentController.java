@@ -89,16 +89,41 @@ public class CustomerPaymentController {
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@LoginUser Long customerId) {
 
-		// todo 检查 orderId 是否为 token 用户所有
-		Payment payment = new Payment(id, request, Payment.Type.NORMAL);
+		Payment payment = new Payment(id, null, request);
 
-		Reply<Payment> r = customerPaymentService.createPayment(payment);
-		payment = r.getData();
-		if (null == payment) {
+		Reply<Payment> r = customerPaymentService.createOrderPayment(payment, customerId);
+		if (!r.isOk()) {
 			return new Reply<>(r.getResponseStatus());
 		}
 
-		return new Reply<>(payment.createVo());
+		return new Reply<>(r.getData().createVo());
+	}
+
+
+	@ApiOperation(value = "买家为售后单创建支付单")
+	@ApiImplicitParams({
+			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+			@ApiImplicitParam(paramType = "path", dataType = "Long", name = "id", value = "售后单id", required = true),
+			@ApiImplicitParam(paramType = "body", dataType = "PaymentPostRequest", name = "body", value = "支付信息", required = true)
+	})
+	@ApiResponses({
+			@ApiResponse(code = 0, message = "成功")
+	})
+	@ResponseStatus(value = HttpStatus.CREATED)
+	@PostMapping(value = "/aftersales/{id}/payments", produces = "application/json;charset=UTF-8")
+	public Reply<PaymentResponse> createAfterSalePayment(
+			@Valid @RequestBody PaymentPostRequest request,
+			@NotNull @Min(value = 0) @PathVariable Long id,
+			@LoginUser Long customerId) {
+
+		Payment payment = new Payment(null, id, request);
+
+		Reply<Payment> r = customerPaymentService.createAfterSalePayment(payment, customerId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getResponseStatus());
+		}
+
+		return new Reply<>(r.getData().createVo());
 	}
 
 
@@ -128,34 +153,6 @@ public class CustomerPaymentController {
 		}
 
 		return new Reply<>(paymentResponses);
-	}
-
-
-	@ApiOperation(value = "买家为售后单创建支付单")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-			@ApiImplicitParam(paramType = "path", dataType = "Long", name = "id", value = "售后单id", required = true),
-			@ApiImplicitParam(paramType = "body", dataType = "PaymentPostRequest", name = "body", value = "支付信息", required = true)
-	})
-	@ApiResponses({
-			@ApiResponse(code = 0, message = "成功")
-	})
-	@ResponseStatus(value = HttpStatus.CREATED)
-	@PostMapping(value = "/aftersales/{id}/payments", produces = "application/json;charset=UTF-8")
-	public Reply<PaymentResponse> createAfterSalePayment(
-			@Valid @RequestBody PaymentPostRequest request,
-			@NotNull @Min(value = 0) @PathVariable Long id) {
-
-		// todo 检查 aftersaleId 是否为 token 用户所有
-		Payment payment = new Payment(id, request, Payment.Type.AFTERSALE);
-
-		Reply<Payment> r = customerPaymentService.createPayment(payment);
-		payment = r.getData();
-		if (null == payment) {
-			return new Reply<>(r.getResponseStatus());
-		}
-
-		return new Reply<>(payment.createVo());
 	}
 
 

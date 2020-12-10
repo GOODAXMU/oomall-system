@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.repository;
 
+import cn.edu.xmu.oomall.bo.Payment;
 import cn.edu.xmu.oomall.entity.PaymentPo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
@@ -7,11 +8,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
  * @author Wang Zhizhou
- * modified 2020/11/28
+ * modified 2020/12/10
  */
 public interface PaymentRepository extends
 		JpaRepository<PaymentPo, Long>,
@@ -36,5 +39,19 @@ public interface PaymentRepository extends
 	@Transactional
 	@Query(value = "UPDATE PaymentPo po SET po.state = :state WHERE po.id = :id")
 	int updatePaymentState(Long id, Integer state);
+
+	// todo 写查询sql
+	@Modifying
+	@Transactional
+	@Query
+	List<PaymentPo> findAllByOrderId(Long oid);
+
+
+	// todo 写查询sql
+	@Modifying
+	@Transactional
+	@Query
+	List<PaymentPo> findAllByAfterSaleId(Long aid);
+
 
 }

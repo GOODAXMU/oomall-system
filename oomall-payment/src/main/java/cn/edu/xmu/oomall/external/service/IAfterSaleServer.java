@@ -21,4 +21,18 @@ public interface IAfterSaleServer {
      * @return
      */
     Boolean isShopOwnAfterSale(Long shopId, Long afterSaleId);
+
+    /**
+     * 查看售后是否处于可支付状态
+     * @param id    售后id
+     * @return
+     */
+    Boolean afterSaleCanBePaid(Long id);
+
+    /**
+     * 完成支付通知售后检查状态
+     * @param id        售后id
+     * @param amount    售后完成的支付
+     */
+    void checkAfterSalePaid(Long id, Long amount);
 }

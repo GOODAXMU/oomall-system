@@ -1,15 +1,12 @@
 package cn.edu.xmu.oomall.bo;
 
 import cn.edu.xmu.oomall.entity.PaymentPo;
-import cn.edu.xmu.oomall.vo.AftersalePaymentPostRequest;
 import cn.edu.xmu.oomall.vo.PaymentPostRequest;
 import cn.edu.xmu.oomall.vo.PaymentResponse;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -25,11 +22,6 @@ public class Payment {
      * 支付等待时间, 超时则取消
      */
     private static Long waitTime = 30L;
-
-    public enum Type {
-        NORMAL,
-        AFTERSALE;
-    }
 
     public enum State {
         NEW(0, "新创建"),
@@ -103,7 +95,7 @@ public class Payment {
 
     private Long id;
 
-    private Long aftersaleId;
+    private Long afterSaleId;
 
     private Long amount;
 
@@ -129,18 +121,13 @@ public class Payment {
 
     /**
      * 根据对应的订单id 以及应支付金额创建新的 payment
-     * @param id
+     * @param orderId       订单id
+     * @param afterSaleId   售后id
      * @param request
      */
-    public Payment(Long id, PaymentPostRequest request, Type type){
-        if (type == Type.NORMAL) {
-            this.orderId = id;
-            this.aftersaleId = null;
-        }
-        else if (type == Type.AFTERSALE) {
-            this.aftersaleId = id;
-            this.orderId = null;
-        }
+    public Payment(Long orderId, Long afterSaleId, PaymentPostRequest request){
+        this.orderId = orderId;
+        this.afterSaleId = afterSaleId;
         this.amount = request.getPrice();
         this.actualAmount = request.getPrice();
         this.paymentPattern = Pattern.valueOf(request.getPattern());
@@ -157,7 +144,7 @@ public class Payment {
      */
     public Payment(PaymentPo po){
         this.id = po.getId();
-        this.aftersaleId = po.getAftersaleId();
+        this.afterSaleId = po.getAftersaleId();
         this.amount = po.getAmount();
         this.actualAmount = po.getActualAmount();
         this.paymentPattern = Pattern.getById(po.getPaymentPattern());
@@ -199,7 +186,7 @@ public class Payment {
     public PaymentPo createPo() {
         PaymentPo po = new PaymentPo();
         po.setId(this.id);
-        po.setAftersaleId(this.aftersaleId);
+        po.setAftersaleId(this.afterSaleId);
         po.setAmount(this.amount);
         po.setActualAmount(this.actualAmount);
         po.setPaymentPattern(this.paymentPattern.getPatternId());
@@ -213,5 +200,13 @@ public class Payment {
         po.setGmtModified(this.gmtModified);
 
         return po;
+    }
+
+    /**
+     * 判断支付是否成功
+     * @return
+     */
+    public Boolean isPaySuccess() {
+        return this.state == State.SUCCESS;
     }
 }
