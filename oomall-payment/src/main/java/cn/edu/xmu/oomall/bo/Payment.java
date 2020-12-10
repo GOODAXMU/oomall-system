@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/11/29
+ * modified 2020/12/10
  */
 
 @Data
@@ -68,7 +68,7 @@ public class Payment {
     }
 
     public enum Pattern {
-        REBATE(0, "UserRebatePayment"),
+        REBATE(1, "UserRebatePayment"),
         SIMPLE(2, "SimplePayment");
 
         private static final Map<Integer, Payment.Pattern> stateMap;

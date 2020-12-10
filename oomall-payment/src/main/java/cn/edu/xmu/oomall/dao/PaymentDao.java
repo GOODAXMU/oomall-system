@@ -5,13 +5,8 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.entity.PaymentPo;
 import cn.edu.xmu.oomall.repository.PaymentRepository;
 import cn.edu.xmu.oomall.repository.util.SpecificationFactory;
-import cn.edu.xmu.oomall.vo.PaymentResponse;
 import cn.edu.xmu.oomall.vo.Reply;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -46,9 +41,9 @@ public class PaymentDao {
         return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
     }
 
-    public Reply<List<Payment>> getPaymentsByAftersaleId(Long aftersaleId) {
+    public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId) {
         PaymentPo po = new PaymentPo();
-        po.setAftersaleId(aftersaleId);
+        po.setAftersaleId(afterSaleId);
 
         List<Payment> payments = new ArrayList<>();
         for (PaymentPo paymentPo : paymentRepository.findAll(SpecificationFactory.get(po))) {

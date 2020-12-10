@@ -1,11 +1,30 @@
 package cn.edu.xmu.oomall.external.service;
 
+import java.util.List;
+
 /**
  * @author Wang Zhizhou
  * create 2020/11/28
- * modified 2020/12/08
+ * modified 2020/12/10
  */
 public interface IOrderService {
+
+    /**
+     * 检查客户是否拥有该订单
+     * @param orderId    订单id
+     * @param customerId 顾客id
+     * @return  校验确认
+     */
+    Boolean isCustomerOwnOrder(Long customerId, Long orderId);
+
+    /**
+     * 检查商店是否拥有该订单
+     * @param shopId    商店id
+     * @param orderId   订单id
+     * @return
+     */
+    Boolean isShopOwnOrder(Long shopId, Long orderId);
+
 
     /**
      * 查看订单是否可以进行支付

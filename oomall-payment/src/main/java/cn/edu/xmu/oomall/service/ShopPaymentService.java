@@ -5,29 +5,27 @@ import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
-import cn.edu.xmu.oomall.entity.PaymentPo;
+import cn.edu.xmu.oomall.external.service.IAfterSaleServer;
 import cn.edu.xmu.oomall.external.service.IExternalPayment;
+import cn.edu.xmu.oomall.external.service.IOrderService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
-import cn.edu.xmu.oomall.vo.PaymentPostRequest;
 import cn.edu.xmu.oomall.vo.Reply;
-import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 /**
  * @author Wang Zhizhou
- * create 2020/11/24
- * modified 2020/11/26
+ * create 2020/12/10
+ * modified 2020/12/10
  */
 
 @Service
-public class PaymentService {
+public class ShopPaymentService {
 
     @Autowired
     private PaymentDao paymentDao;
@@ -39,48 +37,25 @@ public class PaymentService {
     private ServiceFactory serviceFactory;
 
     private IExternalPayment externalPayment;
+    private IOrderService orderService;
+    private IAfterSaleServer afterSaleServer;
 
     @PostConstruct
     public void init() {
         externalPayment = (IExternalPayment) serviceFactory.get(IExternalPayment.class);
     }
 
-    /**
-     * 根据所创建的 payment 完成支付
-     * @return
-     */
-    public Reply<Payment> createPayment(Payment payment) {
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
-
-        // 根据插入数据库分配获得 id
-        payment = paymentDao.savePayment(payment).getData();
-        if (null == payment) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-        }
-
-        if (externalPayment.pay(payment.getActualAmount()) > 0L) {
-            payment.setPayTime(LocalDateTime.now());
-            payment.setState(Payment.State.SUCCESS);
-        }
-        else {
-            payment.setState(Payment.State.FAILED);
-        }
-
-
-        if (paymentDao.updatePayment(payment).isOk()) {
-            return new Reply<>(payment);
-        }
-
-        return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-    }
 
     /**
      * 根据订单id 查询该订单的所有支付信息
      * @param orderId
      * @return
      */
-    public Reply<List<Payment>> getPayments(Long orderId) {
+    public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long shopId) {
+        if (orderService.isShopOwnOrder(shopId, orderId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
         return paymentDao.getPaymentsByOrderId(orderId);
     }
 
@@ -95,11 +70,15 @@ public class PaymentService {
 
     /**
      * 根据售后id 查询该售后的所有支付信息
-     * @param aftersaleId
+     * @param afterSaleId
      * @return
      */
-    public Reply<List<Payment>> getAftersalePayments(Long aftersaleId) {
-        return paymentDao.getPaymentsByAftersaleId(aftersaleId);
+    public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long shopId) {
+        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        return paymentDao.getPaymentsByAfterSaleId(afterSaleId);
     }
 
     /**
@@ -137,17 +116,25 @@ public class PaymentService {
      * @param orderId
      * @return
      */
-    public Reply<List<Refund>> getRefunds(Long orderId) {
+    public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long shopId) {
+        if (orderService.isShopOwnOrder(shopId, orderId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
         return refundDao.getRefundsByOrderId(orderId);
     }
 
     /**
      * 根据订单id 查询该售后单的所有退款信息
-     * @param aftersaleId
+     * @param afterSaleId
      * @return
      */
-    public Reply<List<Refund>> getAftersaleRefunds(Long aftersaleId) {
-        return refundDao.getRefundsByAftersaleId(aftersaleId);
+    public Reply<List<Refund>> getRefundsByAfterSaleId(Long afterSaleId, Long shopId) {
+        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+
+        return refundDao.getRefundsByAfterSaleId(afterSaleId);
     }
 
 }
