@@ -1,7 +1,10 @@
 package cn.edu.xmu.oomall.service;
 
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.dto.EffectiveShareDto;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
+
+import java.util.List;
 
 /**
  * @author xincong yao
@@ -52,4 +55,10 @@ public interface IDubboOrderService {
 	 * @return
 	 */
 	Long getOrderCanBeRefundPrice(Long id);
+
+	/**
+	 * 返回确认收货后七天到八天且未退款的订单项信息
+	 * @return
+	 */
+	List<EffectiveShareDto> getEffectiveShareRecord();
 }

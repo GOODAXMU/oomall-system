@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -113,4 +115,7 @@ public interface OrderRepository extends
 
 	@Query(value = "SELECT new OrderPo(o.id, o.originPrice, o.originPrice) FROM OrderPo o WHERE id = :id")
 	OrderPo findPrice(Long id);
+
+	@Query(value = "SELECT o FROM OrderPo o WHERE o.state = :status AND o.gmtModified > :startTime AND o.gmtModified < :endTime")
+	List<OrderPo> findAllWhereStatusEqualsAndGmtModifiedBetween(Integer status, LocalDateTime startTime, LocalDateTime endTime);
 }

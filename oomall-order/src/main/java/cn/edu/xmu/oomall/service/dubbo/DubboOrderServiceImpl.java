@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.service.dubbo;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
+import cn.edu.xmu.oomall.dto.EffectiveShareDto;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.external.service.IActivityService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
@@ -15,6 +16,9 @@ import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -181,5 +185,32 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			return 0L;
 		}
 		return po.getOriginPrice() - po.getDiscountPrice();
+	}
+
+	@Override
+	public List<EffectiveShareDto> getEffectiveShareRecord() {
+		List<EffectiveShareDto> dtos = new ArrayList<>();
+
+		List<OrderPo> orders = orderRepository.findAllWhereStatusEqualsAndGmtModifiedBetween(
+				OrderStatus.RECEIVED.value(),
+				LocalDateTime.now().minusDays(8),
+				LocalDateTime.now().minusDays(7)
+		);
+
+		for (OrderPo po : orders) {
+			List<OrderItemPo> orderItems = orderItemRepository.findByOrderId(po.getId());
+			for (OrderItemPo oi : orderItems) {
+				Long price = (po.getOriginPrice() - po.getDiscountPrice()) * oi.getPrice() / po.getOriginPrice();
+				if (oi.getBeShareId() != null) {
+					EffectiveShareDto dto = new EffectiveShareDto();
+					dto.setBeSharedId(oi.getBeShareId());
+					dto.setQuantity(oi.getQuantity());
+					dto.setPrice(price);
+					dtos.add(dto);
+				}
+			}
+		}
+
+		return dtos;
 	}
 }
