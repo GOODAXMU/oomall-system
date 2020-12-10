@@ -113,9 +113,15 @@ public interface OrderRepository extends
 	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id")
 	Integer findOrderStatusById(Long id);
 
-	@Query(value = "SELECT new OrderPo(o.id, o.originPrice, o.originPrice) FROM OrderPo o WHERE id = :id")
+	@Query(value = "SELECT new OrderPo(o.id, o.originPrice, o.discountPrice) FROM OrderPo o WHERE id = :id")
 	OrderPo findPrice(Long id);
 
 	@Query(value = "SELECT o FROM OrderPo o WHERE o.state = :status AND o.gmtModified > :startTime AND o.gmtModified < :endTime")
 	List<OrderPo> findAllWhereStatusEqualsAndGmtModifiedBetween(Integer status, LocalDateTime startTime, LocalDateTime endTime);
+
+	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.shopId = :shopId")
+	Long findIdByIdAndShopId(Long orderId, Long shopId);
+
+	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.customerId = :customerId")
+	Long findIdByIdAndCustomerId(Long orderId, Long customerId);
 }

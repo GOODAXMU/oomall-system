@@ -67,6 +67,16 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	}
 
 	@Override
+	public Boolean isShopOwnOrder(Long shopId, Long orderId) {
+		return orderRepository.findIdByIdAndShopId(orderId, shopId) != null;
+	}
+
+	@Override
+	public Boolean isCustomerOwnOrder(Long customerId, Long orderId) {
+		return orderRepository.findIdByIdAndCustomerId(orderId, customerId) != null;
+	}
+
+	@Override
 	public Boolean isCustomerOwnOrderItem(Long customerId, Long orderItemId) {
 		Long orderId = orderItemRepository.findOrderIdById(orderItemId);
 		if (orderId == null) {
@@ -147,7 +157,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		} else if (OrderType.GROUPON.value() == po.getOrderType()) {
 			Long price = Long.MAX_VALUE;
 			if (po.getOriginPrice() != null) {
-				price = po.getOriginPrice() - po.getDiscountPrice();
+				long discount = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
+				price = po.getOriginPrice() - discount;
 			}
 
 			if (price.equals(amount)) {
@@ -165,7 +176,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		} else {
 			Long price = Long.MAX_VALUE;
 			if (po.getOriginPrice() != null) {
-				price = po.getOriginPrice() - po.getDiscountPrice();
+				long discount = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
+				price = po.getOriginPrice() - discount;
 			}
 
 			if (price.equals(amount)) {
@@ -184,7 +196,9 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		if (po == null || po.getOriginPrice() == null) {
 			return 0L;
 		}
-		return po.getOriginPrice() - po.getDiscountPrice();
+		long price = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
+		long discount = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
+		return price - discount;
 	}
 
 	@Override
@@ -200,12 +214,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		for (OrderPo po : orders) {
 			List<OrderItemPo> orderItems = orderItemRepository.findByOrderId(po.getId());
 			for (OrderItemPo oi : orderItems) {
-				Long price = (po.getOriginPrice() - po.getDiscountPrice()) * oi.getPrice() / po.getOriginPrice();
 				if (oi.getBeShareId() != null) {
 					EffectiveShareDto dto = new EffectiveShareDto();
 					dto.setBeSharedId(oi.getBeShareId());
 					dto.setQuantity(oi.getQuantity());
-					dto.setPrice(price);
+					long price = oi.getPrice() == null ? 0L : oi.getPrice();
+					long discount = oi.getDiscount() == null ? 0L : oi.getDiscount();
+					dto.setPrice(price - discount);
 					dtos.add(dto);
 				}
 			}

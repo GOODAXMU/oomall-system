@@ -20,6 +20,22 @@ public interface IDubboOrderService {
 	AfterSaleDto getAfterSaleByOrderItemId(Long orderItemId);
 
 	/**
+	 * 商铺是否拥有某个order
+	 * @param shopId
+	 * @param orderId
+	 * @return
+	 */
+	Boolean isShopOwnOrder(Long shopId, Long orderId);
+
+	/**
+	 * 用户是否拥有某个order
+	 * @param customerId
+	 * @param orderId
+	 * @return
+	 */
+	Boolean isCustomerOwnOrder(Long customerId, Long orderId);
+
+	/**
 	 * 用户是否拥有某个orderItem
 	 * @param customerId
 	 * @param orderItemId
