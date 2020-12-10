@@ -431,16 +431,19 @@ public class FreightDao {
     /**
      * 定义重量运费模板
      *
-     * @param WeightFreightModel
+     * @param weightFreightModel
      * @return WeightFreightModel
      */
-    public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel WeightFreightModel,Long shopId) {
-        WeightFreightModelPo WeightFreightModelPo = new WeightFreightModelPo(WeightFreightModel);
+    public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel,Long shopId) {
+        WeightFreightModelPo WeightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
         WeightFreightModelPo.setGmtModified(LocalDateTime.now());
         WeightFreightModelPo.setGmtCreate(LocalDateTime.now());
-        FreightModel freightModel = getFreightModelById(WeightFreightModel.getFreightModelId()).getData();
+        FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
         if(!freightModel.getShopId().equals(shopId)){
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        }
+        if(null!=getWeightFreightModelByRid(weightFreightModel.getRid())){
+            return new Reply<>(ResponseStatus.REGION_EXIST);
         }
         Reply<WeightFreightModel> reply = new Reply<>();
         try {
@@ -559,6 +562,9 @@ public class FreightDao {
         if(!freightModel.getShopId().equals(shopId)){
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
+        if(null!=getPieceFreightModelByRid(pieceFreightModel.getRid()).getData()){
+            return new Reply<>(ResponseStatus.REGION_EXIST);
+        }
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
         pieceFreightModelPo.setGmtModified(LocalDateTime.now());
         pieceFreightModelPo.setGmtCreate(LocalDateTime.now());
@@ -587,5 +593,36 @@ public class FreightDao {
         return reply;
     }
 
+    /**
+     * 通过计件运费模板rid查询计件运费模板
+     *
+     * @param rid 计件运费模板rid
+     * @return PieceFreightModel
+     */
+    public Reply<PieceFreightModel> getPieceFreightModelByRid(Long rid){
+        PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
+        pieceFreightModelPo.setRegionId(rid);
+        List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo));
+        if(pieceFreightModelPos.isEmpty()){
+            return new Reply<>(null);
+        }
+        return new Reply<>(new PieceFreightModel(pieceFreightModelPos.get(0)));
+    }
+
+    /**
+     * 通过重量运费模板rid查询重量运费模板
+     *
+     * @param rid 重量运费模板rid
+     * @return WeightFreightModel
+     */
+    public Reply<WeightFreightModel> getWeightFreightModelByRid(Long rid){
+        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
+        weightFreightModelPo.setRegionId(rid);
+        List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo));
+        if(weightFreightModelPos.isEmpty()){
+            return new Reply<>(null);
+        }
+        return new Reply<>(new WeightFreightModel((weightFreightModelPos.get(0))));
+    }
 
 }

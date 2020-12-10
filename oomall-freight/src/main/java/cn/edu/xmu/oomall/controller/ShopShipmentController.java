@@ -115,11 +115,15 @@ public class ShopShipmentController {
     @ApiOperation(value = "管理员定义重量模板明细")
     @PostMapping(value = "/shops/{shopId}/freightmodels/{id}/weightItems", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Reply<WeightFreightModelDefineResponse> defineWeightFreightModelInfo(
+    public Reply<WeightFreightModelDefineResponse> defineWeightFreightModel(
             @Valid @RequestBody WeightFreightModelDefineRequest freightModelInfo,
             @NotNull @Min(value = 0) @PathVariable Long id, @PathVariable Long shopId) {
         WeightFreightModel weightFreightModel = new WeightFreightModel(freightModelInfo,id);
-        return new Reply<>(new WeightFreightModelDefineResponse(freightModelService.defineWeightFreightModel(weightFreightModel,shopId).getData()));
+        Reply<WeightFreightModel> reply = freightModelService.defineWeightFreightModel(weightFreightModel,shopId);
+        if(null==reply.getData()){
+            return new Reply<>(reply.getResponseStatus());
+        }
+        return new Reply<>(new WeightFreightModelDefineResponse(reply.getData()));
     }
 
     @ApiOperation(value = "店家或管理员查询重量模板的明细")
@@ -133,12 +137,16 @@ public class ShopShipmentController {
     @ApiOperation(value = "管理员定义件数模板明细")
     @PostMapping(value = "/shops/{shopId}/freightmodels/{id}/pieceItems", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Reply<PieceItemResponse> createPieceItemsModel(
+    public Reply<PieceItemResponse> definePieceItemModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id,
             @Valid @RequestBody PieceItemRequest info) {
         PieceFreightModel pieceFreightModel = new PieceFreightModel(info,id);
-        return new Reply<>(new PieceItemResponse(freightModelService.definePieceFreightModel(pieceFreightModel,shopId).getData()));
+        Reply<PieceFreightModel> reply = freightModelService.definePieceFreightModel(pieceFreightModel,shopId);
+        if(null==reply.getData()){
+            return new Reply<>(reply.getResponseStatus());
+        }
+        return new Reply<>(new PieceItemResponse(reply.getData()));
     }
 
     @ApiOperation(value = "管理员查询件数模板明细")

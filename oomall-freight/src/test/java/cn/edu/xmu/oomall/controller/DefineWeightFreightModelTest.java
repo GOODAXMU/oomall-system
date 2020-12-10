@@ -43,6 +43,29 @@ public class DefineWeightFreightModelTest {
         weightFreightModelDefineRequest.setFirstWeight(1);
         weightFreightModelDefineRequest.setFirstWeightFreight(1);
         weightFreightModelDefineRequest.setHundredPrice(200);
+        weightFreightModelDefineRequest.setRegionId(2);
+        weightFreightModelDefineRequest.setTenPrice(10);
+        weightFreightModelDefineRequest.setTrihunPrice(300);
+        String json = JSON.toJSONString(weightFreightModelDefineRequest);
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/weightItems")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":803,\"errmsg\":\"运费模板中该地区已经定义\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+    @Test
+    public void defineWeightFreightModelSuccessfully() throws Exception {
+        WeightFreightModelDefineRequest weightFreightModelDefineRequest = new WeightFreightModelDefineRequest();
+        weightFreightModelDefineRequest.setAbovePrice(200);
+        weightFreightModelDefineRequest.setFiftyPrice(100);
+        weightFreightModelDefineRequest.setFirstWeight(1);
+        weightFreightModelDefineRequest.setFirstWeightFreight(1);
+        weightFreightModelDefineRequest.setHundredPrice(200);
         weightFreightModelDefineRequest.setRegionId(1);
         weightFreightModelDefineRequest.setTenPrice(10);
         weightFreightModelDefineRequest.setTrihunPrice(300);
@@ -55,7 +78,30 @@ public class DefineWeightFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        String expectedResponse = "{\"errno\":803,\"errmsg\":\"运费模板中该地区已经定义\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+    @Test
+    public void defineWeightFreightModelOutOfScope() throws Exception {
+        WeightFreightModelDefineRequest weightFreightModelDefineRequest = new WeightFreightModelDefineRequest();
+        weightFreightModelDefineRequest.setAbovePrice(200);
+        weightFreightModelDefineRequest.setFiftyPrice(100);
+        weightFreightModelDefineRequest.setFirstWeight(1);
+        weightFreightModelDefineRequest.setFirstWeightFreight(1);
+        weightFreightModelDefineRequest.setHundredPrice(200);
+        weightFreightModelDefineRequest.setRegionId(3);
+        weightFreightModelDefineRequest.setTenPrice(10);
+        weightFreightModelDefineRequest.setTrihunPrice(300);
+        String json = JSON.toJSONString(weightFreightModelDefineRequest);
+        String responseString = this.mvc.perform(post("/shops/2/freightmodels/1/weightItems")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 }
