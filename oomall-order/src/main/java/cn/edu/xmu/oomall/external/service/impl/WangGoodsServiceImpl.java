@@ -25,7 +25,7 @@ public class WangGoodsServiceImpl implements IGoodsService {
 	}
 
 	@Override
-	public void setSkuInformation(List<OrderItem> orderItems) {
+	public void setSkuInformation(List<OrderItem> orderItems, Integer type) {
 		// todo 使用效率更高的接口
 		for (OrderItem orderItem : orderItems) {
 			SkuDTO sku = goodsService.getSku(orderItem.getSkuId());

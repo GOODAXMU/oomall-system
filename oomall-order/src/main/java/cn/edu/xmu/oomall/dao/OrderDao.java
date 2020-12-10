@@ -92,11 +92,15 @@ public class OrderDao {
     }
 
     public Reply<Order> getOrderByIdAndCustomerId(Long id, Long customerId) {
-        OrderPo t = orderRepository.findByIdAndCustomerId(id, customerId);
-        Order o = Order.toOrder(t);
-        if (o == null) {
+        Optional<OrderPo> op = orderRepository.findById(id);
+        if (op.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
+        OrderPo opo = op.get();
+        if (opo.getCustomerId() == null || !opo.getCustomerId().equals(customerId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        }
+        Order o = Order.toOrder(opo);
 
         // 设置订单列表
         List<OrderItemPo> orderItemPos = orderItemRepository.findByOrderId(o.getId());

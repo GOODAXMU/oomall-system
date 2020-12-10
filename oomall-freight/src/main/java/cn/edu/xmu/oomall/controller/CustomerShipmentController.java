@@ -7,6 +7,7 @@ import cn.edu.xmu.oomall.bo.FreightModel;
 import cn.edu.xmu.oomall.bo.PurchaseItem;
 import cn.edu.xmu.oomall.service.FreightService;
 import cn.edu.xmu.oomall.vo.FreightCalculateRequest;
+import cn.edu.xmu.oomall.vo.FreightModelSummaryGetResponse;
 import cn.edu.xmu.oomall.vo.Reply;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -51,12 +52,12 @@ public class CustomerShipmentController {
     @GetMapping(value = "freightmodels/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     @Audit
-    public Reply getFreightModelSummary(
+    public Reply<FreightModelSummaryGetResponse> getFreightModelSummary(
             @NotNull @Min(value = 0) @PathVariable Long id,
             @Depart Long shopId) {
         Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id,shopId);
         if (!freightModelReply.isOk()) {
-            return freightModelReply;
+            return new Reply<>(freightModelReply.getResponseStatus());
         }
         return new Reply<>(freightModelReply.getData().createSummaryGetResponse());
     }

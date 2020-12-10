@@ -98,7 +98,7 @@ public class ShopShipmentController {
     @ApiOperation(value = "删除运费模板，需同步删除与商品的")
     @DeleteMapping(value = "/shops/{shopId}/freightmodels/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
-    public Object deleteFreightModel(
+    public Reply deleteFreightModel(
             @NotNull @Min(value = 0) @PathVariable Long id,
             @NotNull @Min(value = 0) @PathVariable Long shopId) {
         return freightService.deleteFreightModel(id, shopId);
@@ -107,7 +107,7 @@ public class ShopShipmentController {
     @ApiOperation(value = "店家或管理员为商铺定义默认运费模板")
     @PostMapping(value = "/shops/{shopId}/freightmodels/{id}/default", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.CREATED)
-    public Object defineDefaultFreightModel(
+    public Reply defineDefaultFreightModel(
             @NotNull @Min(value = 0) @PathVariable Long id, @PathVariable Long shopId) {
         return freightService.defineDefaultFreightModel(id, shopId);
     }

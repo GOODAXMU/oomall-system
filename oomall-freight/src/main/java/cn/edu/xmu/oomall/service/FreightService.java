@@ -26,7 +26,9 @@ import javax.annotation.PostConstruct;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -52,13 +54,6 @@ public class FreightService {
 
     @Autowired
     private RedisTemplate redisTemplate;
-
-
-    @Value("${oomall.freight.model.weight}")
-    private int weightModel;
-
-    @Value("${oomall.freight.model.piece}")
-    private int pieceModel;
 
     @Value("${oomall.redis.prifix}")
     private String prifix;
@@ -86,14 +81,21 @@ public class FreightService {
         List<FreightModel> freightModels = new ArrayList<>();
         for (PurchaseItem item : purchaseItems) {
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(item.getSkuId())).getData();
-            freightModels.add(freightModel);
+            if (!freightModels.contains(freightModel)) {
+                freightModels.add(freightModel);
+            }
             item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
         }
 
+        List<Long> shopIds = new ArrayList<>();
         //没有定义模板则使用商家默认运费模板
         if (freightModels.isEmpty()) {
             for (PurchaseItem item : purchaseItems) {
-                freightModels.add(freightDao.getDefaultFreightModel(goodService.getShopId(item.getSkuId())));
+                Long shopId = goodService.getShopId(item.getSkuId());
+                if (!shopIds.contains(shopId)) {
+                    shopIds.add(shopId);
+                    freightModels.add(freightDao.getDefaultFreightModel(shopId));
+                }
             }
         }
 
@@ -102,14 +104,14 @@ public class FreightService {
         List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
         for (FreightModel freightModel : freightModels) {
             freightModel.setRid(rid);
-            if (freightModel.getType() == weightModel) {
+            if (freightModel.getType().equals(FreightModel.ModelType.WEIGHT_MODEL.type())) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 weightFreightModels.add(weightFreightModel);
-            } else if (freightModel.getType() == pieceModel) {
+            } else if (freightModel.getType().equals(FreightModel.ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
@@ -147,14 +149,14 @@ public class FreightService {
             freightModel.setRid(rid);
 
             Long freight = Long.valueOf(0);
-            if (freightModel.getType() == weightModel) {
+            if (freightModel.getType().equals(FreightModel.ModelType.WEIGHT_MODEL.type())) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
-            } else if (freightModel.getType() == pieceModel) {
+            } else if (freightModel.getType().equals(FreightModel.ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());

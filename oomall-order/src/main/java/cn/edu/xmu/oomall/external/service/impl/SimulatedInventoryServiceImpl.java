@@ -14,7 +14,7 @@ import java.util.List;
 public class SimulatedInventoryServiceImpl implements IInventoryService {
 
 	@Override
-	public List<OrderItem> modifyInventory(List<OrderItem> orderItems) {
+	public List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type) {
 		return orderItems;
 	}
 }

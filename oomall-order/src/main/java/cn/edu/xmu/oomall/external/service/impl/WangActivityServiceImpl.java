@@ -50,11 +50,25 @@ public class WangActivityServiceImpl implements IActivityService {
 
 	@Override
 	public Long getGrouponId(Long skuId) {
+		// todo 等待外部接口
 		return null;
 	}
 
 	@Override
 	public Long getPreSale(Long skuId) {
+		// todo 等待外部接口
+		return null;
+	}
+
+	@Override
+	public Long getPreSaleDeposit(Long preSaleId) {
+		// todo 等待外部接口
+		return null;
+	}
+
+	@Override
+	public Long getPreSaleBalance(Long preSaleId) {
+		// todo 等待外部接口
 		return null;
 	}
 

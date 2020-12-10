@@ -26,7 +26,6 @@ public interface OrderItemRepository extends
 			"oi.price = CASE WHEN :#{#orderItem.price} IS NULL THEN oi.price ELSE :#{#orderItem.price} END, " +
 			"oi.discount = CASE WHEN :#{#orderItem.discount} IS NULL THEN oi.discount ELSE :#{#orderItem.discount} END, " +
 			"oi.name = CASE WHEN :#{#orderItem.name} IS NULL THEN oi.name ELSE :#{#orderItem.name} END, " +
-			"oi.couponId = CASE WHEN :#{#orderItem.couponId} IS NULL THEN oi.couponId ELSE :#{#orderItem.couponId} END, " +
 			"oi.couponActivityId = CASE WHEN :#{#orderItem.couponActivityId} IS NULL THEN oi.couponActivityId ELSE :#{#orderItem.couponActivityId} END, " +
 			"oi.beShareId = CASE WHEN :#{#orderItem.beShareId} IS NULL THEN oi.beShareId ELSE :#{#orderItem.beShareId} END " +
 			"WHERE oi.id = :#{#orderItem.id}")

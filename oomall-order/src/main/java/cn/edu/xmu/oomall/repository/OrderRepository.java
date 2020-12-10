@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -91,6 +93,12 @@ public interface OrderRepository extends
 
 	@Modifying
 	@Transactional
+	@Query(value = "UPDATE OrderPo p SET p.subState = :to " +
+			"WHERE p.id = :id AND p.subState = :s")
+	int changeOrderSubStateWhenSubStateEquals(Long id, Integer to, Integer s);
+
+	@Modifying
+	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
 			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
 			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND p.state < :state")
@@ -99,8 +107,21 @@ public interface OrderRepository extends
 	@Query(value = "SELECT new OrderPo(o.orderSn, o.shopId) FROM OrderPo o WHERE id = :orderId")
 	OrderPo findOrderSnAndShopIdById(Long orderId);
 
-	OrderPo findByIdAndCustomerId(Long id, Long customerId);
-
 	@Query(value = "SELECT o.customerId FROM OrderPo o WHERE o.id = :id")
 	Long findCustomerIdById(Long id);
+
+	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id")
+	Integer findOrderStatusById(Long id);
+
+	@Query(value = "SELECT new OrderPo(o.id, o.originPrice, o.discountPrice) FROM OrderPo o WHERE id = :id")
+	OrderPo findPrice(Long id);
+
+	@Query(value = "SELECT o FROM OrderPo o WHERE o.state = :status AND o.gmtModified > :startTime AND o.gmtModified < :endTime")
+	List<OrderPo> findAllWhereStatusEqualsAndGmtModifiedBetween(Integer status, LocalDateTime startTime, LocalDateTime endTime);
+
+	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.shopId = :shopId")
+	Long findIdByIdAndShopId(Long orderId, Long shopId);
+
+	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.customerId = :customerId")
+	Long findIdByIdAndCustomerId(Long orderId, Long customerId);
 }
