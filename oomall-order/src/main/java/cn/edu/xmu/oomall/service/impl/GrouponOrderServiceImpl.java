@@ -68,7 +68,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		order.setShop(shop);
 
 		// 扣库存
-		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
+		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.GROUPON.value());
 		if (orderItems == null || orderItems.size() <= 0) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
@@ -82,7 +82,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		// 设置订单流水号
 		order.createAndGetOrderSn();
 
-		// todo 计算团购价格
+		// 设置价格
 		order.calcAndSetParentOrderOriginPrice();
 
 		// 设置订单状态和类型

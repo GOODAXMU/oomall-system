@@ -66,7 +66,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 		}
 
 		// 扣库存
-		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems());
+		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value());
 		if (orderItems.size() == 0) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}

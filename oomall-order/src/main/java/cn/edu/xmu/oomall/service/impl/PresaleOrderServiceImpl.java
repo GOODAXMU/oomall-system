@@ -70,7 +70,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		order.setShop(shop);
 
 		// 扣库存
-		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems());
+		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value());
 		if (r == null || r.isEmpty()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
@@ -84,7 +84,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		// 设置订单流水号
 		order.createAndGetOrderSn();
 
-		// todo 计算预售价格
+		// 设置价格
 		order.calcAndSetParentOrderOriginPrice();
 
 		// 设置订单状态和类型

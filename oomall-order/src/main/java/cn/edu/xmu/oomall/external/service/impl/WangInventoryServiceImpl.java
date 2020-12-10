@@ -22,7 +22,7 @@ public class WangInventoryServiceImpl implements IInventoryService {
 
 
 	@Override
-	public List<OrderItem> modifyInventory(List<OrderItem> orderItems) {
+	public List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type) {
 		List<OrderItemDTO> dto = new ArrayList<>();
 		for (OrderItem oi : orderItems) {
 			dto.add(toOrderItemDTO(oi));
