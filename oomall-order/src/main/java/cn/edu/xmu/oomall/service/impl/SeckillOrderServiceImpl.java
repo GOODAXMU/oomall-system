@@ -50,23 +50,8 @@ public class SeckillOrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		// 设置订单的客户
-		Long customerId = order.getCustomer().getId();
-		Customer customer = customerService.getCustomer(customerId);
-		if (customer == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
-		order.setCustomer(customer);
-
+	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		OrderItem orderItem = order.getOrderItems().get(0);
-
-		// 设置商铺
-		Shop shop = shopService.getShop(orderItem.getSkuId());
-		if (shop == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
-		order.setShop(shop);
 
 		// 扣库存
 		Boolean r = seckillService.deductInventory(orderItem.getSkuId(), orderItem.getQuantity(), order.getSeckillId());
@@ -77,9 +62,23 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		// 异步计算运费
 		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), true);
 
-		// 获取价格
-		Long price = flashSaleService.getPrice(orderItem.getSkuId());
-		orderItem.setPrice(price);
+		// 设置订单的客户
+		Long customerId = order.getCustomer().getId();
+		Customer customer = customerService.getCustomer(customerId);
+		if (customer == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setCustomer(customer);
+
+		// 设置商铺
+		Shop shop = shopService.getShop(orderItem.getSkuId());
+		if (shop == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setShop(shop);
+
+		// 设置商品信息
+		flashSaleService.setPriceAndName(orderItem);
 
 		// 设置订单流水号
 		order.createAndGetOrderSn();
@@ -94,8 +93,9 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		// 获取并设置运费
 		order.setFreightPrice(freights.get());
 
+		// 异步写入
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
 
-		return new Reply<>(order);
+		return new Reply<>(order.getOrderSn());
 	}
 }

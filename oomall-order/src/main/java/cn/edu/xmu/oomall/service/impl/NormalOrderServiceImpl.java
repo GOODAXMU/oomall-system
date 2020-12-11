@@ -57,7 +57,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
+	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 获取订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -142,6 +142,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 		// 订单写入消息队列
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
 
-		return new Reply<>(order);
+		return new Reply<>(order.getOrderSn());
 	}
 }

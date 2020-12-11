@@ -53,7 +53,13 @@ public class PresaleOrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
+	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
+		// 扣库存
+		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value());
+		if (r == null || r.isEmpty()) {
+			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
+		}
+
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -68,12 +74,6 @@ public class PresaleOrderServiceImpl implements IOrderService {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 		order.setShop(shop);
-
-		// 扣库存
-		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value());
-		if (r == null || r.isEmpty()) {
-			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
-		}
 
 		// 异步计算运费
 		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
@@ -96,6 +96,6 @@ public class PresaleOrderServiceImpl implements IOrderService {
 
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
 
-		return new Reply<>(order);
+		return new Reply<>(order.getOrderSn());
 	}
 }
