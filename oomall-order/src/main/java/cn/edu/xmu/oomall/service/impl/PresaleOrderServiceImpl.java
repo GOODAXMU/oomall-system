@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IOrderService;
+import cn.edu.xmu.oomall.util.OrderSnGenerator;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -82,7 +83,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		goodsService.setSkuInformation(order.getOrderItems(), OrderType.PRESALE.value());
 
 		// 设置订单流水号
-		order.createAndGetOrderSn();
+		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
 
 		// 设置价格
 		order.calcAndSetParentOrderOriginPrice();

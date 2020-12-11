@@ -158,16 +158,13 @@ public class Order {
 		}
 	}
 
-	public String createAndGetOrderSn() {
-		orderSn = UUID.randomUUID().toString();
-		return orderSn;
-	}
-
 	public static Order toOrder(OrderPo orderPo) {
 		if (orderPo == null) {
 			return null;
 		}
 		Order o = new Order();
+		o.orderItems = new ArrayList<>();
+		o.subOrders = new ArrayList<>();
 		o.id = orderPo.getId();
 		o.customer = new Customer(orderPo.getCustomerId());
 		o.shop = new Shop(orderPo.getShopId());

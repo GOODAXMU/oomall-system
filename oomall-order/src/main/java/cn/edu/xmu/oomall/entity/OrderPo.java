@@ -118,7 +118,6 @@ public class OrderPo {
 		po.setSubState(o.getSubState());
 		po.setBeDeleted(o.getBeDeleted());
 		po.setGmtCreate(o.getGmtCreated());
-		po.setGmtModified(o.getGmtModified());
 		return po;
 	}
 }

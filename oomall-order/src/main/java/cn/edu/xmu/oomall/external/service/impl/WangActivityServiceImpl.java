@@ -43,18 +43,13 @@ public class WangActivityServiceImpl implements IActivityService {
 	}
 
 	@Override
-	public Boolean useCoupon(Long couponId) {
-		return false;
-	}
-
-	@Override
 	public Long getGrouponId(Long skuId) {
 		// todo 等待外部接口
 		return null;
 	}
 
 	@Override
-	public Long getPreSale(Long skuId) {
+	public Long getPreSaleId(Long skuId) {
 		// todo 等待外部接口
 		return null;
 	}

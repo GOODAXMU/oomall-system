@@ -19,11 +19,6 @@ public class WangGoodsServiceImpl implements IGoodsService {
 	private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
 	@Override
-	public Long getPrice(Long skuId) {
-		return goodsService.getPrice(skuId);
-	}
-
-	@Override
 	public void setSkuInformation(List<OrderItem> orderItems, Integer type) {
 		// todo 使用效率更高的接口
 		for (OrderItem orderItem : orderItems) {
