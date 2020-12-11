@@ -130,6 +130,9 @@ public class FreightModel {
         } else {
             freightModelDefineResponse.setDefaultModel(isDefault == 1 ? true : false);
         }
+        freightModelDefineResponse.setGmtCreate(gmtCreate);
+        freightModelDefineResponse.setGmtModified(gmtModified);
+        freightModelDefineResponse.setUnit(unit);
         freightModelDefineResponse.setId(id);
         freightModelDefineResponse.setName(name);
         freightModelDefineResponse.setType(type);
@@ -138,11 +141,12 @@ public class FreightModel {
 
     public FreightModelSummaryGetResponse createSummaryGetResponse() {
         FreightModelSummaryGetResponse freightModelSummaryGetResponse = new FreightModelSummaryGetResponse();
-        freightModelSummaryGetResponse.setDefaultModel(isDefault == 1);
+        freightModelSummaryGetResponse.setDefaultModel(isDefault == null? false : isDefault == 1);
         freightModelSummaryGetResponse.setGmtCreate(gmtCreate);
         freightModelSummaryGetResponse.setGmtModified(gmtModified);
         freightModelSummaryGetResponse.setId(id);
         freightModelSummaryGetResponse.setName(name);
+        freightModelSummaryGetResponse.setUnit(unit);
         freightModelSummaryGetResponse.setType(type);
         return freightModelSummaryGetResponse;
     }
@@ -155,6 +159,7 @@ public class FreightModel {
         freightModelCloneResponse.setId(id);
         freightModelCloneResponse.setName(name);
         freightModelCloneResponse.setType(type);
+        freightModelCloneResponse.setUnit(unit);
         return freightModelCloneResponse;
     }
 

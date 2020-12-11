@@ -38,16 +38,16 @@ public class CloneFreightModelTest {
      * @throws Exception
      */
     @Test
-    public void cloneFreightModel() throws Exception{
+    public void cloneFreightModel() throws Exception {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone").header("authorization",token))
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/200/clone").header("authorization", token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
-        JSONAssert.assertEquals(expectedResponse, responseString, false );
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
     /**
@@ -57,15 +57,21 @@ public class CloneFreightModelTest {
      * @throws Exception
      */
     @Test
-    public void cloneFreightModel1() throws Exception{
+    public void cloneFreightModel1() throws Exception {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone").header("authorization",token))
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/clone").header("authorization", token))
                 .andExpect(status().isCreated())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        System.out.println(responseString);
+
+        int startIndex = responseString.indexOf("id");
+        int endIndex = responseString.indexOf("name");
+        String id = responseString.substring(startIndex + 4, endIndex - 2);
+        System.out.println("id :" + id.toString());
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 

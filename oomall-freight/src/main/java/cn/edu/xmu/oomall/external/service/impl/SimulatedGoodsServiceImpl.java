@@ -24,7 +24,7 @@ public class SimulatedGoodsServiceImpl implements IGoodService {
     }
 
     @Override
-    public Reply deleteGoodsFreightModel(Long modelId, long shopId){
-        return new Reply(ResponseStatus.OK);
+    public Boolean deleteGoodsFreightModel(Long modelId, long shopId){
+        return true;
     }
 }

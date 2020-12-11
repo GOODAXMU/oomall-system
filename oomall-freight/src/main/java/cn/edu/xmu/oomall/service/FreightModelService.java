@@ -31,7 +31,7 @@ public class FreightModelService {
 	}
 
 	/**
-	 * 店家或管理员查询某个重量模板明细
+	 * 店家或管理员查询某个运费模板的重量模板明细
 	 *
 	 * @param id Long;
 	 * @return Reply<List<WeightFreightModel>>;
