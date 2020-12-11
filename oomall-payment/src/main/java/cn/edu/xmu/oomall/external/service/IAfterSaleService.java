@@ -2,9 +2,9 @@ package cn.edu.xmu.oomall.external.service;
 
 /**
  * @author Wang Zhizhou
- * create 2020/12/10
+ * create 2020/12/11
  */
-public interface IAfterSaleServer {
+public interface IAfterSaleService {
 
     /**
      * 检查用户是否拥有该售后
@@ -35,4 +35,12 @@ public interface IAfterSaleServer {
      * @param amount    售后完成的支付
      */
     void checkAfterSalePaid(Long id, Long amount);
+
+    /**
+     * 获取售后的顾客id
+     * @param id 售后id
+     * @return
+     */
+    Long getCustomerIdByAfterSaleId(Long id);
+
 }

@@ -23,7 +23,7 @@ import java.util.List;
  * @author xincong yao
  * @date 2020-11-9
  * @author Wang Zhizhou
- * modified 2020/12/10
+ * modified 2020/12/11
  */
 @Api(value = "供卖家及管理员访问的支付api")
 @Validated
@@ -107,26 +107,11 @@ public class ShopPaymentController {
 	public Reply<RefundResponse> createRefund(
 			@Valid @RequestBody RefundPostRequest request,
 			@NotNull @Min(value = 0) @PathVariable Long id,
-			@NotNull @Min(value = 0) @PathVariable String shopId) {
+			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
-		// todo 检查 shopId 是否正确
-		Reply<List<Long>> rIds = shopPaymentService.getOrderIdByPaymentId(id);
-		if (!rIds.isOk() || null == rIds.getData()) {
-			return new Reply<>(rIds.getResponseStatus());
-		}
-
-		Long oid = rIds.getData().get(0);
-		Refund.Type type = Refund.Type.NORMAL;
-
-		if (null == oid) {
-			oid = rIds.getData().get(1);
-			type = Refund.Type.AFTERSALE;
-		}
-
-		Refund refund = new Refund(id, oid, request, type);
-		Reply<Refund> r = shopPaymentService.createRefund(refund);
-		refund = r.getData();
-		if (null == refund) {
+		Refund refund = new Refund(id, request);
+		Reply<Refund> r = shopPaymentService.createRefund(refund, shopId);
+		if (!r.isOk()) {
 			return new Reply<>(r.getResponseStatus());
 		}
 

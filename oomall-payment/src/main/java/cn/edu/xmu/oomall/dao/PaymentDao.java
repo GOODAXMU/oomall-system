@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/10
+ * modified 2020/12/11
  */
 
 @Component
@@ -57,17 +57,13 @@ public class PaymentDao {
         return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
     }
 
-    public Reply<List<Long>> getOrderIdByPaymentId(Long paymentId) {
+    public Reply<Payment> getPaymentById(Long paymentId) {
         PaymentPo po = paymentRepository.getOne(paymentId);
-        List<Long> ids = new ArrayList<>();
-        ids.add(po.getOrderId());
-        ids.add(po.getAftersaleId());
-
-        if (null == ids.get(0) && null == ids.get(1)) {
+        if (null == po) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
-        return new Reply<>(ids);
+        return new Reply<>(new Payment(po));
     }
 
     public Reply<Payment> savePayment(Payment payment) {
@@ -77,12 +73,6 @@ public class PaymentDao {
 
         po = paymentRepository.save(po);
         return new Reply<>(new Payment(po));
-    }
-
-    public Reply<Object> updatePayment(Payment payment) {
-        paymentRepository.update(payment.createPo());
-
-        return new Reply<>();
     }
 
     public Long calcOrderPayments(Long orderId) {

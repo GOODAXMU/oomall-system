@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/28
- * modified 2020/12/10
+ * modified 2020/12/11
  */
 public interface IOrderService {
 
@@ -42,8 +42,15 @@ public interface IOrderService {
 
     /**
      * 获取订单的价格(可以被返款的部分)
-     * @param id
+     * @param id 订单id
      * @return
      */
     Long getOrderCanBeRefundPrice(Long id);
+
+    /**
+     * 获取订单的顾客id
+     * @param id 订单id
+     * @return
+     */
+    Long getCustomerIdByOrderId(Long id);
 }
