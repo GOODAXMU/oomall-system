@@ -2,7 +2,7 @@ package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.bo.Payment;
 import cn.edu.xmu.oomall.bo.Refund;
-import cn.edu.xmu.oomall.service.PaymentService;
+import cn.edu.xmu.oomall.service.ShopPaymentService;
 import cn.edu.xmu.oomall.vo.PaymentResponse;
 import cn.edu.xmu.oomall.vo.RefundPostRequest;
 import cn.edu.xmu.oomall.vo.RefundResponse;
@@ -23,7 +23,7 @@ import java.util.List;
  * @author xincong yao
  * @date 2020-11-9
  * @author Wang Zhizhou
- * modified 2020/11/29
+ * modified 2020/12/10
  */
 @Api(value = "供卖家及管理员访问的支付api")
 @Validated
@@ -32,7 +32,7 @@ import java.util.List;
 public class ShopPaymentController {
 
 	@Autowired
-	private PaymentService paymentService;
+	private ShopPaymentService shopPaymentService;
 
 	@ApiOperation(value = "管理员查询订单的支付信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
@@ -45,18 +45,17 @@ public class ShopPaymentController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "/shops/{shopId}/orders/{id}/payments", produces = "application/json;charset=UTF-8")
-	public Reply<List<PaymentResponse>> getPayment(
+	public Reply<List<PaymentResponse>> getOrderPayment(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
-		// todo 检查 shopId 是否正确
-		List<Payment> payments = paymentService.getPayments(id).getData();
-		if (null == payments) {
-			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		Reply<List<Payment>> r = shopPaymentService.getPaymentsByOrderId(id, shopId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getResponseStatus());
 		}
 
 		List<PaymentResponse> paymentResponses = new ArrayList<>();
-		for (Payment payment : payments) {
+		for (Payment payment : r.getData()) {
 			paymentResponses.add(payment.createVo());
 		}
 
@@ -75,18 +74,17 @@ public class ShopPaymentController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "/shops/{shopId}/aftersales/{id}/payments", produces = "application/json;charset=UTF-8")
-	public Reply<List<PaymentResponse>> getAftersalePayment(
+	public Reply<List<PaymentResponse>> getAfterSalePayment(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
-		// todo 检查 shopId 是否正确
-		List<Payment> payments = paymentService.getAftersalePayments(id).getData();
-		if (null == payments) {
-			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		Reply<List<Payment>> r = shopPaymentService.getPaymentsByAfterSaleId(id, shopId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getResponseStatus());
 		}
 
 		List<PaymentResponse> paymentResponses = new ArrayList<>();
-		for (Payment payment : payments) {
+		for (Payment payment : r.getData()) {
 			paymentResponses.add(payment.createVo());
 		}
 
@@ -112,7 +110,7 @@ public class ShopPaymentController {
 			@NotNull @Min(value = 0) @PathVariable String shopId) {
 
 		// todo 检查 shopId 是否正确
-		Reply<List<Long>> rIds = paymentService.getOrderIdByPaymentId(id);
+		Reply<List<Long>> rIds = shopPaymentService.getOrderIdByPaymentId(id);
 		if (!rIds.isOk() || null == rIds.getData()) {
 			return new Reply<>(rIds.getResponseStatus());
 		}
@@ -126,7 +124,7 @@ public class ShopPaymentController {
 		}
 
 		Refund refund = new Refund(id, oid, request, type);
-		Reply<Refund> r = paymentService.createRefund(refund);
+		Reply<Refund> r = shopPaymentService.createRefund(refund);
 		refund = r.getData();
 		if (null == refund) {
 			return new Reply<>(r.getResponseStatus());
@@ -147,18 +145,17 @@ public class ShopPaymentController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "/shops/{shopId}/orders/{id}/refund", produces = "application/json;charset=UTF-8")
-	public Reply<List<RefundResponse>> getRefund(
+	public Reply<List<RefundResponse>> getOrderRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
-		// todo 检查 shopId 是否正确
-		List<Refund> refunds = paymentService.getRefunds(id).getData();
-		if (null == refunds) {
-			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		Reply<List<Refund>> r = shopPaymentService.getRefundsByOrderId(id, shopId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getResponseStatus());
 		}
 
 		List<RefundResponse> paymentResponses = new ArrayList<>();
-		for (Refund payment : refunds) {
+		for (Refund payment : r.getData()) {
 			paymentResponses.add(payment.createVo());
 		}
 
@@ -177,18 +174,17 @@ public class ShopPaymentController {
 	})
 	@ResponseStatus(value = HttpStatus.OK)
 	@GetMapping(value = "/shops/{shopId}/aftersales/{id}/refund", produces = "application/json;charset=UTF-8")
-	public Reply<List<RefundResponse>> getAftersaleRefund(
+	public Reply<List<RefundResponse>> getAfterSaleRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
 
-		// todo 检查 shopId 是否正确
-		List<Refund> refunds = paymentService.getAftersaleRefunds(id).getData();
-		if (null == refunds) {
-			return new Reply<>(cn.edu.xmu.oomall.constant.ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		Reply<List<Refund>> r = shopPaymentService.getRefundsByAfterSaleId(id, shopId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getResponseStatus());
 		}
 
 		List<RefundResponse> paymentResponses = new ArrayList<>();
-		for (Refund payment : refunds) {
+		for (Refund payment : r.getData()) {
 			paymentResponses.add(payment.createVo());
 		}
 
