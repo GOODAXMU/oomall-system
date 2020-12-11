@@ -21,6 +21,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import java.util.ArrayList;
@@ -76,7 +77,7 @@ public class FreightDao {
         try {
             freightModel = new FreightModel(freightModelRepository.findById(id).get());
             log.info("gmtCreate: " + freightModel.getGmtCreate().toString());
-            if (freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
+            if (!freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
                 return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
             }
         } catch (NoSuchElementException e) {
@@ -155,8 +156,12 @@ public class FreightDao {
     public Reply<FreightModel> createFreightModel(FreightModel freightModel) {
 
         FreightModelPo freightModelPo = freightModel.createPo();
-        freightModelPo.setGmtModified(LocalDateTime.now());
-        freightModelPo.setGmtCreate(LocalDateTime.now());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        LocalDateTime gmt = LocalDateTime.of(localDateTime.getYear(),localDateTime.getMonth(),
+                localDateTime.getDayOfMonth(),localDateTime.getHour(),localDateTime.getMinute(),
+                localDateTime.getSecond());
+        freightModelPo.setGmtModified(gmt);
+        freightModelPo.setGmtCreate(gmt);
         Reply reply = new Reply<FreightModel>();
         log.debug("into createFreightModel");
         if (isFreightModelNameExist(freightModel.getName())) {
@@ -200,7 +205,7 @@ public class FreightDao {
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (freightModelPo.getShopId().equals(Long.valueOf(0)) && !freightModelPo.getShopId().equals(shopId)) {
+        if (!freightModelPo.getShopId().equals(Long.valueOf(0)) && !freightModelPo.getShopId().equals(shopId)) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
@@ -220,7 +225,7 @@ public class FreightDao {
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(freightModelPo.getShopId())) {
+        if (!freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(freightModelPo.getShopId())) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
