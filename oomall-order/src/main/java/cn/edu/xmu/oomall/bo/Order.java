@@ -238,15 +238,12 @@ public class Order {
 		dto.setShopId(shop == null ? null : shop.getId());
 		dto.setOrderSn(orderSn);
 
-		if (subOrders != null) {
-			List<OrderDto> sub = new ArrayList<>();
-			for (Order o : subOrders) {
-				OrderDto d = o.toOrderDto();
-				d.setCustomerId(dto.getCustomerId());
-				sub.add(d);
-			}
-			dto.setSubOrders(sub);
+		List<OrderItemDto> dtos = new ArrayList<>();
+		for (OrderItem oi : orderItems) {
+			OrderItemDto orderItemDto = oi.toOrderItemDto();
+			dtos.add(orderItemDto);
 		}
+		dto.setOrderItems(dtos);
 
 		dto.setPid(pid);
 		dto.setConsignee(consignee);

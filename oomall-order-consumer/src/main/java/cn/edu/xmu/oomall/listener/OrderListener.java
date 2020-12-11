@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "${rocketmq.consumer.order.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.group}")
+@RocketMQMessageListener(topic = "${rocketmq.consumer.order.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.order.group}")
 public class OrderListener implements RocketMQListener<String>, RocketMQPushConsumerLifecycleListener {
 
 	@Autowired
@@ -45,6 +45,10 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 		OrderPo parent = OrderPo.toOrderPo(dto);
 
 		parent = orderRepository.save(parent);
+
+		if (dto.getOrderItems() == null) {
+			return;
+		}
 
 		List<OrderItemPo> items = new ArrayList<>();
 		for (OrderItemDto item : dto.getOrderItems()) {
