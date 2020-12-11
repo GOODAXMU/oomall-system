@@ -16,8 +16,7 @@ import java.util.Map;
 @Component
 public class GoodaSeckillServiceImpl implements ISeckillService {
 
-	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.external.seckill-service.version}")
+	@DubboReference(version = "${oomall.external.seckill-service.version}", check = false)
 	private cn.edu.xmu.oomall.service.ISeckillService seckillService;
 
 	@Override

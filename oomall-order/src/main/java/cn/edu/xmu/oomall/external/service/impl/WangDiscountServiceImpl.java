@@ -19,8 +19,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class WangDiscountServiceImpl implements IDiscountService {
 
-	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.external.discount-service.version}", cache = "false", async = true, timeout = 5000)
+	@DubboReference(version = "${oomall.external.discount-service.version}", cache = "false", async = true, timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IDiscountService discountService;
 
 	@Override

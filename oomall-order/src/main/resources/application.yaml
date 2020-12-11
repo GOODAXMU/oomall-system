@@ -25,7 +25,7 @@ spring:
 
   cloud:
     nacos:
-      server-addr: localhost:8848
+      server-addr: 47.115.162.144:8848
 
   application:
     name: oomall-order
@@ -42,9 +42,10 @@ dubbo:
   scan:
     base-packages: cn.edu.xmu.oomall.service
   registry:
-    address: nacos://localhost:8848
+    address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
+    host: localhost
     port: 19900
 
 rocketmq:
