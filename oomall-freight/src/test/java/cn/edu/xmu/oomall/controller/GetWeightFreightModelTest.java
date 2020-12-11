@@ -36,7 +36,9 @@ public class GetWeightFreightModelTest {
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+
         JSONAssert.assertEquals(expectedResponse, responseString, false);
+
     }
 
 }

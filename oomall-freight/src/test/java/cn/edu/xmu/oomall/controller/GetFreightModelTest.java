@@ -39,6 +39,7 @@ public class GetFreightModelTest {
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        System.out.println(responseString);
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 

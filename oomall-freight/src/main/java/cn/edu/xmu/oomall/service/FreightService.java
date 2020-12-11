@@ -99,6 +99,15 @@ public class FreightService {
             }
         }
 
+        //商家都没有默认运费模板使用平台默认运费模板
+        if (freightModels.isEmpty()) {
+            freightModels.add(freightDao.getDefaultFreightModel(0L));
+            if (freightModels.isEmpty()) {
+                //平台也没有则不可达
+                return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+            }
+        }
+
         //获取重量运费模板和计件运费模板
         List<WeightFreightModel> weightFreightModels = new ArrayList<>();
         List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
@@ -143,8 +152,17 @@ public class FreightService {
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(purchaseItem.getSkuId())).getData();
             purchaseItem.setWeight(goodService.getGoodsSkuWeightById(purchaseItem.getSkuId()) * freightModel.getUnit());
 
+            //商品没有模板
             if (null == freightModel) {
                 freightModel = freightDao.getDefaultFreightModel(goodService.getShopId(purchaseItem.getSkuId()));
+                //商家没有模板
+                if (null == freightModel) {
+                    freightModel = freightDao.getDefaultFreightModel(0L);
+                    //平台没有模板
+                    if (null == freightModel) {
+                        return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+                    }
+                }
             }
             freightModel.setRid(rid);
 

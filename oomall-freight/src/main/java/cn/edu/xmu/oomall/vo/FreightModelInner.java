@@ -18,6 +18,6 @@ public class FreightModelInner {
     private String name;
     private Integer type;
     private Boolean defaultModel;
-    private LocalDateTime gmtCreate;
-    private LocalDateTime gmtModified;
+    private String gmtCreate;
+    private String gmtModified;
 }

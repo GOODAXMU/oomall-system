@@ -19,7 +19,7 @@ public class FreightModelDefineResponse {
     private Integer type;
     private Long unit;
     private Boolean defaultModel;
-    private LocalDateTime gmtCreate;
-    private LocalDateTime gmtModified;
+    private String gmtCreate;
+    private String gmtModified;
 
 }

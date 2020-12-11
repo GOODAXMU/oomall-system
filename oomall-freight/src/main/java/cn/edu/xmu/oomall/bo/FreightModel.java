@@ -130,8 +130,8 @@ public class FreightModel {
         } else {
             freightModelDefineResponse.setDefaultModel(isDefault == 1 ? true : false);
         }
-        freightModelDefineResponse.setGmtCreate(gmtCreate);
-        freightModelDefineResponse.setGmtModified(gmtModified);
+        freightModelDefineResponse.setGmtCreate(gmtCreate.toString());
+        freightModelDefineResponse.setGmtModified(gmtModified.toString());
         freightModelDefineResponse.setUnit(unit);
         freightModelDefineResponse.setId(id);
         freightModelDefineResponse.setName(name);
@@ -142,8 +142,8 @@ public class FreightModel {
     public FreightModelSummaryGetResponse createSummaryGetResponse() {
         FreightModelSummaryGetResponse freightModelSummaryGetResponse = new FreightModelSummaryGetResponse();
         freightModelSummaryGetResponse.setDefaultModel(isDefault == null? false : isDefault == 1);
-        freightModelSummaryGetResponse.setGmtCreate(gmtCreate);
-        freightModelSummaryGetResponse.setGmtModified(gmtModified);
+        freightModelSummaryGetResponse.setGmtCreate(gmtCreate.toString());
+        freightModelSummaryGetResponse.setGmtModified(gmtModified.toString());
         freightModelSummaryGetResponse.setId(id);
         freightModelSummaryGetResponse.setName(name);
         freightModelSummaryGetResponse.setUnit(unit);
@@ -154,8 +154,8 @@ public class FreightModel {
     public FreightModelCloneResponse createCloneResponse() {
         FreightModelCloneResponse freightModelCloneResponse = new FreightModelCloneResponse();
         freightModelCloneResponse.setDefaultModel(isDefault == 1);
-        freightModelCloneResponse.setGmtCreate(gmtCreate);
-        freightModelCloneResponse.setGmtModified(gmtModified);
+        freightModelCloneResponse.setGmtCreate(gmtCreate.toString());
+        freightModelCloneResponse.setGmtModified(gmtModified.toString());
         freightModelCloneResponse.setId(id);
         freightModelCloneResponse.setName(name);
         freightModelCloneResponse.setType(type);

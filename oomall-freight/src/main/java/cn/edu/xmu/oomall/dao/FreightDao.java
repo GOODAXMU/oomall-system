@@ -75,6 +75,7 @@ public class FreightDao {
         FreightModel freightModel = new FreightModel();
         try {
             freightModel = new FreightModel(freightModelRepository.findById(id).get());
+            log.info("gmtCreate: " + freightModel.getGmtCreate().toString());
             if (freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
                 return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
             }
