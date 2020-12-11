@@ -16,7 +16,7 @@ public interface IFlashSaleService {
 	Long getSeckillId(Long skuId);
 
 	/**
-	 * 设置秒杀活动下商品的价格和名称, 不校验时间
+	 * 设置秒杀活动下商品的价格和名称
 	 * @param orderItem
 	 * @return
 	 */

@@ -82,7 +82,7 @@ public class WangShopServiceImpl implements IShopService {
 		shop.setName(shopDTO.getName());
 		shop.setGmtCreateTime(shopDTO.getGmtCreateTime().toString());
 		shop.setGmtModiTime(shopDTO.getGmtModiTime().toString());
-		// todo shop.setState(shopDTO.getState());
+		shop.setState(shopDTO.getState().intValue());
 		return shop;
 	}
 }

@@ -39,6 +39,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	private IMessageSender sender;
 
 	private ICustomerService customerService;
+	private IGoodsService goodsService;
 	private IShopService shopService;
 	private IInventoryService inventoryService;
 	private IFreightService freightService;
@@ -50,6 +51,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	@PostConstruct
 	public void init() {
 		customerService = (ICustomerService) serviceFactory.get(ICustomerService.class);
+		goodsService = (IGoodsService) serviceFactory.get(IGoodsService.class);
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		inventoryService = (IInventoryService) serviceFactory.get(IInventoryService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
@@ -80,6 +82,13 @@ public class NormalOrderServiceImpl implements IOrderService {
 		}
 		order.setCustomer(customer, false);
 
+		// 设置商铺
+		Shop shop = shopService.getShop(order.getOrderItems().get(0).getSkuId());
+		if (shop == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setShop(shop);
+
 		// 获取可用的优惠活动并设置
 		Map<Long, Long> sku2Activity = activity.get();
 		for (OrderItem oi : order.getOrderItems()) {
@@ -94,6 +103,9 @@ public class NormalOrderServiceImpl implements IOrderService {
 
 		// 分配订单流水号
 		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
+
+		// 设置orderItem的sku信息
+		goodsService.setSkuInformation(order.getOrderItems(), OrderType.NORMAL.value());
 
 		// 计算价格
 		order.calcAndSetParentOrderOriginPrice();

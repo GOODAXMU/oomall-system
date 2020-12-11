@@ -11,8 +11,7 @@ import java.util.List;
 public interface IGoodsService {
 
 	/**
-	 * 设置OrderItems需要的sku信息
-	 * 主要用于设置团购与预售订单项的sku信息
+	 * 设置订单项的sku信息
 	 * @param orderItems
 	 * @return
 	 */

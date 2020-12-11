@@ -53,7 +53,7 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 		List<OrderItemPo> items = new ArrayList<>();
 		for (OrderItemDto item : dto.getOrderItems()) {
 			OrderItemPo po = OrderItemPo.toOrderItemPo(item);
-			po.setOrderId(dto.getId());
+			po.setOrderId(parent.getId());
 			items.add(po);
 		}
 		List<OrderItemPo> orderItems = orderItemRepository.saveAll(items);
