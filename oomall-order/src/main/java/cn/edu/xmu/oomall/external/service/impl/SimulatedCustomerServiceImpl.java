@@ -11,15 +11,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimulatedCustomerServiceImpl implements ICustomerService {
 
-	// 由外部模块实现并提供接口
-	// @DubboReference(version = "${}", cache = "false", async = true, timeout = 11000)
-	// private ExternalCustomerServiceInterface customerService;
-
 	@Override
 	public Customer getCustomer(Long customerId) {
-		// ExCustomer ec = customerService.getExCustomer(customerId);
-		// Customer lc = toLocalCustomer(ec);
-		// return lc;
 		Customer c = new Customer();
 		c.setId(customerId);
 		c.setRealName("wilson");

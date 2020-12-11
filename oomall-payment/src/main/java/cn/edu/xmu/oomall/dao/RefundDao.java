@@ -42,7 +42,7 @@ public class RefundDao {
         return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
     }
 
-    public Reply<List<Refund>> getRefundsByAftersaleId(Long aftersaleId) {
+    public Reply<List<Refund>> getRefundsByAfterSaleId(Long aftersaleId) {
         RefundPo refundPo = new RefundPo();
         refundPo.setAftersaleId(aftersaleId);
 

@@ -16,8 +16,7 @@ import java.util.List;
 @Component
 public class WangInventoryServiceImpl implements IInventoryService {
 
-	// todo 外部服务未配置
-	// @DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", async = true, timeout = 5000)
+	@DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", async = true, timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IInventoryService inventoryService;
 
 
