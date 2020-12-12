@@ -26,7 +26,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-@RocketMQMessageListener(topic = "${rocketmq.consumer.order.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.group}")
+@RocketMQMessageListener(topic = "${rocketmq.consumer.order.topic}", consumeMode = ConsumeMode.CONCURRENTLY, consumeThreadMax = 10, consumerGroup = "${rocketmq.consumer.order.group}")
 public class OrderListener implements RocketMQListener<String>, RocketMQPushConsumerLifecycleListener {
 
 	@Autowired
@@ -46,27 +46,17 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 
 		parent = orderRepository.save(parent);
 
-		List<OrderPo> children = new ArrayList<>();
-		for (OrderDto sub : dto.getSubOrders()) {
-			OrderPo t = OrderPo.toOrderPo(sub);
-			t.setPid(parent.getId());
-			children.add(t);
+		if (dto.getOrderItems() == null) {
+			return;
 		}
 
-		children = orderRepository.saveAll(children);
-
-		List<OrderItemPo> orderItems = new ArrayList<>();
-		int i = 0;
-		for (OrderDto sub : dto.getSubOrders()) {
-			List<OrderItemPo> items = new ArrayList<>();
-			for (OrderItemDto item : sub.getOrderItems()) {
-				OrderItemPo po = OrderItemPo.toOrderItemPo(item);
-				po.setOrderId(children.get(i).getId());
-				items.add(po);
-			}
-			orderItems = orderItemRepository.saveAll(items);
-			i++;
+		List<OrderItemPo> items = new ArrayList<>();
+		for (OrderItemDto item : dto.getOrderItems()) {
+			OrderItemPo po = OrderItemPo.toOrderItemPo(item);
+			po.setOrderId(parent.getId());
+			items.add(po);
 		}
+		List<OrderItemPo> orderItems = orderItemRepository.saveAll(items);
 
 		orderPostProcessor.sendBeShareIdSetRequest(orderItems, parent.getCustomerId());
 	}

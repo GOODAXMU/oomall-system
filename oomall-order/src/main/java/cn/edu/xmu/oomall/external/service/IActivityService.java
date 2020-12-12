@@ -30,14 +30,6 @@ public interface IActivityService {
 	 */
 	CompletableFuture<Map<Long, Long>> validateActivityAsynchronous(List<OrderItem> orderItems, Long couponId);
 
-
-	/**
-	 * 使用优惠卷
-	 * @param couponId
-	 * @return
-	 */
-	Boolean useCoupon(Long couponId);
-
 	/**
 	 * 根据skuId获取团购活动id
 	 * @param skuId
@@ -50,7 +42,7 @@ public interface IActivityService {
 	 * @param skuId
 	 * @return 不存在返回null
 	 */
-	Long getPreSale(Long skuId);
+	Long getPreSaleId(Long skuId);
 
 	/**
 	 * 获取预售活动的定金

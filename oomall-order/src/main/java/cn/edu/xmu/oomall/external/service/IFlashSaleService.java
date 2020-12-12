@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.external.service;
 
+import cn.edu.xmu.oomall.bo.OrderItem;
+
 /**
  * @author xincong yao
  * @date 2020-11-28
@@ -14,9 +16,9 @@ public interface IFlashSaleService {
 	Long getSeckillId(Long skuId);
 
 	/**
-	 * 获取秒杀活动下商品的价格, 不校验时间
-	 * @param skuId
+	 * 设置秒杀活动下商品的价格和名称
+	 * @param orderItem
 	 * @return
 	 */
-	Long getPrice(Long skuId);
+	void setPriceAndName(OrderItem orderItem);
 }

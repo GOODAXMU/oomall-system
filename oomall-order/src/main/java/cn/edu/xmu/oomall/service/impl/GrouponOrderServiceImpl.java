@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IOrderService;
+import cn.edu.xmu.oomall.util.OrderSnGenerator;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -51,7 +52,13 @@ public class GrouponOrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
+	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
+		// 扣库存
+		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.GROUPON.value());
+		if (orderItems == null || orderItems.size() <= 0) {
+			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
+		}
+
 		// 设置订单的客户
 		Long customerId = order.getCustomer().getId();
 		Customer customer = customerService.getCustomer(customerId);
@@ -67,12 +74,6 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		}
 		order.setShop(shop);
 
-		// 扣库存
-		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.GROUPON.value());
-		if (orderItems == null || orderItems.size() <= 0) {
-			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
-		}
-
 		// 异步计算运费
 		CompletableFuture<Long> freights = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
 
@@ -80,7 +81,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		goodsService.setSkuInformation(order.getOrderItems(), OrderType.GROUPON.value());
 
 		// 设置订单流水号
-		order.createAndGetOrderSn();
+		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
 
 		// 设置价格
 		order.calcAndSetParentOrderOriginPrice();
@@ -94,6 +95,6 @@ public class GrouponOrderServiceImpl implements IOrderService {
 
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
 
-		return new Reply<>(order);
+		return new Reply<>(order.getOrderSn());
 	}
 }

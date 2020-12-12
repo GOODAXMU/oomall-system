@@ -34,13 +34,11 @@ public class OrderItemPo {
 
 	private String name;
 
-	private Long couponId;
-
 	private Long couponActivityId;
 
 	private Long beShareId;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
 
@@ -55,7 +53,7 @@ public class OrderItemPo {
 		po.setName(dto.getName());
 		po.setCouponActivityId(dto.getCouponActivityId());
 		po.setBeShareId(dto.getBeShareId());
-		po.setGmtCreated(LocalDateTime.now());
+		po.setGmtCreate(LocalDateTime.now());
 		po.setGmtModified(LocalDateTime.now());
 
 		return po;

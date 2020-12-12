@@ -14,11 +14,6 @@ import java.util.List;
 public class SimulatedGoodsServiceImpl implements IGoodsService {
 
 	@Override
-	public Long getPrice(Long skuId) {
-		return 666L;
-	}
-
-	@Override
 	public void setSkuInformation(List<OrderItem> orderItems, Integer type) {
 		for (OrderItem orderItem : orderItems) {
 			orderItem.setName("Asku");

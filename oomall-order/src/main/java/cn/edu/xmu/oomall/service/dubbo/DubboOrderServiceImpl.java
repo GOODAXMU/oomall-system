@@ -1,17 +1,22 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
+import cn.edu.xmu.oomall.bo.Order;
+import cn.edu.xmu.oomall.bo.OrderItem;
+import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
 import cn.edu.xmu.oomall.dto.EffectiveShareDto;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.external.service.IActivityService;
+import cn.edu.xmu.oomall.external.service.IShopService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IDubboOrderService;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
 import cn.edu.xmu.oomall.repository.OrderRepository;
+import cn.edu.xmu.oomall.util.OrderSnGenerator;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +24,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -34,6 +40,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	private OrderRepository orderRepository;
 
 	private IActivityService activityService;
+	private IShopService shopService;
 
 	@Autowired
 	private ServiceFactory serviceFactory;
@@ -41,6 +48,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	@PostConstruct
 	public void init() {
 		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
+		shopService = (IShopService) serviceFactory.get(IShopService.class);
 	}
 
 	@Override
@@ -186,6 +194,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 						OrderStatus.PAID.value(),
 						OrderStatus.TO_BE_PAID.value()
 				);
+
+				splitAndWriteOrder(po);
 			}
 		}
 	}
@@ -227,5 +237,53 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 
 		return dtos;
+	}
+
+	private void splitAndWriteOrder(OrderPo parent) {
+		// 获取订单下的订单项
+		List<OrderItemPo> orderItemPos = orderItemRepository.findByOrderId(parent.getId());
+		List<OrderItem> orderItems = new ArrayList<>();
+		for (OrderItemPo oip : orderItemPos) {
+			orderItems.add(OrderItem.toOrderItem(oip));
+		}
+
+		long allPrice = 0L;
+		for (OrderItem oi : orderItems) {
+			allPrice += oi.getPrice() * oi.getQuantity();
+		}
+
+		// 拆单
+		Map<Shop, List<OrderItem>> shop2OrderItems = shopService.classifySku(orderItems);
+		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
+			long totalPrice = 0L;
+			for (OrderItem oi : e.getValue()) {
+				totalPrice += oi.getPrice() * oi.getQuantity();
+			}
+
+			OrderPo sub = new OrderPo();
+			sub.setCustomerId(parent.getCustomerId());
+			sub.setShopId(e.getKey().getId());
+			sub.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
+			sub.setPid(parent.getId());
+			sub.setConsignee(parent.getConsignee());
+			sub.setRegionId(parent.getRegionId());
+			sub.setAddress(parent.getAddress());
+			sub.setMobile(parent.getMobile());
+			sub.setMessage(parent.getMessage());
+			sub.setOrderType(parent.getOrderType());
+			sub.setFreightPrice(parent.getFreightPrice() * totalPrice / allPrice);
+			sub.setCouponId(parent.getCouponId());
+			sub.setCouponActivityId(parent.getCouponActivityId());
+			sub.setDiscountPrice(parent.getDiscountPrice() * totalPrice / allPrice);
+			sub.setOriginPrice(totalPrice);
+			sub.setState(parent.getState());
+			sub.setGmtCreate(LocalDateTime.now());
+
+			sub = orderRepository.save(sub);
+
+			for (OrderItem oi : e.getValue()) {
+				orderItemRepository.changeOrderIdTo(oi.getId(), sub.getId());
+			}
+		}
 	}
 }

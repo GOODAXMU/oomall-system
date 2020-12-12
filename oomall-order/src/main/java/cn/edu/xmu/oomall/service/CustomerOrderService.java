@@ -124,6 +124,6 @@ public class CustomerOrderService {
 	}
 
 	public Long getPreSaleId(Long skuId) {
-		return activityService.getPreSale(skuId);
+		return activityService.getPreSaleId(skuId);
 	}
 }
