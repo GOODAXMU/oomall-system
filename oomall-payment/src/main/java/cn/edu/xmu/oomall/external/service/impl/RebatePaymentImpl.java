@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.external.service.IAfterSaleService;
 import cn.edu.xmu.oomall.external.service.ICustomerService;
 import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import cn.edu.xmu.oomall.external.service.IOrderService;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
 import javax.validation.constraints.NotNull;
@@ -13,6 +14,7 @@ import javax.validation.constraints.NotNull;
  * @author Wang Zhizhou
  * create 2020/12/11
  */
+@Component
 public class RebatePaymentImpl implements IExternalPayment {
 
     private IOrderService orderService;

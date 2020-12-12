@@ -98,6 +98,13 @@ public class Refund {
         this.gmtModified = po.getGmtModified();
     }
 
+    public Refund(Long paymentId, Long aftersaleId, Long amount) {
+        this.paymentId = paymentId;
+        this.aftersaleId = aftersaleId;
+        this.amount = amount;
+        this.state = State.NEW;
+    }
+
     /**
      * 创建 po
      * @return

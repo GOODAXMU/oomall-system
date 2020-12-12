@@ -22,9 +22,14 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 	private ApplicationContext applicationContext;
 
 	@Value(value = "${oomall.external.payment-service.name}")
-	private String paymentServiceName;
+	private List<String> paymentServiceNameList;
+
 
 	private List<Object> services = new ArrayList<>();
+
+	public List<Object> getServices() {
+		return services;
+	}
 
 	public Object get(Class c) {
 		if (c == null || !c.isInterface()) {
@@ -44,7 +49,9 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 
 	@Override
 	public void afterPropertiesSet() {
-		services.add(applicationContext.getBean(getBeanName(paymentServiceName)));
+		for (String s : paymentServiceNameList) {
+			services.add(applicationContext.getBean(getBeanName(s)));
+		}
 	}
 
 	@Override

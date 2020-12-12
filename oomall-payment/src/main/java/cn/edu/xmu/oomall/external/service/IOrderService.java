@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.external.service;
 
+import cn.edu.xmu.oomall.dto.OrderItemDto;
+
 import java.util.List;
 
 /**
@@ -41,11 +43,11 @@ public interface IOrderService {
     void checkOrderPaid(Long id, Long amount);
 
     /**
-     * 获取订单的价格(可以被返款的部分)
+     * 获取订单的定金价格(用于筛选可以被返款的部分)
      * @param id 订单id
-     * @return
+     * @return  定金价格, 非预售返回 -1
      */
-    Long getOrderCanBeRefundPrice(Long id);
+    Long getOrderPresaleDeposit(Long id);
 
     /**
      * 获取订单的顾客id
@@ -53,4 +55,11 @@ public interface IOrderService {
      * @return
      */
     Long getCustomerIdByOrderId(Long id);
+
+    /**
+     * 获取orderItemid
+     * @param orderItemId
+     * @return
+     */
+    OrderItemDto getOrderItem(Long orderItemId);
 }
