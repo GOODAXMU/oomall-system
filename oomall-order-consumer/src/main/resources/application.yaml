@@ -22,9 +22,15 @@ spring:
 
 rocketmq:
   name-server: localhost:9876
-  consumer:
+  producer:
     group: order
+    max-message-size: 4096
+    send-message-timeout: 3000
+    retry-times-when-send-async-failed: 2
+  consumer:
     order:
       topic: order
+      group: order
     share:
       topic: share-response
+      group: share-response

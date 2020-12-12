@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IOrderService;
+import cn.edu.xmu.oomall.util.OrderSnGenerator;
 import cn.edu.xmu.oomall.vo.Reply;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	private IMessageSender sender;
 
 	private ICustomerService customerService;
+	private IGoodsService goodsService;
 	private IShopService shopService;
 	private IInventoryService inventoryService;
 	private IFreightService freightService;
@@ -49,6 +51,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	@PostConstruct
 	public void init() {
 		customerService = (ICustomerService) serviceFactory.get(ICustomerService.class);
+		goodsService = (IGoodsService) serviceFactory.get(IGoodsService.class);
 		shopService = (IShopService) serviceFactory.get(IShopService.class);
 		inventoryService = (IInventoryService) serviceFactory.get(IInventoryService.class);
 		freightService = (IFreightService) serviceFactory.get(IFreightService.class);
@@ -57,34 +60,34 @@ public class NormalOrderServiceImpl implements IOrderService {
 	}
 
 	@Override
-	public Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException {
-		// 获取订单的客户
-		Long customerId = order.getCustomer().getId();
-		Customer customer = customerService.getCustomer(customerId);
-		if (customer == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
-
+	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 扣库存
 		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value());
-		if (orderItems.size() == 0) {
+		if (orderItems.size() < order.getOrderItems().size()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
-		order.setOrderItems(orderItems);
 
 		// 异步校验优惠活动与优惠卷
 		CompletableFuture<Map<Long, Long>> activity
 				= activityService.validateActivityAsynchronous(order.getOrderItems(), order.getCouponId());
 
-		// 根据sku所属商铺划分orderItem并创建子订单, 设置orderItem的price字段
-		Map<Shop, List<OrderItem>> shop2OrderItems =
-				shopService.classifySku(order.getOrderItems());
-		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
-			order.createAndAddSubOrder(e.getKey(), e.getValue());
-		}
+		// 异步计算运费
+		CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(order.getOrderItems(), order.getRegionId(), false);
 
-		// 设置订单客户
-		order.setCustomer(customer, true);
+		// 设置订单的客户
+		Long customerId = order.getCustomer().getId();
+		Customer customer = customerService.getCustomer(customerId);
+		if (customer == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setCustomer(customer, false);
+
+		// 设置商铺
+		Shop shop = shopService.getShop(order.getOrderItems().get(0).getSkuId());
+		if (shop == null) {
+			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+		order.setShop(shop);
 
 		// 获取可用的优惠活动并设置
 		Map<Long, Long> sku2Activity = activity.get();
@@ -99,49 +102,31 @@ public class NormalOrderServiceImpl implements IOrderService {
 				order.getOrderItems());
 
 		// 分配订单流水号
-		order.createAndGetOrderSn();
-		for (Order subOrder : order.getSubOrders()) {
-			subOrder.createAndGetOrderSn();
-		}
+		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
 
-		// 异步计算运费
-		Map<String, CompletableFuture<Long>> freights = new HashMap<>(order.getSubOrders().size() + 1);
-		for (Order subOrder : order.getSubOrders()) {
-			CompletableFuture<Long> cf = freightService.calcFreightPriceAsynchronous(subOrder.getOrderItems(), subOrder.getRegionId(), false);
-			freights.put(subOrder.getOrderSn(), cf);
-		}
+		// 设置orderItem的sku信息
+		goodsService.setSkuInformation(order.getOrderItems(), OrderType.NORMAL.value());
+
+		// 计算价格
+		order.calcAndSetParentOrderOriginPrice();
+
+		// 设置订单状态和类型
+		order.setOrderStatus(OrderStatus.NEW, false);
+		order.setOrderType(OrderType.NORMAL, false);
 
 		// 获取并设置折扣
 		Map<Long, Long> sku2Discount = discount.get();
 		for (OrderItem oi : order.getOrderItems()) {
 			oi.setDiscount(sku2Discount.get(oi.getSkuId()));
 		}
-		order.calcAndSetSubOrderDiscountPrice();
 		order.calcAndSetParentDiscountPrice();
 
-		// 计算价格
-		order.calcAndSetSubOrdersOriginPrice();
-		order.calcAndSetParentOrderOriginPrice();
-
-		// 设置订单状态和类型
-		order.setOrderStatus(OrderStatus.NEW, true);
-		order.setOrderType(OrderType.NORMAL, true);
-
 		// 获取并设置运费
-		for (Order subOrder : order.getSubOrders()) {
-			Long f = freights.get(subOrder.getOrderSn()).get();
-			subOrder.setFreightPrice(f);
-		}
-
-		// 单店不拆单
-		if (order.getSubOrders().size() == 1) {
-			order = order.getSubOrders().get(0);
-			order.setPid(0L);
-		}
+		order.setFreightPrice(cf.get());
 
 		// 订单写入消息队列
 		sender.sendAsynchronous(order.toOrderDto(), TOPIC);
 
-		return new Reply<>(order);
+		return new Reply<>(order.getOrderSn());
 	}
 }

@@ -158,16 +158,13 @@ public class Order {
 		}
 	}
 
-	public String createAndGetOrderSn() {
-		orderSn = UUID.randomUUID().toString();
-		return orderSn;
-	}
-
 	public static Order toOrder(OrderPo orderPo) {
 		if (orderPo == null) {
 			return null;
 		}
 		Order o = new Order();
+		o.orderItems = new ArrayList<>();
+		o.subOrders = new ArrayList<>();
 		o.id = orderPo.getId();
 		o.customer = new Customer(orderPo.getCustomerId());
 		o.shop = new Shop(orderPo.getShopId());
@@ -241,15 +238,12 @@ public class Order {
 		dto.setShopId(shop == null ? null : shop.getId());
 		dto.setOrderSn(orderSn);
 
-		if (subOrders != null) {
-			List<OrderDto> sub = new ArrayList<>();
-			for (Order o : subOrders) {
-				OrderDto d = o.toOrderDto();
-				d.setCustomerId(dto.getCustomerId());
-				sub.add(d);
-			}
-			dto.setSubOrders(sub);
+		List<OrderItemDto> dtos = new ArrayList<>();
+		for (OrderItem oi : orderItems) {
+			OrderItemDto orderItemDto = oi.toOrderItemDto();
+			dtos.add(orderItemDto);
 		}
+		dto.setOrderItems(dtos);
 
 		dto.setPid(pid);
 		dto.setConsignee(consignee);

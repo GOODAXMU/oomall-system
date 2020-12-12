@@ -43,32 +43,23 @@ public class WangActivityServiceImpl implements IActivityService {
 	}
 
 	@Override
-	public Boolean useCoupon(Long couponId) {
-		return false;
-	}
-
-	@Override
 	public Long getGrouponId(Long skuId) {
-		// todo 等待外部接口
-		return null;
+		return activityService.getGrouponId(skuId);
 	}
 
 	@Override
-	public Long getPreSale(Long skuId) {
-		// todo 等待外部接口
-		return null;
+	public Long getPreSaleId(Long skuId) {
+		return activityService.getPreSale(skuId);
 	}
 
 	@Override
 	public Long getPreSaleDeposit(Long preSaleId) {
-		// todo 等待外部接口
-		return null;
+		return activityService.getPrePrice(preSaleId).get("prePrice");
 	}
 
 	@Override
 	public Long getPreSaleBalance(Long preSaleId) {
-		// todo 等待外部接口
-		return null;
+		return activityService.getPrePrice(preSaleId).get("finalPrice");
 	}
 
 	private OrderItemDTO toOrderItemDTO(OrderItem oi) {
