@@ -124,4 +124,7 @@ public interface OrderRepository extends
 
 	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.customerId = :customerId")
 	Long findIdByIdAndCustomerId(Long orderId, Long customerId);
+
+	@Query(value = "SELECT o.presaleId FROM OrderPo o WHERE o.id = :id")
+	Long findPreSaleIdById(Long id);
 }
