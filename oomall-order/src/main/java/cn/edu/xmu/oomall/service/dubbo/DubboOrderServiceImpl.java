@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
-import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
