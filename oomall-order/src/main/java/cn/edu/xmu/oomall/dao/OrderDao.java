@@ -28,6 +28,7 @@ import java.util.Optional;
  * @modified by Jianheng HUANG, date: 2020-11-27
  * @modified by Jianheng HUANG, date: 2020-11-29
  * @modified by xincong yao, date: 2020-12-3
+ * @modified by Jianheng HUANG, date: 2020-12-12
  * TODO: 店家的权限检查
  */
 @Component
@@ -216,8 +217,9 @@ public class OrderDao {
     /**
      * @author Jianheng HUANG
      * @date 2020-11-29
+     * @modified 2020-12-12
      */
-    public Reply<Object> markShopOrderDelivered(Long shopId, Long id) {
+    public Reply<Object> markShopOrderDelivered(Long shopId, Long id, String shipmentSn) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
         Order o = Order.toOrder(orderPo.orElse(null));
@@ -225,7 +227,7 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
-        int r = orderRepository.updateOrderState(id, OrderStatus.DELIVERED.value());
+        int r = orderRepository.markShopOrderDelievered(id, OrderStatus.DELIVERED.value(), shipmentSn);
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);

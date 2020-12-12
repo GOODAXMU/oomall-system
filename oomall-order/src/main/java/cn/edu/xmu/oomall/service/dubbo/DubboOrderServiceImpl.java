@@ -201,14 +201,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	}
 
 	@Override
-	public Long getOrderCanBeRefundPrice(Long id) {
-		OrderPo po = orderRepository.findPrice(id);
-		if (po == null || po.getOriginPrice() == null) {
-			return 0L;
+	public Long getOrderPresaleDeposit(Long id) {
+		Long presaleId = orderRepository.findPreSaleIdById(id);
+		if (presaleId == null) {
+			return -1L;
 		}
-		long price = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
-		long discount = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
-		return price - discount;
+		Long deposit = activityService.getPreSaleDeposit(presaleId);
+		return deposit == null ? -1L : deposit;
 	}
 
 	@Override

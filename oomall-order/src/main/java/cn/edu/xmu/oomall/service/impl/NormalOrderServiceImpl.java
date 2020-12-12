@@ -18,7 +18,6 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -108,7 +107,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 		goodsService.setSkuInformation(order.getOrderItems(), OrderType.NORMAL.value());
 
 		// 计算价格
-		order.calcAndSetParentOrderOriginPrice();
+		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, false);
@@ -119,7 +118,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 		for (OrderItem oi : order.getOrderItems()) {
 			oi.setDiscount(sku2Discount.get(oi.getSkuId()));
 		}
-		order.calcAndSetParentDiscountPrice();
+		order.calcAndSetDiscountPrice();
 
 		// 获取并设置运费
 		order.setFreightPrice(cf.get());

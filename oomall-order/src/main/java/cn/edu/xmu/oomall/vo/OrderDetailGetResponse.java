@@ -69,7 +69,7 @@ public class OrderDetailGetResponse {
 	@Data
 	@AllArgsConstructor
 	@NoArgsConstructor
-	private static class OrderItem {
+	public static class OrderItem {
 		private Long skuId;
 		private Long orderId;
 		private String name;

@@ -16,6 +16,7 @@ import java.util.Optional;
  * @date 2020-11-10
  * modified by Jianheng HUANG, date: 2020-11-29
  * modified by xincong yao, date: 2020-12-3
+ * modified by Jianheng HUANG, date: 2020-12-12
  */
 public interface OrderRepository extends
 		JpaRepository<OrderPo, Long>,
@@ -124,4 +125,12 @@ public interface OrderRepository extends
 
 	@Query(value = "SELECT o.id FROM OrderPo o WHERE o.id = :orderId AND o.customerId = :customerId")
 	Long findIdByIdAndCustomerId(Long orderId, Long customerId);
+
+	@Query(value = "SELECT o.presaleId FROM OrderPo o WHERE o.id = :id")
+	Long findPreSaleIdById(Long id);
+
+	@Modifying
+	@Transactional
+	@Query(value="UPDATE OrderPo p SET p.state = :state, p.shipmentSn = :shipmentSn WHERE p.id = :id")
+	int markShopOrderDelievered(Long id, Integer state, String shipmentSn);
 }

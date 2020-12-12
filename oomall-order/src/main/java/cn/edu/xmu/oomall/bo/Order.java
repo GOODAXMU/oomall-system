@@ -78,41 +78,18 @@ public class Order {
 		return subOrder;
 	}
 
-	public void calcAndSetParentOrderOriginPrice() {
-		Long price = 0L;
-		for (Order o : getSubOrders()) {
-			price += o.getOriginPrice();
+	public void calcAndSetOriginPrice() {
+		long price = 0L;
+		for (OrderItem oi : orderItems) {
+			price += oi.getQuantity() * oi.getPrice();
 		}
 		originPrice = price;
 	}
 
-	public void calcAndSetSubOrdersOriginPrice() {
-		for (Order subOrder : getSubOrders()) {
-			long price = 0L;
-			for (OrderItem oi : subOrder.getOrderItems()) {
-				price += oi.getQuantity() * oi.getPrice();
-			}
-			subOrder.setOriginPrice(price);
-		}
-	}
-
-	public void calcAndSetSubOrderDiscountPrice() {
-		if (subOrders == null) {
-			return;
-		}
-		for (Order subOrder : subOrders) {
-			Long t = 0L;
-			for (OrderItem oi : subOrder.orderItems) {
-				t += oi.getDiscount() == null ? 0L : oi.getDiscount();
-			}
-			subOrder.discountPrice = t;
-		}
-	}
-
-	public void calcAndSetParentDiscountPrice() {
-		Long t = 0L;
-		for (Order o : subOrders) {
-			t += o.discountPrice == null ? 0L : o.discountPrice;
+	public void calcAndSetDiscountPrice() {
+		long t = 0L;
+		for (OrderItem oi : orderItems) {
+			t += oi.getDiscount() == null ? 0L : oi.getDiscount();
 		}
 		discountPrice = t;
 	}

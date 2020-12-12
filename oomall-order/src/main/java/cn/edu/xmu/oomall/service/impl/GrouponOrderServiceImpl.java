@@ -84,7 +84,7 @@ public class GrouponOrderServiceImpl implements IOrderService {
 		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
 
 		// 设置价格
-		order.calcAndSetParentOrderOriginPrice();
+		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, false);
