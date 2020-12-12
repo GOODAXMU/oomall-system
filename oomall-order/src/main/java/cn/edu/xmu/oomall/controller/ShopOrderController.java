@@ -20,6 +20,7 @@ import java.util.List;
 /**
  * @author Jianheng HUANG
  * @date 2020-11-9
+ * @modified 2020-12-12
  */
 @Api(value = "供店家访问的订单api")
 @Validated
@@ -36,7 +37,8 @@ public class ShopOrderController {
             @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能查询本商铺)", required = true),
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "customerId", value = "查询的购买者用户id", required = false),
             @ApiImplicitParam(paramType = "query", dataType = "String", name = "orderSn", value = "订单编号", required = false),
-            @ApiImplicitParam(paramType = "query", dataType = "int", name = "state", value = "订单状态", required = false),
+            @ApiImplicitParam(paramType = "query", dataType = "String", name = "beginTime", value = "开始时间", required = false),
+            @ApiImplicitParam(paramType = "query", dataType = "String", name = "endTime", value = "结束时间", required = false),
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "page", value = "页码", required = false),
             @ApiImplicitParam(paramType = "query", dataType = "int", name = "pageSize", value = "每页数目", required = false),
     })
@@ -53,7 +55,7 @@ public class ShopOrderController {
             @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
-        PageInfo pageInfo = new PageInfo(page, pageSize);
+        PageInfo pageInfo = new PageInfo(page - 1, pageSize);
 
         List<Order> os = shopOrderService.getShopOrders(shopId, customerId, orderSn,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
@@ -73,7 +75,7 @@ public class ShopOrderController {
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
             @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能查询本商铺)", required = true),
             @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "指定订单号", required = true),
-            @ApiImplicitParam(paramType = "body", dataType = "String", name = "message", value = "操作字段 (状态)", required = true),
+            @ApiImplicitParam(paramType = "body", dataType = "ShopOrderMessageAddRequest", name = "message", value = "操作字段 (状态)", required = true),
 
     })
     @ResponseStatus(value = HttpStatus.OK)
@@ -82,27 +84,26 @@ public class ShopOrderController {
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id,
             @RequestBody ShopOrderMessageAddRequest orderInfo) {
-        String message=orderInfo.getMessage();
+        String message = orderInfo.getMessage();
         return shopOrderService.addShopOrderMessage(shopId, id, message);
     }
 
 
     @ApiOperation(value = "店家查询店内订单完整信息（普通，团购，预售）")
-	@ApiImplicitParams({
-			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
-			@ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能操作本商铺)", required = true),
-			@ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true)
-	})
-	@ApiResponses({
-			@ApiResponse(code = 0, message = "成功"),
-	})
-	@GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
-	@ResponseStatus(value = HttpStatus.OK)
-	//API标准 v1.0.6 返回类型有误
+    @ApiImplicitParams({
+            @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
+            @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能操作本商铺)", required = true),
+            @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "订单id", required = true)
+    })
+    @ApiResponses({
+            @ApiResponse(code = 0, message = "成功"),
+    })
+    @GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
+    @ResponseStatus(value = HttpStatus.OK)
     public Reply<OrderDetailGetResponse> getShopOrderDetails(
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id) {
-    	Reply<Order> r=shopOrderService.getShopOrderById(shopId, id);
+        Reply<Order> r = shopOrderService.getShopOrderById(shopId, id);
         Order o = r.getData();
         if (o == null) {
             return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
@@ -118,7 +119,7 @@ public class ShopOrderController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
             @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能操作本商铺)", required = true),
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true)
+            @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "订单id", required = true)
     })
     @ApiResponses({
             @ApiResponse(code = 0, message = "成功"),
@@ -136,7 +137,7 @@ public class ShopOrderController {
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
             @ApiImplicitParam(paramType = "path", dataType = "int", name = "shopId", value = "商户id (店员只能操作本商铺)", required = true),
-            @ApiImplicitParam(paramType = "path", dataType = "int", name = "订单id", value = "id", required = true),
+            @ApiImplicitParam(paramType = "path", dataType = "int", name = "id", value = "订单id", required = true),
             @ApiImplicitParam(paramType = "body", dataType = "ShopOrderDeliverPutRequest", name = "body", value = "指定发货资讯", required = true)
     })
     @ApiResponses({
@@ -148,7 +149,7 @@ public class ShopOrderController {
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id,
             @RequestBody ShopOrderDeliverPutRequest body) {
-        String sn= body.getFreightSn();
+        String sn = body.getFreightSn();
         return shopOrderService.markShopOrderDelivered(shopId, id, sn);
     }
 
