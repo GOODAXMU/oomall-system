@@ -25,6 +25,6 @@ public class PageInfo {
 
 	public void calAndSetPagesAndTotal(long totalElements) {
 		this.total = totalElements;
-		this.pages = Math.toIntExact(totalElements / pageSize);
+		this.pages = Math.toIntExact(totalElements / pageSize + totalElements % pageSize == 0 ? 0 : 1);
 	}
 }

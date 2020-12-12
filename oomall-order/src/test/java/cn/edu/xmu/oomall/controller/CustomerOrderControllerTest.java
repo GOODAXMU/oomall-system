@@ -95,7 +95,9 @@ public class CustomerOrderControllerTest {
 
 	@Test
 	public void getAllOrdersTest() throws Exception {
-		String response = mvc.perform(get("/orders").header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
+		String response = mvc.perform(get("/orders")
+				.queryParam("orderSn", "917de2ea-e092-46b2-a3d1-1478de7a93b8")
+				.header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
@@ -111,8 +113,6 @@ public class CustomerOrderControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
-
-		System.out.println(response);
 
 		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":1,\"customer\":{\"id\":112,\"userName\":\"abee\",\"realName\":\"wilson\"},\"shop\":{\"id\":345,\"name\":\"super shop\",\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"},\"pid\":null,\"orderType\":null,\"state\":0,\"subState\":null,\"gmtCreate\":1606843990,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null,\"message\":null,\"regionId\":100,\"address\":\"xiamen\",\"mobile\":\"1334567890\",\"consignee\":\"consigneeeee\",\"couponId\":null,\"grouponId\":null,\"orderItems\":[{\"skuId\":185,\"orderId\":1,\"name\":null,\"quantity\":1,\"price\":4475,\"discount\":null,\"couponActivityId\":null,\"beShareId\":null}]}}";
 		Assert.assertEquals(expectedResponse, response);

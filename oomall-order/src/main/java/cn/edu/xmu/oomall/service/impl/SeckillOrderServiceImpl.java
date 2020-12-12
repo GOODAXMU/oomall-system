@@ -85,7 +85,7 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		order.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
 
 		// 计算价格
-		order.calcAndSetParentOrderOriginPrice();
+		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
 		order.setOrderStatus(OrderStatus.NEW, false);

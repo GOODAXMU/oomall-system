@@ -85,7 +85,7 @@ public class CustomerOrderController {
 			@RequestParam(required = false) Integer state,
 			@RequestParam(required = false) String beginTime,
 			@RequestParam(required = false) String endTime,
-			@RequestParam(required = false, defaultValue = "1") Integer page,
+			@RequestParam(required = false, defaultValue = "0") Integer page,
 			@RequestParam(required = false, defaultValue = "20") Integer pageSize,
 			@LoginUser Long customerId) {
 		PageInfo pageInfo = new PageInfo(page, pageSize);
@@ -93,7 +93,7 @@ public class CustomerOrderController {
 				customerId, orderSn, state,
 				beginTime == null ? null : LocalDateTime.parse(beginTime),
 				endTime == null ? null : LocalDateTime.parse(endTime),
-				pageInfo, false).getData();
+				pageInfo, true).getData();
 
 		OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
 		vo.setSummaryList(os);
