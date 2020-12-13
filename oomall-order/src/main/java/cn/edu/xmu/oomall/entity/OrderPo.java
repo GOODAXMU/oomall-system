@@ -81,6 +81,11 @@ public class OrderPo {
 		this.shopId = shopId;
 	}
 
+	public OrderPo(Integer state, Integer subState) {
+		this.state = state;
+		this.subState = subState;
+	}
+
 	public OrderPo(Long id, Long originPrice, Long discountPrice) {
 		this.id = id;
 		this.originPrice = originPrice;
