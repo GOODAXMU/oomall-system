@@ -63,9 +63,6 @@ public interface OrderRepository extends
 			"WHERE o.id = :#{#order.id} AND o.customerId = :#{#order.customerId} AND o.state < :state AND o.subState <> :subState")
 	int updateWhenStateLessThanAndSubStateNotEquals(OrderPo order, Integer state, Integer subState);
 
-	@Query(value = "SELECT new OrderPo(o.state, o.subState) FROM OrderPo o WHERE o.id = :id AND o.customerId = :customerId")
-	OrderPo findOrderStateByIdAndCustomerId(Long id, Long customerId);
-
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo o SET o.state = :state WHERE o.id = :id")

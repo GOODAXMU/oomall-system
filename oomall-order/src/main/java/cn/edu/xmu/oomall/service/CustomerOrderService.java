@@ -76,7 +76,7 @@ public class CustomerOrderService {
 	}
 
 	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
-		OrderPo order = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
+		OrderPo order = orderDao.getOrderPoByIdAndCustomerId(id, customerId);
 
 		if (order == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);

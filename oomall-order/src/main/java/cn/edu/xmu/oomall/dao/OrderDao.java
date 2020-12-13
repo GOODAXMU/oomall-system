@@ -250,10 +250,6 @@ public class OrderDao {
         }
     }
 
-    public OrderPo getOrderStateByIdAndCustomerId(Long id, Long customerId) {
-        return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
-    }
-
     public Reply<Object> updateOrderState(Long id, Integer state, Integer subState) {
         int r = orderRepository.updateState(id, state, subState);
 
@@ -262,5 +258,15 @@ public class OrderDao {
         }
 
         return new Reply<>(ResponseStatus.OK);
+    }
+
+    public OrderPo getOrderPoByIdAndCustomerId(Long id, Long customerId) {
+        Optional<OrderPo> op = orderRepository.findById(id);
+        OrderPo po = op.isEmpty() ? null : op.get();
+        if (po == null || !customerId.equals(po.getCustomerId())) {
+            return null;
+        }
+
+        return po;
     }
 }
