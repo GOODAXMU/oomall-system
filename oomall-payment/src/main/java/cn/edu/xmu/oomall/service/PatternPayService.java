@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
+ * modified 2020/12/13
  */
 @Component
 public class PatternPayService {
@@ -23,11 +24,9 @@ public class PatternPayService {
 
     @PostConstruct
     public void init() {
-        // todo 装填 patternPay
-        for (Object service : serviceFactory.getServices()) {
-
+        for (Map.Entry<String, Object> e : serviceFactory.getPatternPayServices().entrySet()) {
+            patternPay.put(e.getKey(), (IExternalPayment)e.getValue());
         }
-
     }
 
     /**
@@ -36,7 +35,9 @@ public class PatternPayService {
      * @return
      */
     public Boolean payByPattern(Payment payment) {
-        return patternPay.get(payment.getPaymentPattern().getPatternName()).pay(payment);
+        return patternPay
+                .get(payment.getPaymentPattern().getPatternName())
+                .pay(payment);
     }
 
     /**
@@ -45,7 +46,9 @@ public class PatternPayService {
      * @return
      */
     public Boolean refundByPattern(Payment payment) {
-        return patternPay.get(payment.getPaymentPattern().getPatternName()).refund(payment);
+        return patternPay
+                .get(payment.getPaymentPattern().getPatternName())
+                .refund(payment);
     }
 
 }

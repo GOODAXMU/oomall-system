@@ -6,12 +6,10 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
 import cn.edu.xmu.oomall.external.service.IAfterSaleService;
-import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import cn.edu.xmu.oomall.external.service.IOrderService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +19,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/12/10
- * modified 2020/12/11
+ * modified 2020/12/13
  */
 
 @Service
@@ -40,11 +38,12 @@ public class ShopPaymentService {
     private PatternPayService patternPayService;
 
     private IOrderService orderService;
-    private IAfterSaleService afterSaleServer;
+    private IAfterSaleService afterSaleService;
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXService
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
+        afterSaleService = (IAfterSaleService) serviceFactory.get(IAfterSaleService.class);
     }
 
 
@@ -67,7 +66,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+        if (afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -91,7 +90,7 @@ public class ShopPaymentService {
         Long orderId = r.getData().getOrderId();
         Long afterSaleId = r.getData().getAfterSaleId();
         boolean shopOwnOrder     = null != orderId && orderService.isShopOwnOrder(shopId, orderId);
-        boolean shopOwnAfterSale = null != afterSaleId && afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId);
+        boolean shopOwnAfterSale = null != afterSaleId && afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
         if (!shopOwnOrder && !shopOwnAfterSale) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
@@ -139,7 +138,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+        if (afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 

@@ -5,7 +5,9 @@ import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
+import cn.edu.xmu.oomall.external.service.IAfterSaleService;
 import cn.edu.xmu.oomall.external.service.IOrderService;
+import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IDubboPaymentService;
 import cn.edu.xmu.oomall.service.PatternPayService;
 import cn.edu.xmu.oomall.vo.Reply;
@@ -16,6 +18,11 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * @author Wang Zhizhou
+ * create 2020/12/11
+ * modified 2020/12/13
+ */
 @DubboService(version = "${oomall.payment.version}")
 public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
@@ -28,11 +35,14 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
     @Autowired
     private PatternPayService patternPayService;
 
+    @Autowired
+    private ServiceFactory serviceFactory;
+
     private IOrderService orderService;
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXService
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
     }
 
     @Override

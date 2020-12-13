@@ -51,5 +51,5 @@ oomall:
   external:
     payment-service:
       name:
-        - RebatePaymentImpl
+        - SimplePaymentImpl
         - RebatePaymentImpl

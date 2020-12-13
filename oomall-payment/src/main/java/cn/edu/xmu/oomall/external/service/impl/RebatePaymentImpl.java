@@ -5,6 +5,8 @@ import cn.edu.xmu.oomall.external.service.IAfterSaleService;
 import cn.edu.xmu.oomall.external.service.ICustomerService;
 import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import cn.edu.xmu.oomall.external.service.IOrderService;
+import cn.edu.xmu.oomall.external.util.ServiceFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -13,9 +15,13 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
+ * modified 2020/12/13
  */
 @Component
 public class RebatePaymentImpl implements IExternalPayment {
+
+    @Autowired
+    private ServiceFactory serviceFactory;
 
     private IOrderService orderService;
     private IAfterSaleService afterSaleService;
@@ -23,7 +29,9 @@ public class RebatePaymentImpl implements IExternalPayment {
 
     @PostConstruct
     public void init() {
-        // todo 装填
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
+        afterSaleService = (IAfterSaleService) serviceFactory.get(IAfterSaleService.class);
+        customerService = (ICustomerService) serviceFactory.get(ICustomerService.class);
     }
 
     @Override

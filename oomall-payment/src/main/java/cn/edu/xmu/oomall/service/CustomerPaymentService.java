@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/11
+ * modified 2020/12/13
  */
 
 @Service
@@ -43,7 +43,8 @@ public class CustomerPaymentService {
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXServer
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
+        afterSaleServer = (IAfterSaleService) serviceFactory.get(IAfterSaleService.class);
     }
 
     /**
@@ -81,12 +82,16 @@ public class CustomerPaymentService {
 
         // 支付成果才写入数据库
         if (payment.isPaySuccess()) {
-            paymentDao.savePayment(payment);
+            Reply<Payment> r = paymentDao.savePayment(payment);
+            if (r.isOk()) {
+                // 提醒订单服务器检查支付状态
+                orderService.checkOrderPaid(orderId, paymentDao.calcOrderPayments(orderId));
+            }
+
+            return r;
         }
 
-        // 提醒订单服务器检查支付状态
-        orderService.checkOrderPaid(orderId, paymentDao.calcOrderPayments(orderId));
-
+        // 支付失败并不报错, 返回失败的支付信息
         return new Reply<>(payment);
     }
 
@@ -125,12 +130,16 @@ public class CustomerPaymentService {
 
         // 支付成果才写入数据库
         if (payment.isPaySuccess()) {
-            paymentDao.savePayment(payment);
+            Reply<Payment> r = paymentDao.savePayment(payment);
+            if (r.isOk()) {
+                // 提醒订单服务器检查支付状态
+                afterSaleServer.checkAfterSalePaid(afterSaleId, paymentDao.calcAfterSalePayments(afterSaleId));
+            }
+
+            return r;
         }
 
-        // 提醒订单服务器检查支付状态
-        afterSaleServer.checkAfterSalePaid(afterSaleId, paymentDao.calcAfterSalePayments(afterSaleId));
-
+        // 支付失败不报错, 返回失败的支付信息
         return new Reply<>(payment);
     }
 

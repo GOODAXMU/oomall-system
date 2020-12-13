@@ -26,35 +26,21 @@ public class PaymentDao {
     private PaymentRepository paymentRepository;
 
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId) {
-        PaymentPo po = new PaymentPo();
-        po.setOrderId(orderId);
-
         List<Payment> payments = new ArrayList<>();
-        for (PaymentPo paymentPo : paymentRepository.findAll(SpecificationFactory.get(po))) {
+        for (PaymentPo paymentPo : paymentRepository.findAllByOrderId(orderId)) {
             payments.add(new Payment(paymentPo));
         }
 
-        if (payments.size() > 0) {
-            return new Reply<>(payments);
-        }
-
-        return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        return new Reply<>(payments);
     }
 
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId) {
-        PaymentPo po = new PaymentPo();
-        po.setAftersaleId(afterSaleId);
-
         List<Payment> payments = new ArrayList<>();
-        for (PaymentPo paymentPo : paymentRepository.findAll(SpecificationFactory.get(po))) {
+        for (PaymentPo paymentPo : paymentRepository.findAllByAfterSaleId(afterSaleId)) {
             payments.add(new Payment(paymentPo));
         }
 
-        if (payments.size() > 0) {
-            return new Reply<>(payments);
-        }
-
-        return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        return new Reply<>(payments);
     }
 
     public Reply<Payment> getPaymentById(Long paymentId) {
