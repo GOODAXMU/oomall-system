@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
+import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.external.service.IInventoryService;
 import cn.edu.xmu.goods.client.dubbo.OrderItemDTO;
 import org.apache.dubbo.config.annotation.DubboReference;
@@ -19,14 +20,22 @@ public class WangInventoryServiceImpl implements IInventoryService {
 	@DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IInventoryService inventoryService;
 
+	@DubboReference(version = "${oomall.external.activity-service.version}", cache = "false", timeout = 5000, check = false)
+	private cn.edu.xmu.goods.client.IActivityService activityService;
+
 
 	@Override
-	public List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type) {
+	public List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type, Long activityId) {
 		List<OrderItemDTO> dto = new ArrayList<>();
 		for (OrderItem oi : orderItems) {
 			dto.add(toOrderItemDTO(oi));
 		}
-		dto = inventoryService.modifyInventory(dto);
+
+		if (OrderType.PRESALE.value() == type) {
+			dto = activityService.modifyPresaleInventory(dto, activityId);
+		} else {
+			dto = inventoryService.modifyInventory(dto);
+		}
 
 		if (dto == null) {
 			return new ArrayList<>();

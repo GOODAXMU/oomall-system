@@ -18,5 +18,5 @@ public interface IInventoryService {
 	 * @param type 订单类型
 	 * @return 扣库存成功的orderItem列表
 	 */
-	List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type);
+	List<OrderItem> modifyInventory(List<OrderItem> orderItems, Integer type, Long activityId);
 }

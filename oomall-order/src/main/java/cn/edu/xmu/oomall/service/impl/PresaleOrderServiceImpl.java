@@ -56,7 +56,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 	@Override
 	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 扣库存
-		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value());
+		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value(), order.getPresaleId());
 		if (r == null || r.isEmpty()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}

@@ -61,7 +61,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	@Override
 	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 扣库存
-		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value());
+		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value(), null);
 		if (orderItems.size() < order.getOrderItems().size()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
