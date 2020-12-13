@@ -18,7 +18,7 @@ import java.util.concurrent.CompletableFuture;
 @Component
 public class GoodaFreightServiceImpl implements IFreightService {
 
-	@DubboReference(version = "${oomall.external.freight-service.version}", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.freight-service.version}", timeout = 5000, check = false)
 	private cn.edu.xmu.oomall.service.IFreightService freightService;
 
 	@Override

@@ -17,10 +17,10 @@ import java.util.List;
 @Component
 public class SongFlashSaleServiceImpl implements IFlashSaleService {
 
-	@DubboReference(version = "${oomall.external.flash-sale-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.flash-sale-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IFlashSaleService flashSaleService;
 
-	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
 	@Override

@@ -39,10 +39,10 @@ public class CustomerOrderControllerTest1 {
 		request.setRegionId(66L);
 		List<OrderPostRequest.OrderItem> ois = new ArrayList<>();
 		OrderPostRequest.OrderItem oi1 = new OrderPostRequest.OrderItem();
-		oi1.setSkuId(333L);
+		oi1.setSkuId(280L);
 		oi1.setQuantity(2);
 		OrderPostRequest.OrderItem oi2 = new OrderPostRequest.OrderItem();
-		oi2.setSkuId(335L);
+		oi2.setSkuId(281L);
 		oi2.setQuantity(3);
 		ois.add(oi1);
 		ois.add(oi2);

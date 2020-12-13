@@ -16,7 +16,7 @@ import java.util.List;
 @Component
 public class WangInventoryServiceImpl implements IInventoryService {
 
-	@DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.inventory-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IInventoryService inventoryService;
 
 
@@ -27,6 +27,10 @@ public class WangInventoryServiceImpl implements IInventoryService {
 			dto.add(toOrderItemDTO(oi));
 		}
 		dto = inventoryService.modifyInventory(dto);
+
+		if (dto == null) {
+			return new ArrayList<>();
+		}
 
 		orderItems = new ArrayList<>();
 		for (OrderItemDTO oiDTO : dto) {

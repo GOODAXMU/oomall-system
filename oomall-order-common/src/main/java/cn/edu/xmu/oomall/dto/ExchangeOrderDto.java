@@ -8,18 +8,21 @@ import java.io.Serializable;
 
 /**
  * @author xincong yao
- * @date 2020-12-7
+ * @date 2020-12-13
  */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShareDto implements Serializable {
+public class ExchangeOrderDto implements Serializable {
 
-	private Long orderItemId;
+	Long customerId;
+	Long shopId;
 
-	private Long customerId;
+	Integer quantity;
+	Long orderItemId;
 
-	private Long skuId;
-
-	private Long beSharedId;
+	String mobile;
+	String consignee;
+	Long regionId;
+	String address;
 }

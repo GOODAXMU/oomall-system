@@ -4,6 +4,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @author xincong yao
  * @date 2020-11-27
@@ -11,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderItemDto {
+public class OrderItemDto implements Serializable {
 
 	private Long id;
 	private Long skuId;

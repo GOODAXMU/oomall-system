@@ -50,9 +50,9 @@ public class OrderDao {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
                 SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime),
-                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
+                PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
 
-        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
 
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {
@@ -79,7 +79,7 @@ public class OrderDao {
                 SpecificationFactory.get(shopId, customerId, orderSn, beginTime, endTime),
                 PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
 
-        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
 
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {

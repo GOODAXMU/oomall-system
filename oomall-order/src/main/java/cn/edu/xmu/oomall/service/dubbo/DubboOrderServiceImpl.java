@@ -1,11 +1,14 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
+import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dto.AfterSaleDto;
 import cn.edu.xmu.oomall.dto.EffectiveShareDto;
+import cn.edu.xmu.oomall.dto.ExchangeOrderDto;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
 import cn.edu.xmu.oomall.external.service.IActivityService;
 import cn.edu.xmu.oomall.external.service.IShopService;
@@ -250,8 +253,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			allPrice += oi.getPrice() * oi.getQuantity();
 		}
 
-		// 拆单
 		Map<Shop, List<OrderItem>> shop2OrderItems = shopService.classifySku(orderItems);
+
+		// 单店不拆单
+		if (shop2OrderItems == null || shop2OrderItems.size() <= 1) {
+			return;
+		}
+
 		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
 			long totalPrice = 0L;
 			for (OrderItem oi : e.getValue()) {
@@ -283,5 +291,52 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 				orderItemRepository.changeOrderIdTo(oi.getId(), sub.getId());
 			}
 		}
+	}
+
+	@Override
+	public Integer createExchangeOrder(ExchangeOrderDto dto) {
+		if (dto == null) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		Optional<OrderItemPo> orderItemOp = orderItemRepository.findById(dto.getOrderItemId());
+		OrderItemPo orderItemPo = orderItemOp.isEmpty() ? null : orderItemOp.get();
+
+		if (orderItemPo == null) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		Optional<OrderPo> op = orderRepository.findById(orderItemPo.getOrderId());
+		if (op.isEmpty()) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		OrderPo order = op.get();
+
+		if (!order.getCustomerId().equals(dto.getCustomerId())
+				|| !order.getShopId().equals(dto.getShopId())) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		OrderPo exOrder = new OrderPo();
+		exOrder.setCustomerId(dto.getCustomerId());
+		exOrder.setShopId(dto.getShopId());
+		exOrder.setMobile(dto.getMobile());
+		exOrder.setRegionId(dto.getRegionId());
+		exOrder.setAddress(dto.getAddress());
+		exOrder.setConsignee(dto.getConsignee());
+
+		exOrder = orderRepository.save(exOrder);
+
+		OrderItemPo oi = new OrderItemPo();
+		oi.setOrderId(exOrder.getId());
+		oi.setGoodsSkuId(orderItemPo.getGoodsSkuId());
+		oi.setQuantity(dto.getQuantity());
+		oi.setName(orderItemPo.getName());
+		oi.setPrice(orderItemPo.getPrice());
+
+		orderItemRepository.save(oi);
+
+		return ResponseStatus.OK.value();
 	}
 }
