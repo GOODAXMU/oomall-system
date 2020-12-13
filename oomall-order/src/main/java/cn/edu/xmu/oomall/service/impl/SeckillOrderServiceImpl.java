@@ -88,7 +88,8 @@ public class SeckillOrderServiceImpl implements IOrderService {
 		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
-		order.setOrderStatus(OrderStatus.NEW, false);
+		order.setOrderStatus(OrderStatus.TO_BE_PAID, false);
+		order.setSubState(OrderStatus.NEW.value());
 		order.setOrderType(OrderType.NORMAL, false);
 
 		// 获取并设置运费

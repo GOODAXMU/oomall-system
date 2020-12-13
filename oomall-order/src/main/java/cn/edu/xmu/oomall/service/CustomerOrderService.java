@@ -7,6 +7,7 @@ import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
+import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
@@ -75,16 +76,16 @@ public class CustomerOrderService {
 	}
 
 	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
-		Integer s = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
+		OrderPo order = orderDao.getOrderStateByIdAndCustomerId(id, customerId);
 
-		if (s == null) {
+		if (order == null) {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 
-		if (s == OrderStatus.RECEIVED.value()) {
+		if (order.getState() == OrderStatus.COMPLETED.value()) {
 			return orderDao.deleteSelfOrder(id);
-		} else if (s < OrderStatus.DELIVERED.value()) {
-			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value());
+		} else if (order.getSubState() < OrderStatus.DELIVERED.value()) {
+			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value(), null);
 		} else {
 			return new Reply<>(ResponseStatus.OK);
 		}

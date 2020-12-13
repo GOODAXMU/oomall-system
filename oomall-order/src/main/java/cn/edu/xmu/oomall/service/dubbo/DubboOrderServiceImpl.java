@@ -6,10 +6,7 @@ import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
-import cn.edu.xmu.oomall.dto.AfterSaleDto;
-import cn.edu.xmu.oomall.dto.EffectiveShareDto;
-import cn.edu.xmu.oomall.dto.ExchangeOrderDto;
-import cn.edu.xmu.oomall.dto.OrderItemDto;
+import cn.edu.xmu.oomall.dto.*;
 import cn.edu.xmu.oomall.external.service.IActivityService;
 import cn.edu.xmu.oomall.external.service.IShopService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
@@ -140,13 +137,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 
 		if (OrderType.PRESALE.value() == po.getOrderType()) {
-			if (OrderStatus.DEPOSIT_TO_BE_PAID.value() == po.getSubState()) {
+			if (OrderStatus.NEW.value() == po.getSubState()) {
 				Long price = activityService.getPreSaleDeposit(po.getPresaleId());
 				if (price.equals(amount)) {
 					orderRepository.changeOrderSubStateWhenSubStateEquals(
 							id,
-							OrderStatus.DEPOSIT_PAID.value(),
-							OrderStatus.DEPOSIT_TO_BE_PAID.value()
+							OrderStatus.BALANCE_TO_BE_PAID.value(),
+							OrderStatus.NEW.value()
 					);
 				}
 			} else if (OrderStatus.BALANCE_TO_BE_PAID.value() == po.getSubState()) {
@@ -154,12 +151,9 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 				if (price.equals(amount)) {
 					orderRepository.changeOrderStateWhenStateEquals(
 							id,
+							OrderStatus.TO_BE_RECEIVED.value(),
 							OrderStatus.PAID.value(),
-							OrderStatus.TO_BE_PAID.value()
-					);
-					orderRepository.changeOrderSubStateWhenSubStateEquals(
-							id,
-							OrderStatus.BALANCE_PAID.value(),
+							OrderStatus.TO_BE_PAID.value(),
 							OrderStatus.BALANCE_TO_BE_PAID.value()
 					);
 				}
@@ -174,13 +168,10 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			if (price.equals(amount)) {
 				orderRepository.changeOrderStateWhenStateEquals(
 						id,
-						OrderStatus.PAID.value(),
-						OrderStatus.TO_BE_PAID.value()
-				);
-				orderRepository.changeOrderSubStateWhenSubStateEquals(
-						id,
-						OrderStatus.GROUPON_TO_BE_JOIN.value(),
-						OrderStatus.GROUPON_JOIN.value()
+						OrderStatus.TO_BE_RECEIVED.value(),
+						OrderStatus.GROUPON_THRESHOLD_TO_BE_REACH.value(),
+						OrderStatus.TO_BE_PAID.value(),
+						OrderStatus.NEW.value()
 				);
 			}
 		} else {
@@ -193,8 +184,10 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			if (price.equals(amount)) {
 				orderRepository.changeOrderStateWhenStateEquals(
 						id,
+						OrderStatus.TO_BE_RECEIVED.value(),
 						OrderStatus.PAID.value(),
-						OrderStatus.TO_BE_PAID.value()
+						OrderStatus.TO_BE_PAID.value(),
+						OrderStatus.NEW.value()
 				);
 
 				splitAndWriteOrder(po);
@@ -217,7 +210,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		List<EffectiveShareDto> dtos = new ArrayList<>();
 
 		List<OrderPo> orders = orderRepository.findAllWhereStatusEqualsAndGmtModifiedBetween(
-				OrderStatus.RECEIVED.value(),
+				OrderStatus.COMPLETED.value(),
 				LocalDateTime.now().minusDays(8),
 				LocalDateTime.now().minusDays(7)
 		);
@@ -338,5 +331,15 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		orderItemRepository.save(oi);
 
 		return ResponseStatus.OK.value();
+	}
+
+	@Override
+	public Boolean changeOrderState(OrderStateDto dto) {
+		int r = orderRepository.changeOrderStateWhenStateEquals(
+				dto.getOrderId(),
+				dto.getTo(), dto.getToSub(),
+				dto.getFrom(), dto.getFromSub()
+		);
+		return r == 1;
 	}
 }

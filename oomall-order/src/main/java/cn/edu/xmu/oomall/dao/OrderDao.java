@@ -139,10 +139,9 @@ public class OrderDao {
 
     public Reply<Object> updateOrderDeliveryInformation(Order o) {
         OrderPo po = OrderPo.toOrderPo(o);
-        po.setGmtModified(LocalDateTime.now());
 
-        int r = orderRepository.updateWhenStateLessThan(
-                po, OrderStatus.DELIVERED.value());
+        int r = orderRepository.updateWhenStateLessThanAndSubStateNotEquals(
+                po, OrderStatus.COMPLETED.value(), OrderStatus.DELIVERED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -183,8 +182,8 @@ public class OrderDao {
 
     public Reply<Object> confirmOrder(Long id) {
         int r = orderRepository.changeOrderStateWhenStateEquals(
-                id, OrderStatus.RECEIVED.value(),
-                OrderStatus.ARRIVED.value());
+                id, OrderStatus.COMPLETED.value(), null,
+                OrderStatus.TO_BE_RECEIVED.value(), OrderStatus.DELIVERED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -237,8 +236,12 @@ public class OrderDao {
     }
 
     public Reply<Object> updateOrderType(Long id, Long customerId) {
-        int r = orderRepository.updateGroupon2NormalWhenStateLessThan(
-                id, customerId, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
+        int r = orderRepository.updateGroupon2NormalWhenSubStateEqualsOr(
+                id, customerId,
+                OrderType.GROUPON.value(), OrderType.NORMAL.value(),
+                OrderStatus.GROUPON_THRESHOLD_TO_BE_REACH.value(),
+                OrderStatus.GROUPON_THRESHOLD_NOT_REACH.value()
+        );
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -247,12 +250,12 @@ public class OrderDao {
         }
     }
 
-    public Integer getOrderStateByIdAndCustomerId(Long id, Long customerId) {
+    public OrderPo getOrderStateByIdAndCustomerId(Long id, Long customerId) {
         return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
     }
 
-    public Reply<Object> updateOrderState(Long id, Integer state) {
-        int r = orderRepository.updateOrderState(id, state);
+    public Reply<Object> updateOrderState(Long id, Integer state, Integer subState) {
+        int r = orderRepository.updateState(id, state, subState);
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);

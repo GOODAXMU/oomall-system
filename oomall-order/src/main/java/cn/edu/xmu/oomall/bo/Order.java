@@ -57,6 +57,11 @@ public class Order {
 	private LocalDateTime gmtModified;
 
 
+	public Order(Integer state, Integer subState) {
+		this.state = state;
+		this.subState = subState;
+	}
+
 	public Order createAndAddSubOrder(Shop shop, List<OrderItem> orderItems) {
 		Order subOrder = new Order();
 
