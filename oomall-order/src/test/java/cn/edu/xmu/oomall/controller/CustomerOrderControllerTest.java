@@ -88,7 +88,7 @@ public class CustomerOrderControllerTest {
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
 
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"code\":0,\"name\":\"已取消\"},{\"code\":1,\"name\":\"定金待支付\"},{\"code\":2,\"name\":\"待支付\"},{\"code\":3,\"name\":\"待参团\"},{\"code\":4,\"name\":\"已支付定金\"},{\"code\":5,\"name\":\"待支付尾款\"},{\"code\":6,\"name\":\"创建订单\"},{\"code\":7,\"name\":\"预售中止\"},{\"code\":8,\"name\":\"已参团\"},{\"code\":9,\"name\":\"未达到团购门槛\"},{\"code\":10,\"name\":\"已成团\"},{\"code\":11,\"name\":\"已支付\"},{\"code\":12,\"name\":\"已支付尾款\"},{\"code\":13,\"name\":\"已退款\"},{\"code\":14,\"name\":\"订单中止\"},{\"code\":15,\"name\":\"售后单待发货\"},{\"code\":16,\"name\":\"发货中\"},{\"code\":17,\"name\":\"到货\"},{\"code\":18,\"name\":\"已签收\"}]}";
+		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"code\":1,\"name\":\"待付款\"},{\"code\":2,\"name\":\"待收货\"},{\"code\":3,\"name\":\"已完成\"},{\"code\":4,\"name\":\"已取消\"},{\"code\":11,\"name\":\"新订单\"},{\"code\":12,\"name\":\"待支付尾款\"},{\"code\":21,\"name\":\"付款完成\"},{\"code\":22,\"name\":\"待成团\"},{\"code\":23,\"name\":\"未成团\"},{\"code\":24,\"name\":\"已发货\"}]}";
 
 		Assert.assertEquals(expectedResponse, response);
 	}
