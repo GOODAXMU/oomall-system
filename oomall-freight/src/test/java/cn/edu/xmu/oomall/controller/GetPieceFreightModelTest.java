@@ -31,7 +31,7 @@ public class GetPieceFreightModelTest {
     @Test
     public void getPieceFreightModels() throws Exception{
         String response = mvc.perform(get("/shops/1/freightmodels/2/pieceItems"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
@@ -39,5 +39,26 @@ public class GetPieceFreightModelTest {
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
 
         Assert.assertEquals(expectedResponse, response);
+    }
+
+    /**
+     * 测试获取重量运费模板明细
+     * 成功
+     * @author zhibin lan
+     * @throws Exception
+     */
+    @Test
+    public void getPieceFreightModels1() throws Exception{
+
+        String responseString = mvc.perform(get("/shops/1/freightmodels/11/pieceItems"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+
+        System.out.println("responseString :" + responseString );
+        Assert.assertEquals(expectedResponse, responseString);
     }
 }

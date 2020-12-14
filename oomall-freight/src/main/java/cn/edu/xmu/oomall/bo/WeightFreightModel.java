@@ -30,8 +30,6 @@ public class WeightFreightModel {
 
     private Long firstWeight;
 
-    private Long firstWeightPrice;
-
     private Long firstWeightFreight;
 
     private Long tenPrice;
@@ -81,7 +79,7 @@ public class WeightFreightModel {
 
     /**
      * 构造函数
-     * @param WeightItemRequest Po对象, id Long
+     * @param weightFreightModelDefineRequest Po对象
      */
     public WeightFreightModel(WeightItemRequest weightFreightModelDefineRequest,Long id){
         this.id=id;
