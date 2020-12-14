@@ -64,7 +64,7 @@
         <appender-ref ref="DruidFILE"/>
     </logger>
 
-    <logger name="cn.edu.xmu.oomall" level="INFO">
+    <logger name="cn.edu.xmu.oomall" level="DEBUG">
         <appender-ref ref="STDOUT"/>
         <appender-ref ref="FILE"/>
     </logger>
