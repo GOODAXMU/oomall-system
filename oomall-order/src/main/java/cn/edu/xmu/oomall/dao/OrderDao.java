@@ -69,17 +69,34 @@ public class OrderDao {
      * @author Jianheng HUANG
      * @date 2020-11-27
      */
-    public Reply<List<Order>> getShopOrders(Long shopId, Long customerId,
-                                            String orderSn,
-                                            LocalDateTime beginTime,
-                                            LocalDateTime endTime,
-                                            PageInfo pageInfo, Boolean withParent) {
+    public Reply<Object> getShopOrders(Long shopId, Long customerId,
+                                       String orderSn,
+                                       LocalDateTime beginTime,
+                                       LocalDateTime endTime,
+                                       PageInfo pageInfo, Boolean withParent) {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
                 SpecificationFactory.get(shopId, customerId, orderSn, beginTime, endTime),
-                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
+                PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
 
         pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
+
+        if (orderPoPage.isEmpty()) {
+            if (orderSn != null) {
+                Page<OrderPo> orderPoPage2 = orderRepository.findAll(
+                        SpecificationFactory.get(customerId, orderSn, beginTime, endTime),
+                        PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
+                if (!orderPoPage2.isEmpty()) {
+                    return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+                } else {
+                    return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+                }
+
+            } else {
+                // 严格的customerId和orderSn同时筛选，不另外判断
+                return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+            }
+        }
 
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {
@@ -121,9 +138,12 @@ public class OrderDao {
     public Reply<Order> getShopOrderById(Long shopId, Long id) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
-        Order o = Order.toOrder(orderPo.orElse(null));
-        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+        if (orderPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         // 设置订单列表
@@ -157,9 +177,12 @@ public class OrderDao {
     public Reply<Object> addShopOrderMessage(Long shopId, Long id, String message) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
-        Order o = Order.toOrder(orderPo.orElse(null));
-        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+        if (orderPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         int r = orderRepository.addShopOrderMessage(id, message);
@@ -199,9 +222,15 @@ public class OrderDao {
     public Reply<Object> cancelShopOrder(Long shopId, Long id) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
-        Order o = Order.toOrder(orderPo.orElse(null));
-        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+        if (orderPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        }
+        if (o.getState() == OrderStatus.COMPLETED.value()) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
         int r = orderRepository.updateOrderState(id, OrderStatus.CANCELED.value());
@@ -221,11 +250,16 @@ public class OrderDao {
     public Reply<Object> markShopOrderDelivered(Long shopId, Long id, String shipmentSn) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
-        Order o = Order.toOrder(orderPo.orElse(null));
-        if (o == null || o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+        if (orderPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-
+        Order o = Order.toOrder(orderPo.orElse(null));
+        if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        }
+        if (o.getState() != OrderStatus.PAID.value()) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
         int r = orderRepository.markShopOrderDelievered(id, OrderStatus.DELIVERED.value(), shipmentSn);
 
         if (r <= 0) {

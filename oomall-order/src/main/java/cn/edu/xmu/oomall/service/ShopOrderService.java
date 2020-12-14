@@ -41,7 +41,7 @@ public class ShopOrderService {
         shopService = (IShopService) serviceFactory.get(IShopService.class);
     }
 
-    public Reply<List<Order>> getShopOrders(Long shopId, Long customerId,
+    public Reply<Object> getShopOrders(Long shopId, Long customerId,
                                             String orderSn,
                                             LocalDateTime beginTime,
                                             LocalDateTime endTime,

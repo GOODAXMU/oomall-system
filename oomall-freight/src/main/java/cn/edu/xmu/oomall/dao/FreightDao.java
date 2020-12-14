@@ -14,14 +14,12 @@ import cn.edu.xmu.oomall.repository.util.SpecificationFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.tomcat.jni.Local;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import java.util.ArrayList;
@@ -69,6 +67,29 @@ public class FreightDao {
      *
      * @param id
      * @param shopId
+     * @param uShopId
+     * @return FreightModel
+     * @author zhibin lan
+     */
+    public Reply<FreightModel> getFreightModelById(Long id, Long shopId, Long uShopId) {
+        FreightModel freightModel = new FreightModel();
+        try {
+            freightModel = new FreightModel(freightModelRepository.findById(id).get());
+            if (!uShopId.equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
+                return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+            }
+        } catch (NoSuchElementException e) {
+            log.debug("freight model no exist, id: " + id);
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        return new Reply<>(freightModel);
+    }
+
+    /**
+     * 通过id查询运费模板
+     *
+     * @param id
+     * @param shopId
      * @return FreightModel
      * @author zhibin lan
      */
@@ -76,8 +97,7 @@ public class FreightDao {
         FreightModel freightModel = new FreightModel();
         try {
             freightModel = new FreightModel(freightModelRepository.findById(id).get());
-            log.info("gmtCreate: " + freightModel.getGmtCreate().toString());
-            if (!freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(shopId)) {
+            if (!freightModel.getShopId().equals(shopId)) {
                 return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
             }
         } catch (NoSuchElementException e) {
@@ -157,8 +177,8 @@ public class FreightDao {
 
         FreightModelPo freightModelPo = freightModel.createPo();
         LocalDateTime localDateTime = LocalDateTime.now();
-        LocalDateTime gmt = LocalDateTime.of(localDateTime.getYear(),localDateTime.getMonth(),
-                localDateTime.getDayOfMonth(),localDateTime.getHour(),localDateTime.getMinute(),
+        LocalDateTime gmt = LocalDateTime.of(localDateTime.getYear(), localDateTime.getMonth(),
+                localDateTime.getDayOfMonth(), localDateTime.getHour(), localDateTime.getMinute(),
                 localDateTime.getSecond());
         freightModelPo.setGmtModified(gmt);
         freightModelPo.setGmtCreate(gmt);
@@ -195,17 +215,18 @@ public class FreightDao {
      *
      * @param id
      * @param shopId
+     * @param uShopId
      * @return Reply
      * @author zhibin lan
      */
-    public Reply isFreightModelBelongShop(Long id, Long shopId) {
+    public Reply isFreightModelBelongShop(Long id, Long shopId, Long uShopId) {
         FreightModelPo freightModelPo = new FreightModelPo();
         try {
             freightModelPo = freightModelRepository.findById(id).get();
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (!freightModelPo.getShopId().equals(Long.valueOf(0)) && !freightModelPo.getShopId().equals(shopId)) {
+        if (!uShopId.equals(Long.valueOf(0)) && !freightModelPo.getShopId().equals(shopId)) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
@@ -215,17 +236,18 @@ public class FreightDao {
      * 检测运费模板名称是否存在并且该模板是否属于该商店
      *
      * @param freightModel
+     * @param uShopId
      * @return boolean
      * @author zhibin lan
      */
-    public Reply checkFreightModel(FreightModel freightModel) {
+    public Reply checkFreightModel(FreightModel freightModel, Long uShopId) {
         FreightModelPo freightModelPo = new FreightModelPo();
         try {
             freightModelPo = freightModelRepository.findById(freightModel.getId()).get();
         } catch (Exception e) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
-        if (!freightModel.getShopId().equals(Long.valueOf(0)) && !freightModel.getShopId().equals(freightModelPo.getShopId())) {
+        if (!uShopId.equals(Long.valueOf(0)) && !freightModel.getShopId().equals(freightModelPo.getShopId())) {
             return new Reply(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         return new Reply(ResponseStatus.OK);
@@ -247,10 +269,9 @@ public class FreightDao {
         freightModelPo.setShopId(shopId);
         Page<FreightModelPo> freightModelPoPage = freightModelRepository.findAll(
                 SpecificationFactory.get(freightModelPo),
-                PageRequest.of(pageInfo.getPage() - 1, pageInfo.getPageSize())
+                PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize())
         );
-        pageInfo.calAndSetPagesAndTotal(freightModelPoPage.getTotalElements(), freightModelPoPage.getTotalPages());
-
+        pageInfo.setPagesAndTotal(freightModelPoPage.getTotalElements(), freightModelPoPage.getTotalPages());
         List<FreightModel> freightModels = new ArrayList<>();
         for (FreightModelPo po : freightModelPoPage.getContent()) {
             freightModels.add(new FreightModel(po));
@@ -263,12 +284,13 @@ public class FreightDao {
      * 更新运费模板
      *
      * @param freightModel
+     * @param uShopId
      * @return
      * @author zhibin lan
      */
-    public Reply updateFreightModel(FreightModel freightModel) {
+    public Reply updateFreightModel(FreightModel freightModel, Long uShopId) {
 
-        Reply reply = checkFreightModel(freightModel);
+        Reply reply = checkFreightModel(freightModel, uShopId);
         if (!reply.isOk()) {
             return reply;
         }
@@ -288,13 +310,14 @@ public class FreightDao {
     /**
      * 克隆运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id      模板id
+     * @param shopId  商铺id
+     * @param uShopId 用户所属商铺id
      * @return
      * @author zhibin lan
      */
-    public Reply<FreightModel> cloneFreightModel(Long id, Long shopId) {
-        Reply<FreightModel> freightModelReply = getFreightModelById(id, shopId);
+    public Reply<FreightModel> cloneFreightModel(Long id, Long shopId, Long uShopId) {
+        Reply<FreightModel> freightModelReply = getFreightModelById(id, shopId, uShopId);
         if (!freightModelReply.isOk()) {
             return freightModelReply;
         }
@@ -309,13 +332,15 @@ public class FreightDao {
     /**
      * 删除运费模板
      *
-     * @param id 模板id
+     * @param id      模板id
+     * @param shopId
+     * @param uShopId
      * @return
      * @author zhibin lan
      */
-    public Reply deleteFreightModel(Long id, Long shopId) {
+    public Reply deleteFreightModel(Long id, Long shopId, Long uShopId) {
 
-        Reply reply = isFreightModelBelongShop(id, shopId);
+        Reply reply = isFreightModelBelongShop(id, shopId, uShopId);
         if (!reply.isOk()) {
             return reply;
         }
@@ -400,13 +425,14 @@ public class FreightDao {
     /**
      * 设置默认运费模板，并取消原来的默认运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id      模板id
+     * @param shopId  商铺id
+     * @param uShopId 用户所属商铺id
      * @return
      * @author zhibin lan
      */
-    public Reply defineDefaultFreightModel(Long id, Long shopId) {
-        Reply reply = isFreightModelBelongShop(id, shopId);
+    public Reply defineDefaultFreightModel(Long id, Long shopId, Long uShopId) {
+        Reply reply = isFreightModelBelongShop(id, shopId, uShopId);
         if (!reply.isOk()) {
             return reply;
         }
@@ -447,15 +473,15 @@ public class FreightDao {
      * @param weightFreightModel
      * @return WeightFreightModel
      */
-    public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel,Long shopId) {
+    public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel, Long shopId) {
         WeightFreightModelPo WeightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
         WeightFreightModelPo.setGmtModified(LocalDateTime.now());
         WeightFreightModelPo.setGmtCreate(LocalDateTime.now());
         FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
-        if(!freightModel.getShopId().equals(shopId)){
+        if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if(null!=getWeightFreightModelByRid(weightFreightModel.getRid())){
+        if (null != getWeightFreightModelByRid(weightFreightModel.getRid())) {
             return new Reply<>(ResponseStatus.REGION_EXIST);
         }
         Reply<WeightFreightModel> reply = new Reply<>();
@@ -475,9 +501,9 @@ public class FreightDao {
      * @param id 运费模板id
      * @return WeightFreightModel
      */
-    public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModelByFreightModelId(Long id,Long shopId) {
-        Reply<FreightModel> freightModelReply = getFreightModelById(id,shopId);
-        if(!freightModelReply.isOk()){
+    public Reply<List<WeightFreightModelQueryResponse>> getWeightFreightModelByFreightModelId(Long id, Long shopId, Long uShopId) {
+        Reply<FreightModel> freightModelReply = getFreightModelById(id, shopId, uShopId);
+        if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
@@ -495,9 +521,9 @@ public class FreightDao {
      * @param id 运费模板id
      * @return PieceFreightModel
      */
-    public Reply<List<PieceFreightQueryResponse>> getPieceFreightModelByFreightModelId(Long id,Long shopId) {
-        Reply <FreightModel> freightModelReply = getFreightModelById(id,shopId);
-        if(!freightModelReply.isOk()){
+    public Reply<List<PieceFreightQueryResponse>> getPieceFreightModelByFreightModelId(Long id, Long shopId, Long uShopId) {
+        Reply<FreightModel> freightModelReply = getFreightModelById(id, shopId, uShopId);
+        if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }
 
@@ -517,11 +543,11 @@ public class FreightDao {
      * @param weightFreightModel
      */
 
-    public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel,Long id,Long shopId) {
+    public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel, Long id, Long shopId) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
         WeightFreightModel weightFreightModel1 = getWeightFreightModelById(id).getData();
         FreightModel freightModel = getFreightModelById(weightFreightModel1.getFreightModelId()).getData();
-        if(!freightModel.getShopId().equals(shopId)){
+        if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         int res = weightModelRepository.update(weightFreightModelPo);
@@ -536,11 +562,11 @@ public class FreightDao {
      *
      * @param pieceFreightModel
      */
-    public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel,Long id,Long shopId) {
+    public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel, Long id, Long shopId) {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
         PieceFreightModel pieceFreightModel1 = getPieceFreightModelById(id).getData();
         FreightModel freightModel = getFreightModelById(pieceFreightModel1.getFreightModelId()).getData();
-        if(!freightModel.getShopId().equals(shopId)){
+        if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         int res = pieceModelRepository.update(pieceFreightModelPo);
@@ -570,12 +596,12 @@ public class FreightDao {
      * @param pieceFreightModel
      * @return PieceFreightModel
      */
-    public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel,Long shopId) {
+    public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel, Long shopId) {
         FreightModel freightModel = getFreightModelById(pieceFreightModel.getFreightModelId()).getData();
-        if(!freightModel.getShopId().equals(shopId)){
+        if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if(null!=getPieceFreightModelByRid(pieceFreightModel.getRid()).getData()){
+        if (null != getPieceFreightModelByRid(pieceFreightModel.getRid()).getData()) {
             return new Reply<>(ResponseStatus.REGION_EXIST);
         }
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
@@ -612,11 +638,11 @@ public class FreightDao {
      * @param rid 计件运费模板rid
      * @return PieceFreightModel
      */
-    public Reply<PieceFreightModel> getPieceFreightModelByRid(Long rid){
+    public Reply<PieceFreightModel> getPieceFreightModelByRid(Long rid) {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
         pieceFreightModelPo.setRegionId(rid);
         List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo));
-        if(pieceFreightModelPos.isEmpty()){
+        if (pieceFreightModelPos.isEmpty()) {
             return new Reply<>(null);
         }
         return new Reply<>(new PieceFreightModel(pieceFreightModelPos.get(0)));
@@ -628,11 +654,11 @@ public class FreightDao {
      * @param rid 重量运费模板rid
      * @return WeightFreightModel
      */
-    public Reply<WeightFreightModel> getWeightFreightModelByRid(Long rid){
+    public Reply<WeightFreightModel> getWeightFreightModelByRid(Long rid) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
         weightFreightModelPo.setRegionId(rid);
         List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo));
-        if(weightFreightModelPos.isEmpty()){
+        if (weightFreightModelPos.isEmpty()) {
             return new Reply<>(null);
         }
         return new Reply<>(new WeightFreightModel((weightFreightModelPos.get(0))));

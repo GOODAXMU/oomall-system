@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
+import cn.edu.xmu.goods.client.dubbo.ShopDTO;
 import cn.edu.xmu.oomall.external.service.IGoodService;
 
 public class WangGoodsServiceImpl implements IGoodService {
@@ -10,21 +11,21 @@ public class WangGoodsServiceImpl implements IGoodService {
 
     @Override
     public Long getShopId(Long skuid) {
-        return null;
+        return 1L;
     }
 
     @Override
     public Long getGoodsSkuWeightById(Long skuid) {
-        return null;
+        return goodsService.getGoodWeightBySku(skuid);
     }
 
     @Override
     public Long getFreightModelId(Long skuid) {
-        return null;
+        return goodsService.getFreightModelIdBySku(skuid);
     }
 
     @Override
     public Boolean deleteGoodsFreightModel(Long modelId, long shopId) {
-        return null;
+        return goodsService.deleteFreightModelIdBySku(modelId,shopId);
     }
 }
