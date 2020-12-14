@@ -246,37 +246,40 @@ public class FreightService {
      * 更新运费模板
      *
      * @param freightModel
+     * @param uShopId
      * @return
      * @author zhibin lan
      */
     @Transactional
-    public Reply updateFreightModel(FreightModel freightModel) {
-        return freightDao.updateFreightModel(freightModel);
+    public Reply updateFreightModel(FreightModel freightModel, Long uShopId) {
+        return freightDao.updateFreightModel(freightModel, uShopId);
     }
 
     /**
      * 克隆运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id      模板id
+     * @param shopId  商铺id
+     * @param uShopId 用户所属商铺id
      * @return
      * @author zhibin lan
      */
     @Transactional
-    public Reply<FreightModel> cloneFreightModel(Long id, Long shopId) {
-        return freightDao.cloneFreightModel(id, shopId);
+    public Reply<FreightModel> cloneFreightModel(Long id, Long shopId, Long uShopId) {
+        return freightDao.cloneFreightModel(id, shopId, uShopId);
     }
 
     /**
      * 删除运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id      模板id
+     * @param shopId  商铺id
+     * @param uShopId 用户所属商铺id
      * @return
      * @author zhibin lan
      */
-    public Reply deleteFreightModel(Long id, Long shopId) {
-        Reply reply = freightDao.deleteFreightModel(id, shopId);
+    public Reply deleteFreightModel(Long id, Long shopId, Long uShopId) {
+        Reply reply = freightDao.deleteFreightModel(id, shopId, uShopId);
         if (!reply.isOk()) {
             return reply;
         }
@@ -289,12 +292,13 @@ public class FreightService {
     /**
      * 设置默认运费模板
      *
-     * @param id     模板id
-     * @param shopId 商铺id
+     * @param id      模板id
+     * @param shopId  商铺id
+     * @param uShopId 用户所属商铺id
      * @return
      * @author zhibin lan
      */
-    public Reply defineDefaultFreightModel(Long id, Long shopId) {
-        return freightDao.defineDefaultFreightModel(id, shopId);
+    public Reply defineDefaultFreightModel(Long id, Long shopId, Long uShopId) {
+        return freightDao.defineDefaultFreightModel(id, shopId, uShopId);
     }
 }

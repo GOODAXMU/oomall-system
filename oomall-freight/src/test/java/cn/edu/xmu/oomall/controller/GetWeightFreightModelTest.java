@@ -30,7 +30,7 @@ public class GetWeightFreightModelTest {
     @Test
     public void getWeightFreightModels() throws Exception{
         String responseString = this.mvc.perform(get("/shops/2/freightmodels/2/weightItems"))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
@@ -41,4 +41,23 @@ public class GetWeightFreightModelTest {
 
     }
 
+    /**
+     * 测试获取重量运费模板明细
+     * 成功
+     * @author zhibin lan
+     * @throws Exception
+     */
+    @Test
+    public void getWeightFreightModels1() throws Exception{
+        //todo 过该测试（gmt时间精确到秒不要到毫秒）
+        String responseString = this.mvc.perform(get("/shops/1/freightmodels/11/weightItems"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+
+    }
 }

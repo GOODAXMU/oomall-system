@@ -59,18 +59,21 @@ public interface OrderRepository extends
 			"o.regionId = CASE WHEN :#{#order.regionId} IS NULL THEN o.regionId ELSE :#{#order.regionId} END, " +
 			"o.address = CASE WHEN :#{#order.address} IS NULL THEN o.address ELSE :#{#order.address} END, " +
 			"o.mobile = CASE WHEN :#{#order.mobile} IS NULL THEN o.mobile ELSE :#{#order.mobile} END, " +
-			"o.message = CASE WHEN :#{#order.message} IS NULL THEN o.message ELSE :#{#order.message} END, " +
-			"o.gmtModified = CASE WHEN :#{#order.gmtModified} IS NULL THEN o.gmtModified ELSE :#{#order.gmtModified} END " +
-			"WHERE o.id = :#{#order.id} AND o.customerId = :#{#order.customerId} AND o.gmtModified IS NOT NULL AND o.state < :state")
-	int updateWhenStateLessThan(OrderPo order, Integer state);
-
-	@Query(value = "SELECT o.state FROM OrderPo o WHERE o.id = :id AND o.customerId = :customerId")
-	Integer findOrderStateByIdAndCustomerId(Long id, Long customerId);
+			"o.message = CASE WHEN :#{#order.message} IS NULL THEN o.message ELSE :#{#order.message} END " +
+			"WHERE o.id = :#{#order.id} AND o.customerId = :#{#order.customerId} AND o.state < :state AND o.subState <> :subState")
+	int updateWhenStateLessThanAndSubStateNotEquals(OrderPo order, Integer state, Integer subState);
 
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo o SET o.state = :state WHERE o.id = :id")
 	int updateOrderState(Long id, Integer state);
+
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderPo o " +
+			"SET o.state = :state, o.subState = :subState " +
+			"WHERE o.id = :id")
+	int updateState(Long id, Integer state, Integer subState);
 
 	/**
 	 * @author Jianheng HUANG
@@ -88,9 +91,9 @@ public interface OrderRepository extends
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE OrderPo p SET p.state = :to " +
-			"WHERE p.id = :id AND p.state = :s")
-	int changeOrderStateWhenStateEquals(Long id, Integer to, Integer s);
+	@Query(value = "UPDATE OrderPo p SET p.state = :to, p.subState = :subTo " +
+			"WHERE p.id = :id AND p.state = :s AND p.subState = :sub")
+	int changeOrderStateWhenStateEquals(Long id, Integer to, Integer subTo, Integer s, Integer sub);
 
 	@Modifying
 	@Transactional
@@ -101,9 +104,9 @@ public interface OrderRepository extends
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
-			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
-			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND p.state < :state")
-	int updateGroupon2NormalWhenStateLessThan(Long id, Long customerId, int groupon, int normal, int state);
+			"SET p.orderType = :normal, p.subState = :toSubState, p.grouponId = null, p.grouponDiscount = null " +
+			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND (p.subState = :s1 OR p.subState = :s2)")
+	int updateGroupon2NormalWhenSubStateEqualsOr(Long id, Long customerId, int groupon, int normal, int s1, int s2, int toSubState);
 
 	@Query(value = "SELECT new OrderPo(o.orderSn, o.shopId) FROM OrderPo o WHERE id = :orderId")
 	OrderPo findOrderSnAndShopIdById(Long orderId);

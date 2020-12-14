@@ -56,7 +56,7 @@ public class PresaleOrderServiceImpl implements IOrderService {
 	@Override
 	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 扣库存
-		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value());
+		List<OrderItem> r = inventoryService.modifyInventory(order.getOrderItems(), OrderType.PRESALE.value(), order.getPresaleId());
 		if (r == null || r.isEmpty()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
@@ -89,7 +89,8 @@ public class PresaleOrderServiceImpl implements IOrderService {
 		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
-		order.setOrderStatus(OrderStatus.NEW, false);
+		order.setOrderStatus(OrderStatus.TO_BE_PAID, false);
+		order.setSubState(OrderStatus.NEW.value());
 		order.setOrderType(OrderType.PRESALE, false);
 
 		// 获取并设置运费

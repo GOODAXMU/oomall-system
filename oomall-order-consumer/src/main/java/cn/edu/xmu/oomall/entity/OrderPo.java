@@ -103,6 +103,7 @@ public class OrderPo {
 		po.setSubState(dto.getSubState());
 		po.setBeDeleted(dto.getBeDeleted());
 		po.setGmtCreate(LocalDateTime.now());
+		po.setGmtCreate(po.getGmtCreate());
 
 		return po;
 	}

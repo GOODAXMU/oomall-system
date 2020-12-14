@@ -23,8 +23,12 @@ public class PageInfo {
 		this.pageSize = pageSize;
 	}
 
-	public void calAndSetPagesAndTotal(long totalElements) {
+	public int getJpaPage() {
+		return page - 1;
+	}
+
+	public void calAndSetPagesAndTotal(long totalElements, int pages) {
 		this.total = totalElements;
-		this.pages = Math.toIntExact(totalElements / pageSize + totalElements % pageSize == 0 ? 0 : 1);
+		this.pages = pages;
 	}
 }

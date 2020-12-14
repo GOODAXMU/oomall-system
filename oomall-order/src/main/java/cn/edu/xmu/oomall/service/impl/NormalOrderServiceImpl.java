@@ -61,7 +61,7 @@ public class NormalOrderServiceImpl implements IOrderService {
 	@Override
 	public Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException {
 		// 扣库存
-		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value());
+		List<OrderItem> orderItems = inventoryService.modifyInventory(order.getOrderItems(), OrderType.NORMAL.value(), null);
 		if (orderItems.size() < order.getOrderItems().size()) {
 			return new Reply<>(ResponseStatus.OUT_OF_STOCK);
 		}
@@ -80,13 +80,6 @@ public class NormalOrderServiceImpl implements IOrderService {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 		order.setCustomer(customer, false);
-
-		// 设置商铺
-		Shop shop = shopService.getShop(order.getOrderItems().get(0).getSkuId());
-		if (shop == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-		}
-		order.setShop(shop);
 
 		// 获取可用的优惠活动并设置
 		Map<Long, Long> sku2Activity = activity.get();
@@ -110,7 +103,8 @@ public class NormalOrderServiceImpl implements IOrderService {
 		order.calcAndSetOriginPrice();
 
 		// 设置订单状态和类型
-		order.setOrderStatus(OrderStatus.NEW, false);
+		order.setOrderStatus(OrderStatus.TO_BE_PAID, false);
+		order.setSubState(OrderStatus.NEW.value());
 		order.setOrderType(OrderType.NORMAL, false);
 
 		// 获取并设置折扣

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class ChenCustomerServiceImpl implements ICustomerService {
 
-	@DubboReference(version = "${oomall.external.customer-service.version}", check = false)
+	@DubboReference(version = "${oomall.external.customer-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.oomall.other.impl.ICustomerService customerService;
 
 	@Override

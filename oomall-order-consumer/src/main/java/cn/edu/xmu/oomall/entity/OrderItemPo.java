@@ -54,7 +54,7 @@ public class OrderItemPo {
 		po.setCouponActivityId(dto.getCouponActivityId());
 		po.setBeShareId(dto.getBeShareId());
 		po.setGmtCreate(LocalDateTime.now());
-		po.setGmtModified(LocalDateTime.now());
+		po.setGmtModified(po.getGmtCreate());
 
 		return po;
 	}

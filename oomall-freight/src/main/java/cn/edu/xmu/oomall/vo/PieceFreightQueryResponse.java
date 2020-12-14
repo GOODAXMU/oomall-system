@@ -2,6 +2,9 @@ package cn.edu.xmu.oomall.vo;
 
 import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
@@ -13,35 +16,24 @@ import java.util.List;
  * @author yan song
  * @date 2020-11-29
  */
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class PieceFreightQueryResponse {
-	@NotNull
-	@Min(value = 0)
 	private Long id;
 
-	@NotNull
-	@Min(value = 0)
 	private Long regionId;
 
-	@NotNull
-	@Min(value = 0)
 	private Integer firstItem;
 
-	@NotNull
-	@Min(value = 0)
 	private Long firstItemPrice;
 
-	@NotNull
-	@Min(value = 0)
 	private Integer additionalItems;
 
-	@NotNull
-	@Min(value = 0)
 	private Long additionalItemPrice;
 
-	@NotNull
 	private LocalDateTime gmtCreate;
 
-	@NotNull
 	private LocalDateTime gmtModified;
 
 	public PieceFreightQueryResponse(PieceFreightModelPo pieceFreightModelPo){

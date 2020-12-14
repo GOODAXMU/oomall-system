@@ -20,10 +20,10 @@ import java.util.Map;
 @Component
 public class WangShopServiceImpl implements IShopService {
 
-	@DubboReference(version = "${oomall.external.shop-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.shop-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IShopService shopService;
 
-	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
 	@Override

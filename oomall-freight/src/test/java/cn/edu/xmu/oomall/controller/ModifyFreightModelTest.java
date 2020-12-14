@@ -42,7 +42,7 @@ public class ModifyFreightModelTest {
         String responseString = this.mvc.perform(put("/shops/1/freightmodels/200").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
-                .andExpect(status().isOk())
+                .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
@@ -72,8 +72,8 @@ public class ModifyFreightModelTest {
 
     @Test
     public void modifyFreightModel2() throws Exception{
-        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTkzNzE3MzY2IiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTE4ODQsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY4MjM3fQ.m2rSuar_3X_zExpAgkc1qAO0qIrZ_eGd_QT8vYib4zE\n" +
-                "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTkzNzE3MzY2IiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTE4ODQsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY4MjM3fQ.m2rSuar_3X_zExpAgkc1qAO0qIrZ_eGd_QT8vYib4zE";
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+
         FreightModelPutRequest freightModelPutRequest = new FreightModelPutRequest();
         freightModelPutRequest.setName("测试模板");
         freightModelPutRequest.setUnit(Long.valueOf(550));

@@ -59,6 +59,7 @@ public class OrderListener implements RocketMQListener<String>, RocketMQPushCons
 		List<OrderItemPo> orderItems = orderItemRepository.saveAll(items);
 
 		orderPostProcessor.sendBeShareIdSetRequest(orderItems, parent.getCustomerId());
+		orderPostProcessor.sendRemoveCartItemsRequest(orderItems, parent.getCustomerId());
 	}
 
 	@Override

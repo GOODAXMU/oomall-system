@@ -27,7 +27,7 @@ public class WeightFreightModelDefineResponse {
     
     public WeightFreightModelDefineResponse(WeightFreightModel weightFreightModel){
         firstWeight = weightFreightModel.getFirstWeight();
-        firstWeightPrice = weightFreightModel.getFirstWeightPrice();
+        firstWeightPrice = weightFreightModel.getFirstWeightFreight();
         tenPrice = weightFreightModel.getTenPrice();
         fiftyPrice = weightFreightModel.getFiftyPrice();
         hundredPrice = weightFreightModel.getHundredPrice();

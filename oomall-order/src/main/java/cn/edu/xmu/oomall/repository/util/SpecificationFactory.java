@@ -184,4 +184,28 @@ public class SpecificationFactory {
 			return builder.and(predicates.toArray(new Predicate[0]));
 		};
 	}
+
+	public static Specification<OrderPo> get(
+			Long customerId, String orderSn,
+			LocalDateTime beginTime, LocalDateTime endTime) {
+		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
+			List<Predicate> predicates = new ArrayList<>();
+
+			if (customerId != null) {
+				predicates.add(builder.equal(root.get("customerId"), customerId));
+			}
+			if (orderSn != null) {
+				predicates.add(builder.equal(root.get("orderSn"), orderSn));
+			}
+			if (beginTime != null) {
+				predicates.add(builder.greaterThanOrEqualTo(root.get("gmtCreate"), beginTime));
+			}
+			if (endTime != null) {
+				predicates.add(builder.lessThanOrEqualTo(root.get("gmtCreate"), endTime));
+			}
+
+			return builder.and(predicates.toArray(new Predicate[0]));
+		};
+	}
+
 }

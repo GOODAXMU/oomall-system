@@ -55,15 +55,20 @@ public class ShopOrderController {
             @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
             @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
-        PageInfo pageInfo = new PageInfo(page - 1, pageSize);
+        PageInfo pageInfo = new PageInfo(page, pageSize);
 
-        List<Order> os = shopOrderService.getShopOrders(shopId, customerId, orderSn,
+        Reply<Object> r = shopOrderService.getShopOrders(shopId, customerId, orderSn,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
                 endTime == null ? null : LocalDateTime.parse(endTime),
-                pageInfo, false).getData();
+                pageInfo, false);
+
+        if(!(r.getData() instanceof List))
+        {
+            return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
+        }
 
         OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
-        vo.setSummaryList(os);
+        vo.setSummaryList((List<Order>)(r.getData()));
         vo.setPageInfo(pageInfo);
 
         return new Reply<>(vo);
