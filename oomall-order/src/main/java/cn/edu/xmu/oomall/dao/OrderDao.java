@@ -235,12 +235,13 @@ public class OrderDao {
         }
     }
 
-    public Reply<Object> updateOrderType(Long id, Long customerId) {
+    public Reply<Object> groupon2Normal(Long id, Long customerId) {
         int r = orderRepository.updateGroupon2NormalWhenSubStateEqualsOr(
                 id, customerId,
                 OrderType.GROUPON.value(), OrderType.NORMAL.value(),
                 OrderStatus.GROUPON_THRESHOLD_TO_BE_REACH.value(),
-                OrderStatus.GROUPON_THRESHOLD_NOT_REACH.value()
+                OrderStatus.GROUPON_THRESHOLD_NOT_REACH.value(),
+                OrderStatus.PAID.value()
         );
 
         if (r <= 0) {

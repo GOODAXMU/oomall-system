@@ -113,7 +113,7 @@ public class CustomerOrderService {
 	}
 
 	public Reply<Object> groupon2Normal(Long id, Long customerId) {
-		return orderDao.updateOrderType(id, customerId);
+		return orderDao.groupon2Normal(id, customerId);
 	}
 
 	public Long getSeckillId(Long skuId) {

@@ -104,9 +104,9 @@ public interface OrderRepository extends
 	@Modifying
 	@Transactional
 	@Query(value = "UPDATE OrderPo p " +
-			"SET p.orderType = :normal, p.grouponId = null, p.grouponDiscount = null " +
+			"SET p.orderType = :normal, p.subState = :toSubState, p.grouponId = null, p.grouponDiscount = null " +
 			"WHERE p.id = :id AND p.customerId = :customerId AND p.orderType = :groupon AND (p.subState = :s1 OR p.subState = :s2)")
-	int updateGroupon2NormalWhenSubStateEqualsOr(Long id, Long customerId, int groupon, int normal, int s1, int s2);
+	int updateGroupon2NormalWhenSubStateEqualsOr(Long id, Long customerId, int groupon, int normal, int s1, int s2, int toSubState);
 
 	@Query(value = "SELECT new OrderPo(o.orderSn, o.shopId) FROM OrderPo o WHERE id = :orderId")
 	OrderPo findOrderSnAndShopIdById(Long orderId);
