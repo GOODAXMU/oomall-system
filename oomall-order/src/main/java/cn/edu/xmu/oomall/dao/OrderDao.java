@@ -93,7 +93,6 @@ public class OrderDao {
                 }
 
             } else {
-                // 严格的customerId和orderSn同时筛选，不另外判断
                 return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
             }
         }
