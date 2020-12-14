@@ -1,17 +1,21 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
+import cn.edu.xmu.oomall.bo.Order;
+import cn.edu.xmu.oomall.bo.OrderItem;
+import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
-import cn.edu.xmu.oomall.dto.AfterSaleDto;
-import cn.edu.xmu.oomall.dto.EffectiveShareDto;
-import cn.edu.xmu.oomall.dto.OrderItemDto;
+import cn.edu.xmu.oomall.constant.ResponseStatus;
+import cn.edu.xmu.oomall.dto.*;
 import cn.edu.xmu.oomall.external.service.IActivityService;
+import cn.edu.xmu.oomall.external.service.IShopService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IDubboOrderService;
 import cn.edu.xmu.oomall.entity.OrderItemPo;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
 import cn.edu.xmu.oomall.repository.OrderRepository;
+import cn.edu.xmu.oomall.util.OrderSnGenerator;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -19,6 +23,7 @@ import javax.annotation.PostConstruct;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -34,6 +39,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	private OrderRepository orderRepository;
 
 	private IActivityService activityService;
+	private IShopService shopService;
 
 	@Autowired
 	private ServiceFactory serviceFactory;
@@ -41,6 +47,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	@PostConstruct
 	public void init() {
 		activityService = (IActivityService) serviceFactory.get(IActivityService.class);
+		shopService = (IShopService) serviceFactory.get(IShopService.class);
 	}
 
 	@Override
@@ -130,13 +137,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 
 		if (OrderType.PRESALE.value() == po.getOrderType()) {
-			if (OrderStatus.DEPOSIT_TO_BE_PAID.value() == po.getSubState()) {
+			if (OrderStatus.NEW.value() == po.getSubState()) {
 				Long price = activityService.getPreSaleDeposit(po.getPresaleId());
 				if (price.equals(amount)) {
 					orderRepository.changeOrderSubStateWhenSubStateEquals(
 							id,
-							OrderStatus.DEPOSIT_PAID.value(),
-							OrderStatus.DEPOSIT_TO_BE_PAID.value()
+							OrderStatus.BALANCE_TO_BE_PAID.value(),
+							OrderStatus.NEW.value()
 					);
 				}
 			} else if (OrderStatus.BALANCE_TO_BE_PAID.value() == po.getSubState()) {
@@ -144,12 +151,9 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 				if (price.equals(amount)) {
 					orderRepository.changeOrderStateWhenStateEquals(
 							id,
+							OrderStatus.TO_BE_RECEIVED.value(),
 							OrderStatus.PAID.value(),
-							OrderStatus.TO_BE_PAID.value()
-					);
-					orderRepository.changeOrderSubStateWhenSubStateEquals(
-							id,
-							OrderStatus.BALANCE_PAID.value(),
+							OrderStatus.TO_BE_PAID.value(),
 							OrderStatus.BALANCE_TO_BE_PAID.value()
 					);
 				}
@@ -164,13 +168,10 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			if (price.equals(amount)) {
 				orderRepository.changeOrderStateWhenStateEquals(
 						id,
-						OrderStatus.PAID.value(),
-						OrderStatus.TO_BE_PAID.value()
-				);
-				orderRepository.changeOrderSubStateWhenSubStateEquals(
-						id,
-						OrderStatus.GROUPON_TO_BE_JOIN.value(),
-						OrderStatus.GROUPON_JOIN.value()
+						OrderStatus.TO_BE_RECEIVED.value(),
+						OrderStatus.GROUPON_THRESHOLD_TO_BE_REACH.value(),
+						OrderStatus.TO_BE_PAID.value(),
+						OrderStatus.NEW.value()
 				);
 			}
 		} else {
@@ -183,22 +184,25 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 			if (price.equals(amount)) {
 				orderRepository.changeOrderStateWhenStateEquals(
 						id,
+						OrderStatus.TO_BE_RECEIVED.value(),
 						OrderStatus.PAID.value(),
-						OrderStatus.TO_BE_PAID.value()
+						OrderStatus.TO_BE_PAID.value(),
+						OrderStatus.NEW.value()
 				);
+
+				splitAndWriteOrder(po);
 			}
 		}
 	}
 
 	@Override
-	public Long getOrderCanBeRefundPrice(Long id) {
-		OrderPo po = orderRepository.findPrice(id);
-		if (po == null || po.getOriginPrice() == null) {
-			return 0L;
+	public Long getOrderPresaleDeposit(Long id) {
+		Long presaleId = orderRepository.findPreSaleIdById(id);
+		if (presaleId == null) {
+			return -1L;
 		}
-		long price = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
-		long discount = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
-		return price - discount;
+		Long deposit = activityService.getPreSaleDeposit(presaleId);
+		return deposit == null ? -1L : deposit;
 	}
 
 	@Override
@@ -206,7 +210,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		List<EffectiveShareDto> dtos = new ArrayList<>();
 
 		List<OrderPo> orders = orderRepository.findAllWhereStatusEqualsAndGmtModifiedBetween(
-				OrderStatus.RECEIVED.value(),
+				OrderStatus.COMPLETED.value(),
 				LocalDateTime.now().minusDays(8),
 				LocalDateTime.now().minusDays(7)
 		);
@@ -227,5 +231,115 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 
 		return dtos;
+	}
+
+	private void splitAndWriteOrder(OrderPo parent) {
+		// 获取订单下的订单项
+		List<OrderItemPo> orderItemPos = orderItemRepository.findByOrderId(parent.getId());
+		List<OrderItem> orderItems = new ArrayList<>();
+		for (OrderItemPo oip : orderItemPos) {
+			orderItems.add(OrderItem.toOrderItem(oip));
+		}
+
+		long allPrice = 0L;
+		for (OrderItem oi : orderItems) {
+			allPrice += oi.getPrice() * oi.getQuantity();
+		}
+
+		Map<Shop, List<OrderItem>> shop2OrderItems = shopService.classifySku(orderItems);
+
+		// 单店不拆单
+		if (shop2OrderItems == null || shop2OrderItems.size() <= 1) {
+			return;
+		}
+
+		for (Map.Entry<Shop, List<OrderItem>> e : shop2OrderItems.entrySet()) {
+			long totalPrice = 0L;
+			for (OrderItem oi : e.getValue()) {
+				totalPrice += oi.getPrice() * oi.getQuantity();
+			}
+
+			OrderPo sub = new OrderPo();
+			sub.setCustomerId(parent.getCustomerId());
+			sub.setShopId(e.getKey().getId());
+			sub.setOrderSn(OrderSnGenerator.createAndGetOrderSn());
+			sub.setPid(parent.getId());
+			sub.setConsignee(parent.getConsignee());
+			sub.setRegionId(parent.getRegionId());
+			sub.setAddress(parent.getAddress());
+			sub.setMobile(parent.getMobile());
+			sub.setMessage(parent.getMessage());
+			sub.setOrderType(parent.getOrderType());
+			sub.setFreightPrice(parent.getFreightPrice() * totalPrice / allPrice);
+			sub.setCouponId(parent.getCouponId());
+			sub.setCouponActivityId(parent.getCouponActivityId());
+			sub.setDiscountPrice(parent.getDiscountPrice() * totalPrice / allPrice);
+			sub.setOriginPrice(totalPrice);
+			sub.setState(parent.getState());
+			sub.setGmtCreate(LocalDateTime.now());
+
+			sub = orderRepository.save(sub);
+
+			for (OrderItem oi : e.getValue()) {
+				orderItemRepository.changeOrderIdTo(oi.getId(), sub.getId());
+			}
+		}
+	}
+
+	@Override
+	public Integer createExchangeOrder(ExchangeOrderDto dto) {
+		if (dto == null) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		Optional<OrderItemPo> orderItemOp = orderItemRepository.findById(dto.getOrderItemId());
+		OrderItemPo orderItemPo = orderItemOp.isEmpty() ? null : orderItemOp.get();
+
+		if (orderItemPo == null) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		Optional<OrderPo> op = orderRepository.findById(orderItemPo.getOrderId());
+		if (op.isEmpty()) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		OrderPo order = op.get();
+
+		if (!order.getCustomerId().equals(dto.getCustomerId())
+				|| !order.getShopId().equals(dto.getShopId())) {
+			return ResponseStatus.INTERNAL_SERVER_ERR.value();
+		}
+
+		OrderPo exOrder = new OrderPo();
+		exOrder.setCustomerId(dto.getCustomerId());
+		exOrder.setShopId(dto.getShopId());
+		exOrder.setMobile(dto.getMobile());
+		exOrder.setRegionId(dto.getRegionId());
+		exOrder.setAddress(dto.getAddress());
+		exOrder.setConsignee(dto.getConsignee());
+
+		exOrder = orderRepository.save(exOrder);
+
+		OrderItemPo oi = new OrderItemPo();
+		oi.setOrderId(exOrder.getId());
+		oi.setGoodsSkuId(orderItemPo.getGoodsSkuId());
+		oi.setQuantity(dto.getQuantity());
+		oi.setName(orderItemPo.getName());
+		oi.setPrice(orderItemPo.getPrice());
+
+		orderItemRepository.save(oi);
+
+		return ResponseStatus.OK.value();
+	}
+
+	@Override
+	public Boolean changeOrderState(OrderStateDto dto) {
+		int r = orderRepository.changeOrderStateWhenStateEquals(
+				dto.getOrderId(),
+				dto.getTo(), dto.getToSub(),
+				dto.getFrom(), dto.getFromSub()
+		);
+		return r == 1;
 	}
 }

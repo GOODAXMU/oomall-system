@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/29
- * modified 2020/11/29
+ * modified 2020/12/11
  */
 @Data
 public class Refund {
@@ -53,11 +53,6 @@ public class Refund {
         }
     }
 
-    public enum Type {
-        NORMAL,
-        AFTERSALE;
-    }
-
     private Long id;
 
     private Long paymentId;
@@ -78,23 +73,14 @@ public class Refund {
 
     /**
      * 根据vo 创建返款
-     * @param id
-     * @param oid
-     * @param vo
-     * @param type
+     * @param paymentId 返款的支付id
+     * @param vo        请求vo
      */
-    public Refund(Long id, Long oid, RefundPostRequest vo, Type type) {
-        if (type == Refund.Type.NORMAL) {
-            this.orderId = oid;
-            this.aftersaleId = null;
-        }
-        else if (type == Refund.Type.AFTERSALE) {
-            this.aftersaleId = oid;
-            this.orderId = null;
-        }
-
+    public Refund(Long paymentId, RefundPostRequest vo) {
         this.paymentId = id;
         this.amount = vo.getAmount();
+        this.orderId = null;
+        this.aftersaleId = null;
         this.state = State.NEW;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
@@ -110,6 +96,13 @@ public class Refund {
         this.state = State.getStateByCode(po.getState());
         this.gmtCreated = po.getGmtCreated();
         this.gmtModified = po.getGmtModified();
+    }
+
+    public Refund(Long paymentId, Long aftersaleId, Long amount) {
+        this.paymentId = paymentId;
+        this.aftersaleId = aftersaleId;
+        this.amount = amount;
+        this.state = State.NEW;
     }
 
     /**
@@ -145,5 +138,13 @@ public class Refund {
         vo.setGmtModifiedTime(this.gmtModified.toString());
 
         return vo;
+    }
+
+    /**
+     * 返款是否成功
+     * @return
+     */
+    public Boolean isRefundSuccess() {
+        return this.state == State.SUCCESS;
     }
 }

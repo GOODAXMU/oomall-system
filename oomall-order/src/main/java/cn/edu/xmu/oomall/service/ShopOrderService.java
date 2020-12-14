@@ -21,6 +21,7 @@ import java.util.List;
 /**
  * @author Jianheng HUANG
  * @date 2020-11-27
+ * @modified 2020-12-12
  */
 @Service
 public class ShopOrderService {
@@ -54,7 +55,11 @@ public class ShopOrderService {
 
 
     public Reply<Order> getShopOrderById(Long shopId, Long id) {
-        Order o = orderDao.getShopOrderById(shopId, id).getData();
+        Reply<Order> r = orderDao.getShopOrderById(shopId, id);
+        Order o = r.getData();
+        if (o == null) {
+            return r;
+        }
 
         // 设置用户和商铺
         Customer customer = customerService.getCustomer(o.getCustomer().getId());
@@ -69,8 +74,8 @@ public class ShopOrderService {
         return orderDao.cancelShopOrder(shopId, id);
     }
 
-    public Reply<Object> markShopOrderDelivered(Long shopId, Long id, String freightSn) {
-        return orderDao.markShopOrderDelivered(shopId, id);
+    public Reply<Object> markShopOrderDelivered(Long shopId, Long id, String shipmentSn) {
+        return orderDao.markShopOrderDelivered(shopId, id, shipmentSn);
     }
 
 }

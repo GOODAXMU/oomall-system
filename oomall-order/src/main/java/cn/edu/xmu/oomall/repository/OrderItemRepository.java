@@ -36,4 +36,8 @@ public interface OrderItemRepository extends
 	@Query(value = "SELECT o.orderId FROM OrderItemPo o WHERE o.id = :id")
 	Long findOrderIdById(Long id);
 
+	@Modifying
+	@Transactional
+	@Query(value = "UPDATE OrderItemPo oip SET oip.orderId = :orderId WHERE oip.id = :id")
+	int changeOrderIdTo(Long id, Long orderId);
 }

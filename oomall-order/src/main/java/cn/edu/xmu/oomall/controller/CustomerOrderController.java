@@ -93,7 +93,7 @@ public class CustomerOrderController {
 				customerId, orderSn, state,
 				beginTime == null ? null : LocalDateTime.parse(beginTime),
 				endTime == null ? null : LocalDateTime.parse(endTime),
-				pageInfo, false).getData();
+				pageInfo, true).getData();
 
 		OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
 		vo.setSummaryList(os);
@@ -114,7 +114,7 @@ public class CustomerOrderController {
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
 	@PostMapping(value = "", produces = "application/json;charset=UTF-8")
-	public Reply<OrderDetailGetResponse> createOrder(
+	public Reply<String> createOrder(
 			@RequestBody @Valid OrderPostRequest request,
 			@LoginUser Long customerId
 	) throws InterruptedException, ExecutionException {
@@ -123,15 +123,11 @@ public class CustomerOrderController {
 
 		IOrderService orderService = getOrderService(order);
 
-		Reply<Order> reply = orderService.createOrder(order);
+		Reply<String> reply = orderService.createOrder(order);
 		if (!reply.isOk()) {
 			return new Reply<>(reply.getHttpStatus(), reply.getResponseStatus());
 		}
-
-		Order o = reply.getData();
-		OrderDetailGetResponse vo = new OrderDetailGetResponse();
-		vo.setAll(o);
-		return new Reply<>(vo);
+		return reply;
 	}
 
 
@@ -246,21 +242,24 @@ public class CustomerOrderController {
 		int size = order.getOrderItems().size();
 		Long skuId = order.getOrderItems().get(0).getSkuId();
 
-		if (order.getPresaleId() != null && size == 1) {
-			if (customerOrderService.getPreSaleId(skuId) != null) {
-				return presaleOrderService;
-			}
-		}
-		if (order.getGrouponId() != null && size == 1) {
-			if (customerOrderService.getGrouponId(skuId) != null) {
-				return grouponOrderService;
-			}
-		}
+		// 秒杀活动优先判断
 		if (size == 1 && order.getOrderItems().get(0).getQuantity() == 1) {
 			Long seckillId = customerOrderService.getSeckillId(skuId);
 			if (seckillId != null && seckillId >= 0) {
 				order.setSeckillId(seckillId);
 				return seckillOrderService;
+			}
+		}
+
+		if (order.getPresaleId() != null && size == 1) {
+			if (customerOrderService.getPreSaleId(skuId) != null) {
+				return presaleOrderService;
+			}
+		}
+
+		if (order.getGrouponId() != null && size == 1) {
+			if (customerOrderService.getGrouponId(skuId) != null) {
+				return grouponOrderService;
 			}
 		}
 

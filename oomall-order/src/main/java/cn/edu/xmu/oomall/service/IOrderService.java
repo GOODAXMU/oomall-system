@@ -16,5 +16,5 @@ public interface IOrderService {
 	 * @param order
 	 * @return
 	 */
-	Reply<Order> createOrder(Order order) throws ExecutionException, InterruptedException;
+	Reply<String> createOrder(Order order) throws ExecutionException, InterruptedException;
 }

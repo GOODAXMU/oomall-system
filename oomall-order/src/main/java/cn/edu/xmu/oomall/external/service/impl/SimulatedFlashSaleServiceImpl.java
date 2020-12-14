@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
+import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.external.service.IFlashSaleService;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ public class SimulatedFlashSaleServiceImpl implements IFlashSaleService {
 	}
 
 	@Override
-	public Long getPrice(Long skuId) {
-		return 888L;
+	public void setPriceAndName(OrderItem orderItem) {
+		orderItem.setPrice(888L);
+		orderItem.setName("super goods");
 	}
 }

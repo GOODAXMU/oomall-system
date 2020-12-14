@@ -28,6 +28,7 @@ import java.util.Optional;
  * @modified by Jianheng HUANG, date: 2020-11-27
  * @modified by Jianheng HUANG, date: 2020-11-29
  * @modified by xincong yao, date: 2020-12-3
+ * @modified by Jianheng HUANG, date: 2020-12-12
  * TODO: 店家的权限检查
  */
 @Component
@@ -49,9 +50,9 @@ public class OrderDao {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
                 SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime),
-                PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
+                PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
 
-        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
 
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {
@@ -78,7 +79,7 @@ public class OrderDao {
                 SpecificationFactory.get(shopId, customerId, orderSn, beginTime, endTime),
                 PageRequest.of(pageInfo.getPage(), pageInfo.getPageSize()));
 
-        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements());
+        pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
 
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {
@@ -138,10 +139,9 @@ public class OrderDao {
 
     public Reply<Object> updateOrderDeliveryInformation(Order o) {
         OrderPo po = OrderPo.toOrderPo(o);
-        po.setGmtModified(LocalDateTime.now());
 
-        int r = orderRepository.updateWhenStateLessThan(
-                po, OrderStatus.DELIVERED.value());
+        int r = orderRepository.updateWhenStateLessThanAndSubStateNotEquals(
+                po, OrderStatus.COMPLETED.value(), OrderStatus.DELIVERED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -182,8 +182,8 @@ public class OrderDao {
 
     public Reply<Object> confirmOrder(Long id) {
         int r = orderRepository.changeOrderStateWhenStateEquals(
-                id, OrderStatus.RECEIVED.value(),
-                OrderStatus.ARRIVED.value());
+                id, OrderStatus.COMPLETED.value(), null,
+                OrderStatus.TO_BE_RECEIVED.value(), OrderStatus.DELIVERED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -216,8 +216,9 @@ public class OrderDao {
     /**
      * @author Jianheng HUANG
      * @date 2020-11-29
+     * @modified 2020-12-12
      */
-    public Reply<Object> markShopOrderDelivered(Long shopId, Long id) {
+    public Reply<Object> markShopOrderDelivered(Long shopId, Long id, String shipmentSn) {
 
         Optional<OrderPo> orderPo = orderRepository.findById(id);
         Order o = Order.toOrder(orderPo.orElse(null));
@@ -225,7 +226,7 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
-        int r = orderRepository.updateOrderState(id, OrderStatus.DELIVERED.value());
+        int r = orderRepository.markShopOrderDelievered(id, OrderStatus.DELIVERED.value(), shipmentSn);
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -235,8 +236,12 @@ public class OrderDao {
     }
 
     public Reply<Object> updateOrderType(Long id, Long customerId) {
-        int r = orderRepository.updateGroupon2NormalWhenStateLessThan(
-                id, customerId, OrderType.GROUPON.value(), OrderType.NORMAL.value(), OrderStatus.PAID.value());
+        int r = orderRepository.updateGroupon2NormalWhenSubStateEqualsOr(
+                id, customerId,
+                OrderType.GROUPON.value(), OrderType.NORMAL.value(),
+                OrderStatus.GROUPON_THRESHOLD_TO_BE_REACH.value(),
+                OrderStatus.GROUPON_THRESHOLD_NOT_REACH.value()
+        );
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
@@ -245,17 +250,23 @@ public class OrderDao {
         }
     }
 
-    public Integer getOrderStateByIdAndCustomerId(Long id, Long customerId) {
-        return orderRepository.findOrderStateByIdAndCustomerId(id, customerId);
-    }
-
-    public Reply<Object> updateOrderState(Long id, Integer state) {
-        int r = orderRepository.updateOrderState(id, state);
+    public Reply<Object> updateOrderState(Long id, Integer state, Integer subState) {
+        int r = orderRepository.updateState(id, state, subState);
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
         return new Reply<>(ResponseStatus.OK);
+    }
+
+    public OrderPo getOrderPoByIdAndCustomerId(Long id, Long customerId) {
+        Optional<OrderPo> op = orderRepository.findById(id);
+        OrderPo po = op.isEmpty() ? null : op.get();
+        if (po == null || !customerId.equals(po.getCustomerId())) {
+            return null;
+        }
+
+        return po;
     }
 }

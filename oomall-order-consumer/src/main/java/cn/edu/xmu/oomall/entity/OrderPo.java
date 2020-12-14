@@ -71,7 +71,7 @@ public class OrderPo {
 
 	private Integer beDeleted;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
 
@@ -102,8 +102,7 @@ public class OrderPo {
 		po.setState(dto.getState());
 		po.setSubState(dto.getSubState());
 		po.setBeDeleted(dto.getBeDeleted());
-		po.setGmtCreated(LocalDateTime.now());
-		po.setGmtModified(LocalDateTime.now());
+		po.setGmtCreate(LocalDateTime.now());
 
 		return po;
 	}

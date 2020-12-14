@@ -57,6 +57,11 @@ public class Order {
 	private LocalDateTime gmtModified;
 
 
+	public Order(Integer state, Integer subState) {
+		this.state = state;
+		this.subState = subState;
+	}
+
 	public Order createAndAddSubOrder(Shop shop, List<OrderItem> orderItems) {
 		Order subOrder = new Order();
 
@@ -78,41 +83,18 @@ public class Order {
 		return subOrder;
 	}
 
-	public void calcAndSetParentOrderOriginPrice() {
-		Long price = 0L;
-		for (Order o : getSubOrders()) {
-			price += o.getOriginPrice();
+	public void calcAndSetOriginPrice() {
+		long price = 0L;
+		for (OrderItem oi : orderItems) {
+			price += oi.getQuantity() * oi.getPrice();
 		}
 		originPrice = price;
 	}
 
-	public void calcAndSetSubOrdersOriginPrice() {
-		for (Order subOrder : getSubOrders()) {
-			long price = 0L;
-			for (OrderItem oi : subOrder.getOrderItems()) {
-				price += oi.getQuantity() * oi.getPrice();
-			}
-			subOrder.setOriginPrice(price);
-		}
-	}
-
-	public void calcAndSetSubOrderDiscountPrice() {
-		if (subOrders == null) {
-			return;
-		}
-		for (Order subOrder : subOrders) {
-			Long t = 0L;
-			for (OrderItem oi : subOrder.orderItems) {
-				t += oi.getDiscount() == null ? 0L : oi.getDiscount();
-			}
-			subOrder.discountPrice = t;
-		}
-	}
-
-	public void calcAndSetParentDiscountPrice() {
-		Long t = 0L;
-		for (Order o : subOrders) {
-			t += o.discountPrice == null ? 0L : o.discountPrice;
+	public void calcAndSetDiscountPrice() {
+		long t = 0L;
+		for (OrderItem oi : orderItems) {
+			t += oi.getDiscount() == null ? 0L : oi.getDiscount();
 		}
 		discountPrice = t;
 	}
@@ -158,16 +140,13 @@ public class Order {
 		}
 	}
 
-	public String createAndGetOrderSn() {
-		orderSn = UUID.randomUUID().toString();
-		return orderSn;
-	}
-
 	public static Order toOrder(OrderPo orderPo) {
 		if (orderPo == null) {
 			return null;
 		}
 		Order o = new Order();
+		o.orderItems = new ArrayList<>();
+		o.subOrders = new ArrayList<>();
 		o.id = orderPo.getId();
 		o.customer = new Customer(orderPo.getCustomerId());
 		o.shop = new Shop(orderPo.getShopId());
@@ -241,15 +220,12 @@ public class Order {
 		dto.setShopId(shop == null ? null : shop.getId());
 		dto.setOrderSn(orderSn);
 
-		if (subOrders != null) {
-			List<OrderDto> sub = new ArrayList<>();
-			for (Order o : subOrders) {
-				OrderDto d = o.toOrderDto();
-				d.setCustomerId(dto.getCustomerId());
-				sub.add(d);
-			}
-			dto.setSubOrders(sub);
+		List<OrderItemDto> dtos = new ArrayList<>();
+		for (OrderItem oi : orderItems) {
+			OrderItemDto orderItemDto = oi.toOrderItemDto();
+			dtos.add(orderItemDto);
 		}
+		dto.setOrderItems(dtos);
 
 		dto.setPid(pid);
 		dto.setConsignee(consignee);

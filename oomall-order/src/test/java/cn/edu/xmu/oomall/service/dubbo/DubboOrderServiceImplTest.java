@@ -79,16 +79,5 @@ public class DubboOrderServiceImplTest {
 		Assert.assertEquals((int) r3, OrderStatus.PAID.value());
 	}
 
-	@Test
-	public void getOrderCanBeRefundPriceTest() {
-		Long r1 = dubboOrderService.getOrderCanBeRefundPrice(99999L);
-		Assert.assertEquals(642L, (long) r1);
-
-		Long r2 = dubboOrderService.getOrderCanBeRefundPrice(Long.MAX_VALUE);
-		Assert.assertEquals(0L, (long) r2);
-
-
-	}
-
 
 }

@@ -5,8 +5,7 @@ import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
-import cn.edu.xmu.oomall.external.service.IAfterSaleServer;
-import cn.edu.xmu.oomall.external.service.IExternalPayment;
+import cn.edu.xmu.oomall.external.service.IAfterSaleService;
 import cn.edu.xmu.oomall.external.service.IOrderService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.vo.Reply;
@@ -21,7 +20,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/10
+ * modified 2020/12/11
  */
 
 @Service
@@ -36,13 +35,15 @@ public class CustomerPaymentService {
     @Autowired
     private ServiceFactory serviceFactory;
 
-    private IExternalPayment externalPayment;
+    @Autowired
+    private PatternPayService patternPaymentService;
+
     private IOrderService orderService;
-    private IAfterSaleServer afterSaleServer;
+    private IAfterSaleService afterSaleServer;
 
     @PostConstruct
     public void init() {
-        externalPayment = (IExternalPayment) serviceFactory.get(IExternalPayment.class);
+        // todo 装填 IXXServer
     }
 
     /**
@@ -56,7 +57,7 @@ public class CustomerPaymentService {
         }
 
         // 检查用户和该订单是否匹配
-        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+    if (orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -69,7 +70,7 @@ public class CustomerPaymentService {
         payment.setState(Payment.State.WAITING);
 
         // 进行支付
-        if (externalPayment.pay(payment.getActualAmount()) > 0L) {
+        if (patternPaymentService.payByPattern(payment)) {
             payment.setPayTime(LocalDateTime.now());
             payment.setState(Payment.State.SUCCESS);
         }
@@ -113,7 +114,7 @@ public class CustomerPaymentService {
         payment.setState(Payment.State.WAITING);
 
         // 进行支付
-        if (externalPayment.pay(payment.getActualAmount()) > 0L) {
+        if (patternPaymentService.payByPattern(payment)) {
             payment.setPayTime(LocalDateTime.now());
             payment.setState(Payment.State.SUCCESS);
         }

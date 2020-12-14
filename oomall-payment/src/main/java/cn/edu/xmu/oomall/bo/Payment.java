@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/10
+ * modified 2020/12/11
  */
 
 @Data
@@ -60,7 +60,7 @@ public class Payment {
     }
 
     public enum Pattern {
-        REBATE(1, "UserRebatePayment"),
+        REBATE(1, "RebatePayment"),
         SIMPLE(2, "SimplePayment");
 
         private static final Map<Integer, Payment.Pattern> stateMap;
@@ -156,6 +156,21 @@ public class Payment {
         this.state = Payment.State.getStateByCode(po.getState());
         this.gmtCreated = po.getGmtCreated();
         this.gmtModified = po.getGmtModified();
+    }
+
+    /**
+     * 为返款创建反向支付信息
+     * @param pattern
+     * @param amount
+     */
+    public Payment(Pattern pattern, Long amount, Long orderId, Long afterSaleId) {
+        this.orderId = orderId;
+        this.afterSaleId = afterSaleId;
+        this.paymentPattern = pattern;
+        this.amount = amount;
+        this.actualAmount = amount;
+        this.state = State.NEW;
+        // 反向支付的开始支付与结束支付时间无意义
     }
 
     /**

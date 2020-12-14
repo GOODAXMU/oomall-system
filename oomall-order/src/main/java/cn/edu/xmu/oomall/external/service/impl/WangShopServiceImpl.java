@@ -20,10 +20,10 @@ import java.util.Map;
 @Component
 public class WangShopServiceImpl implements IShopService {
 
-	@DubboReference(version = "${oomall.external.shop-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.shop-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IShopService shopService;
 
-	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", async = true, timeout = 5000, check = false)
+	@DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000, check = false)
 	private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
 	@Override
@@ -82,7 +82,7 @@ public class WangShopServiceImpl implements IShopService {
 		shop.setName(shopDTO.getName());
 		shop.setGmtCreateTime(shopDTO.getGmtCreateTime().toString());
 		shop.setGmtModiTime(shopDTO.getGmtModiTime().toString());
-		// todo shop.setState(shopDTO.getState());
+		shop.setState(shopDTO.getState().intValue());
 		return shop;
 	}
 }
