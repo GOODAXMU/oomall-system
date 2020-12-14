@@ -44,7 +44,7 @@ spring:
 
   cloud:
     nacos:
-      server-addr: localhost:8848
+      server-addr: 47.115.162.144:8848
 
   application:
     name: oomall-freight
@@ -60,25 +60,28 @@ dubbo:
   application:
     name: dubbo-freight
   scan:
-    base-packages: cn.edu.xmu.oomall.service
+    base-packages: cn.edu.xmu.oomall.external.dubbo
   registry:
-    address: nacos://localhost:8848
-#    address: nacos://47.115.162.144:8848
+    #    address: nacos://localhost:8848
+    address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
     port: 19800
+    host: 172.20.10.2
 
 oomall:
   external:
     goods-service:
+#      name: WangGoodsServiceImpl
       name: SimulatedGoodsServiceImpl
+      version: 0.0.5-SNAPSHOT
 
   strategy:
     freight-calculate:
       name: FreightCalculateImpl
 
-  goods:
-    version: 0.0.1-SNAPSHOT
+  freight:
+    version: 1.0.8-SNAPSHOT
 
   redis:
     prifix: freight
