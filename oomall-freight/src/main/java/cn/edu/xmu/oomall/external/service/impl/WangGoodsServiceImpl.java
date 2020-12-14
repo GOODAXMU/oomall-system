@@ -1,17 +1,17 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
-import cn.edu.xmu.goods.client.dubbo.ShopDTO;
 import cn.edu.xmu.oomall.external.service.IGoodService;
+import org.apache.dubbo.config.annotation.DubboReference;
 
 public class WangGoodsServiceImpl implements IGoodService {
 
     // todo 外部服务未配置
-    // @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", async = true, timeout = 5000)
+    @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000,check = false)
     private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
     @Override
     public Long getShopId(Long skuid) {
-        return 1L;
+        return goodsService.getShopIdBySKUId(skuid);
     }
 
     @Override

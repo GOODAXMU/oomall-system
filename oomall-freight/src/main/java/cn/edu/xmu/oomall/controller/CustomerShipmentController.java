@@ -47,7 +47,7 @@ public class CustomerShipmentController {
         for (FreightCalculateRequest item : items) {
             purchaseItems.add(new PurchaseItem(item));
         }
-        return new Reply<>(freightService.calFreight(purchaseItems, rid).getData());
+        return freightService.calFreight(purchaseItems, rid);
     }
 
     @ApiOperation(value = "获取运费模板概要")

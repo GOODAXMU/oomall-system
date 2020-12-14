@@ -43,4 +43,23 @@ public class GetFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    /**
+     * 测试获取运费模板功能
+     * 按模板名查询
+     *
+     * @throws Exception
+     */
+    @Test
+    public void getFreightModels1() throws Exception{
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+        String responseString = this.mvc.perform(get("/shops/1/freightmodels").header("authorization",token).queryParam("name","测试模板4"))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        System.out.println(responseString);
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
 }

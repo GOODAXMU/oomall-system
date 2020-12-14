@@ -50,4 +50,25 @@ public class ModifyPieceFreightModelTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+
+    @Test
+    public void modifyPieceFreightModel1() throws Exception{
+        PieceFreightModelModifyRequest pieceItemRequest = new PieceFreightModelModifyRequest();
+        pieceItemRequest.setRegionId(210L);
+        pieceItemRequest.setFirstItem(3);
+        pieceItemRequest.setFirstItemPrice(12L);
+        pieceItemRequest.setAdditionalItems(2);
+        pieceItemRequest.setAdditionalItemPrice(16L);
+        String json = JSON.toJSONString(pieceItemRequest);
+        String responseString = this.mvc.perform(put("/shops/1/pieceItems/10000")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
 }
