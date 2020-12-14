@@ -339,7 +339,7 @@ public class ShopOrderControllerTest {
 
     /**
      * 17 店家取消订单测试1
-     * 访问属于本商铺的订单
+     * 访问不存在的订单
      * @throws Exception
      */
     @Test
@@ -463,7 +463,7 @@ public class ShopOrderControllerTest {
     }
 
     /**
-     * 23 店家取消订单测试2
+     * 23 店家取消订单测试3
      * 访问属于本商铺的订单
      * （但是当前订单状态并非“付款完成”）
      * @throws Exception
@@ -483,7 +483,7 @@ public class ShopOrderControllerTest {
     }
 
     /**
-     * 23 店家取消订单测试2
+     * 23 店家取消订单测试4
      * 访问属于本商铺的订单
      * 当前订单状态为“付款完成”
      * @throws Exception
