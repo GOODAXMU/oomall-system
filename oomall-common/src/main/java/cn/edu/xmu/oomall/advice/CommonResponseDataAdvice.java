@@ -27,7 +27,7 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 
 	private static Map<Integer, HttpStatus> STATUS_MAP = new HashMap<>();
 	static {
-		STATUS_MAP.put(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE.value(), HttpStatus.UNAUTHORIZED);
+		STATUS_MAP.put(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE.value(), HttpStatus.FORBIDDEN);
 		STATUS_MAP.put(ResponseStatus.RESOURCE_ID_NOT_EXIST.value(), HttpStatus.NOT_FOUND);
 	}
 

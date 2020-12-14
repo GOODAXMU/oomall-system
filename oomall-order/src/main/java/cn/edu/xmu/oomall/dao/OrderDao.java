@@ -70,10 +70,10 @@ public class OrderDao {
      * @date 2020-11-27
      */
     public Reply<Object> getShopOrders(Long shopId, Long customerId,
-                                            String orderSn,
-                                            LocalDateTime beginTime,
-                                            LocalDateTime endTime,
-                                            PageInfo pageInfo, Boolean withParent) {
+                                       String orderSn,
+                                       LocalDateTime beginTime,
+                                       LocalDateTime endTime,
+                                       PageInfo pageInfo, Boolean withParent) {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
                 SpecificationFactory.get(shopId, customerId, orderSn, beginTime, endTime),
@@ -88,8 +88,7 @@ public class OrderDao {
                         PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
                 if (!orderPoPage2.isEmpty()) {
                     return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
-                }
-                else {
+                } else {
                     return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
                 }
 
@@ -230,6 +229,9 @@ public class OrderDao {
         if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
+        if (o.getState() == OrderStatus.COMPLETED.value()) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
 
         int r = orderRepository.updateOrderState(id, OrderStatus.CANCELED.value());
 
@@ -255,7 +257,9 @@ public class OrderDao {
         if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-
+        if (o.getState() != OrderStatus.PAID.value()) {
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
         int r = orderRepository.markShopOrderDelievered(id, OrderStatus.DELIVERED.value(), shipmentSn);
 
         if (r <= 0) {
