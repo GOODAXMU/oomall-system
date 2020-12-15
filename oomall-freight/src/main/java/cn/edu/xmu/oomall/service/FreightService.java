@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.service;
 
 
 import cn.edu.xmu.oomall.bo.*;
+import cn.edu.xmu.oomall.constant.ModelType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.FreightDao;
 import cn.edu.xmu.oomall.entity.FreightModelPo;
@@ -113,14 +114,14 @@ public class FreightService {
         List<PieceFreightModel> pieceFreightModels = new ArrayList<>();
         for (FreightModel freightModel : freightModels) {
             freightModel.setRid(rid);
-            if (freightModel.getType().equals(FreightModel.ModelType.WEIGHT_MODEL.type())) {
+            if (freightModel.getType().equals(ModelType.WEIGHT_MODEL.type())) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 weightFreightModels.add(weightFreightModel);
-            } else if (freightModel.getType().equals(FreightModel.ModelType.PIECE_MODEL.type())) {
+            } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
@@ -167,14 +168,14 @@ public class FreightService {
             freightModel.setRid(rid);
 
             Long freight = Long.valueOf(0);
-            if (freightModel.getType().equals(FreightModel.ModelType.WEIGHT_MODEL.type())) {
+            if (freightModel.getType().equals(ModelType.WEIGHT_MODEL.type())) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
                 freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
-            } else if (freightModel.getType().equals(FreightModel.ModelType.PIECE_MODEL.type())) {
+            } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());

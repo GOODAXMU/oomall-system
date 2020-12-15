@@ -67,7 +67,7 @@ dubbo:
   #    address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
-    port: 19800
+    port: 19888
     host: localhost
 
 oomall:
