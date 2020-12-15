@@ -97,19 +97,7 @@ public class CustomerOrderService {
 			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
 		}
 
-		Order order = r.getData();
-
-		Reply<Object> reply = orderDao.confirmOrder(id);
-
-		if (reply.isOk()) {
-			for (OrderItem oi : order.getOrderItems()) {
-				if (oi.getBeShareId() != null) {
-					shareService.sendShareMessage(oi);
-				}
-			}
-		}
-
-		return reply;
+		return orderDao.confirmOrder(id);
 	}
 
 	public Reply<Object> groupon2Normal(Long id, Long customerId) {
