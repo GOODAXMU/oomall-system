@@ -8,11 +8,13 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @author xincong yao
  * @date 2020-11-10
  * @author Wang Zhizhou
- * modified 2020/11/29
+ * modified 2020/12/14
  */
 public interface RefundRepository extends
 		JpaRepository<RefundPo, Long>,
@@ -23,7 +25,6 @@ public interface RefundRepository extends
 	@Query(value = "UPDATE RefundPo r SET " +
 			"r.paymentId = CASE WHEN :#{#refund.paymentId} IS NULL THEN r.paymentId ELSE :#{#refund.paymentId} END, " +
 			"r.amount = CASE WHEN :#{#refund.amount} IS NULL THEN r.amount ELSE :#{#refund.amount} END, " +
-			"r.paySn = CASE WHEN :#{#refund.paySn} IS NULL THEN r.paySn ELSE :#{#refund.paySn} END, " +
 			"r.orderId = CASE WHEN :#{#refund.orderId} IS NULL THEN r.orderId ELSE :#{#refund.orderId} END, " +
 			"r.aftersaleId = CASE WHEN :#{#refund.aftersaleId} IS NULL THEN r.aftersaleId ELSE :#{#refund.aftersaleId} END, " +
 			"r.state = CASE WHEN :#{#refund.state} IS NULL THEN r.state ELSE :#{#refund.state} END " +
@@ -32,6 +33,13 @@ public interface RefundRepository extends
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE RefundPo po SET po.state = :state WHERE po.id = :id")
-	int updateRefundState(Long id, Integer state);
+	@Query(value = "SELECT r FROM RefundPo r WHERE r.orderId = :oid")
+	List<RefundPo> findAllByOrderId(Long oid);
+
+
+	@Modifying
+	@Transactional
+	@Query(value = "SELECT r FROM RefundPo r WHERE r.aftersaleId = :aid")
+	List<RefundPo> findAllByAfterSaleId(Long aid);
+
 }

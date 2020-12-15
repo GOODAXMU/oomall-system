@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/12/10
- * modified 2020/12/13
+ * modified 2020/12/15
  */
 
 @Service
@@ -53,7 +53,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long shopId) {
-        if (orderService.isShopOwnOrder(shopId, orderId)) {
+        if (!orderService.isShopOwnOrder(shopId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -66,7 +66,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
+        if (!afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -98,11 +98,10 @@ public class ShopPaymentService {
         // 设置返款信息
         refund.setOrderId(orderId);
         refund.setAftersaleId(afterSaleId);
-        refund.setPaySn("refund" + UUID.randomUUID().toString());
         refund.setState(Refund.State.WAITING);
 
         // 创建用于返款的反向支付
-        Payment payment = new Payment(r.getData().getPaymentPattern(), refund.getAmount(), orderId, afterSaleId);
+        Payment payment = new Payment(r.getData().getPattern(), refund.getAmount(), orderId, afterSaleId);
 
         // 返款是否成功
         if (patternPayService.refundByPattern(payment)) {
@@ -125,7 +124,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long shopId) {
-        if (orderService.isShopOwnOrder(shopId, orderId)) {
+        if (!orderService.isShopOwnOrder(shopId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -138,7 +137,7 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
+        if (!afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 

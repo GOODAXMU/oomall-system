@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.annotation.LoginUser;
 import cn.edu.xmu.oomall.bo.Payment;
 import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.service.CustomerPaymentService;
+import cn.edu.xmu.oomall.service.PatternPayService;
 import cn.edu.xmu.oomall.vo.*;
 import io.swagger.annotations.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,12 +18,13 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xincong yao
  * @date 2020-11-9
  * @author Wang Zhizhou
- * modified 2020/12/20
+ * modified 2020/12/14
  */
 @Api(value = "供买家访问的支付api")
 @Validated
@@ -32,6 +34,9 @@ public class CustomerPaymentController {
 
 	@Autowired
 	private CustomerPaymentService customerPaymentService;
+
+	@Autowired
+	private PatternPayService patternPayService;
 
 
 	@ApiOperation(value = "获取所有支付状态", produces = "application/json;charset=UTF-8")
@@ -64,8 +69,10 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/payments/patterns", produces = "application/json;charset=UTF-8")
 	public Reply<List<PayPatternResponse>> getAllPattern() {
 		List<PayPatternResponse> r = new ArrayList<>();
-		for (Payment.Pattern pattern : Payment.Pattern.values()) {
-			r.add(new PayPatternResponse(String.format("%03d", pattern.getPatternId()), pattern.getPatternName()));
+		for (Map.Entry<Integer, String> pattern : patternPayService.getPatternIds().entrySet()) {
+			r.add(new PayPatternResponse(
+					String.format("%03d", pattern.getKey()),
+					pattern.getValue()));
 		}
 
 		return new Reply<>(r);

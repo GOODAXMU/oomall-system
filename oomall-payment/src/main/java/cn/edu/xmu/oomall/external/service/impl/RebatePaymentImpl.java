@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
- * modified 2020/12/13
+ * modified 2020/12/14
  */
 @Component
 public class RebatePaymentImpl implements IExternalPayment {
@@ -64,5 +64,10 @@ public class RebatePaymentImpl implements IExternalPayment {
         }
 
         return customerService.refundRebate(customerId, amount);
+    }
+
+    @Override
+    public int getPatternId() {
+        return 1;
     }
 }

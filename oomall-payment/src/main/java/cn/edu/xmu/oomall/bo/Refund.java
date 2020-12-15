@@ -59,8 +59,6 @@ public class Refund {
 
     private Long amount;
 
-    private String paySn;
-
     private Long orderId;
 
     private Long aftersaleId;
@@ -90,11 +88,10 @@ public class Refund {
         this.id = po.getId();
         this.paymentId = po.getPaymentId();
         this.amount = po.getAmount();
-        this.paySn = po.getPaySn();
         this.orderId = po.getOrderId();
         this.aftersaleId = po.getAftersaleId();
         this.state = State.getStateByCode(po.getState());
-        this.gmtCreated = po.getGmtCreated();
+        this.gmtCreated = po.getGmtCreate();
         this.gmtModified = po.getGmtModified();
     }
 
@@ -114,11 +111,10 @@ public class Refund {
         po.setId(this.id);
         po.setPaymentId(this.paymentId);
         po.setAmount(this.amount);
-        po.setPaySn(this.paySn);
         po.setOrderId(this.orderId);
         po.setAftersaleId(this.aftersaleId);
         po.setState(this.state.code);
-        po.setGmtCreated(this.gmtCreated);
+        po.setGmtCreate(this.gmtCreated);
         po.setGmtModified(this.gmtModified);
 
         return po;

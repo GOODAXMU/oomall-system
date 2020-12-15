@@ -50,6 +50,10 @@ dubbo:
 oomall:
   external:
     payment-service:
-      name:
-        - SimplePaymentImpl
-        - RebatePaymentImpl
+      name: RebatePaymentImpl|SimplePaymentImpl
+    order-service:
+      name: SimulateOrderServiceImpl
+    customer-service:
+      name: SimulateCustomerServiceImpl
+    afterSale-service:
+      name: SimulateAfterSaleServiceImpl

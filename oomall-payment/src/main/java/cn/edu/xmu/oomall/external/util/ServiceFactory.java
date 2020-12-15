@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.external.util;
 
-import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -17,7 +16,7 @@ import java.util.Map;
 /**
  * @author xincong yao
  * @date 2020-11-16
- * modified 2020-12-13
+ * modified 2020-12-15
  */
 @Component
 @Slf4j
@@ -25,13 +24,13 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 
 	private ApplicationContext applicationContext;
 
-	@Value(value = "${oomall.external.payment-service.name}")
-	private List<String> paymentServiceNameList;
-	@Value(value =  "oomall.external.order-service.name")
+	@Value(value =  "${oomall.external.payment-service.name}")
+	private String paymentServiceName;
+	@Value(value =  "${oomall.external.order-service.name}")
 	private String orderServiceName;
-	@Value(value =  "oomall.external.customer-service.name")
+	@Value(value =  "${oomall.external.customer-service.name}")
 	private String customerServiceName;
-	@Value(value =  "oomall.external.afterSale-service.name")
+	@Value(value =  "${oomall.external.afterSale-service.name}")
 	private String afterSaleServiceName;
 
 
@@ -60,7 +59,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 
 	@Override
 	public void afterPropertiesSet() {
-		for (String s : paymentServiceNameList) {
+		for (String s : paymentServiceName.split("\\|")) {
 			patternPayServices.put(s.replace("Impl", ""), applicationContext.getBean(getBeanName(s)));
 		}
 		services.add(applicationContext.getBean(getBeanName(orderServiceName)));

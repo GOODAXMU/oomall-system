@@ -21,9 +21,9 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
- * modified 2020/12/13
+ * modified 2020/12/15
  */
-@DubboService(version = "${oomall.payment.version}")
+//@DubboService(version = "${oomall.payment.version}")
 public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
     @Autowired
@@ -48,13 +48,16 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
     @Override
     public Boolean createRefund(Long afterSaleId, Long orderItemId, Integer quantity) {
         OrderItemDto oi = orderService.getOrderItem(orderItemId);
+        if (null == oi) {
+            return false;
+        }
 
         Long deposit = orderService.getOrderPresaleDeposit(oi.getOrderId());
         Reply<List<Payment>> r = paymentDao.getPaymentsByOrderId(oi.getOrderId());
 
-        if (!r.isOk()) {                // 查询失败无从返款
+        if (!r.isOk()) {            // 查询失败无从返款
             return false;
-        } else if (deposit > 0){   // 存在定金, 定金无法返款
+        } else if (deposit > 0){    // 存在定金, 定金无法返款
             r.getData().removeIf(payment -> payment.getActualAmount() == deposit);
         }
 
@@ -71,10 +74,9 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
         for (Payment payment : r.getData()) {
             Long amount = (long)(payment.getActualAmount() * refundRate);
             Refund refund = new Refund(payment.getId(), afterSaleId, amount);
-            refund.setPaySn("refund" + UUID.randomUUID().toString());
             refund.setState(Refund.State.WAITING);
 
-            Payment rePayment = new Payment(payment.getPaymentPattern(), amount, oi.getOrderId(), afterSaleId);
+            Payment rePayment = new Payment(payment.getPattern(), amount, oi.getOrderId(), afterSaleId);
             // 返款是否成功
             if (patternPayService.refundByPattern(rePayment)) {
                 refund.setState(Refund.State.SUCCESS);

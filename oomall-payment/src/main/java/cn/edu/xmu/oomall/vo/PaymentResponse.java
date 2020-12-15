@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 /**
  * @author xincong yao
  * @date 2020-11-9
+ * modified 2020-12-15
  */
 @ApiModel(description = "支付单相关操作的响应对象")
 @Data
@@ -22,7 +23,7 @@ public class PaymentResponse {
 	private Long actualAmount;
 	private String payTime;
 	private String payPattern;
-	private String state;
+	private Integer state;
 	private String beginTime;
 	private String endTime;
 	private String gmtCreateTime;

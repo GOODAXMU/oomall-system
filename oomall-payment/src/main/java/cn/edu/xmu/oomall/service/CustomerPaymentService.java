@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/13
+ * modified 2020/12/15
  */
 
 @Service
@@ -58,7 +58,7 @@ public class CustomerPaymentService {
         }
 
         // 检查用户和该订单是否匹配
-    if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+    if (!orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -67,7 +67,7 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
+        payment.setPaySn(payment.getPattern() + UUID.randomUUID().toString());
         payment.setState(Payment.State.WAITING);
 
         // 进行支付
@@ -106,7 +106,7 @@ public class CustomerPaymentService {
         }
 
         // 检查用户和该售后是否匹配
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        if (!afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -115,7 +115,7 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
+        payment.setPaySn(payment.getPattern() + UUID.randomUUID().toString());
         payment.setState(Payment.State.WAITING);
 
         // 进行支付
@@ -150,7 +150,7 @@ public class CustomerPaymentService {
      */
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long customerId) {
         // 检查顾客查询订单属于本顾客
-        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+        if (!orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -163,7 +163,7 @@ public class CustomerPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long customerId) {
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        if (!afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -177,7 +177,7 @@ public class CustomerPaymentService {
      */
     public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long customerId) {
         // 检查顾客查询订单属于本顾客
-        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+        if (!orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -190,7 +190,7 @@ public class CustomerPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundByAfterSaleId(Long afterSaleId, Long customerId) {
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        if (!afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 

@@ -7,17 +7,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
- * modified 2020/12/13
+ * modified 2020/12/15
  */
 @Component
 public class PatternPayService {
 
-    private Map<String, IExternalPayment> patternPay;
+    private Map<String, IExternalPayment> patternPay = new HashMap<>();
+
+    private Map<Integer, String> patternIds = new HashMap<>();
 
     @Autowired
     private ServiceFactory serviceFactory;
@@ -26,6 +29,7 @@ public class PatternPayService {
     public void init() {
         for (Map.Entry<String, Object> e : serviceFactory.getPatternPayServices().entrySet()) {
             patternPay.put(e.getKey(), (IExternalPayment)e.getValue());
+            patternIds.put(((IExternalPayment) e.getValue()).getPatternId(), e.getKey());
         }
     }
 
@@ -36,7 +40,7 @@ public class PatternPayService {
      */
     public Boolean payByPattern(Payment payment) {
         return patternPay
-                .get(payment.getPaymentPattern().getPatternName())
+                .get(payment.getPattern())
                 .pay(payment);
     }
 
@@ -47,8 +51,15 @@ public class PatternPayService {
      */
     public Boolean refundByPattern(Payment payment) {
         return patternPay
-                .get(payment.getPaymentPattern().getPatternName())
+                .get(payment.getPattern())
                 .refund(payment);
     }
 
+    /**
+     * 获取所有可行的支付渠道
+     * @return
+     */
+    public Map<Integer, String> getPatternIds() {
+        return patternIds;
+    }
 }

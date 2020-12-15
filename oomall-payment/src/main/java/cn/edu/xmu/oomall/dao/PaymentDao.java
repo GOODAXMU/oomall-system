@@ -4,7 +4,6 @@ import cn.edu.xmu.oomall.bo.Payment;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.entity.PaymentPo;
 import cn.edu.xmu.oomall.repository.PaymentRepository;
-import cn.edu.xmu.oomall.repository.util.SpecificationFactory;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -16,7 +15,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/11
+ * modified 2020/12/14
  */
 
 @Component
@@ -54,8 +53,7 @@ public class PaymentDao {
 
     public Reply<Payment> savePayment(Payment payment) {
         PaymentPo po = payment.createPo();
-        po.setGmtCreated(LocalDateTime.now());
-        po.setGmtModified(LocalDateTime.now());
+        po.setGmt();
 
         po = paymentRepository.save(po);
         return new Reply<>(new Payment(po));
