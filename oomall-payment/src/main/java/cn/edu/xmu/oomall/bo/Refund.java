@@ -12,16 +12,15 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/29
- * modified 2020/12/11
+ * modified 2020/12/15
  */
 @Data
 public class Refund {
 
     public enum State {
-        NEW(0, "新创建"),
-        WAITING(1,"等待完成退款"),
-        SUCCESS(2, "完成退款"),
-        FAILED(3, "退款失败");
+        WAITING(0, "未退款"),
+        SUCCESS(1, "已退款"),
+        FAILED(2, "退款失败");
 
         private static final Map<Integer, Refund.State> stateMap;
 
@@ -75,11 +74,11 @@ public class Refund {
      * @param vo        请求vo
      */
     public Refund(Long paymentId, RefundPostRequest vo) {
-        this.paymentId = id;
+        this.paymentId = paymentId;
         this.amount = vo.getAmount();
         this.orderId = null;
         this.aftersaleId = null;
-        this.state = State.NEW;
+        this.state = State.WAITING;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
     }
@@ -99,7 +98,7 @@ public class Refund {
         this.paymentId = paymentId;
         this.aftersaleId = aftersaleId;
         this.amount = amount;
-        this.state = State.NEW;
+        this.state = State.WAITING;
     }
 
     /**
@@ -132,6 +131,8 @@ public class Refund {
         vo.setState(this.state.description);
         vo.setGmtCreateTime(this.gmtCreated.toString());
         vo.setGmtModifiedTime(this.gmtModified.toString());
+        vo.setOrderId(this.orderId);
+        vo.setAftersaleId(this.aftersaleId);
 
         return vo;
     }

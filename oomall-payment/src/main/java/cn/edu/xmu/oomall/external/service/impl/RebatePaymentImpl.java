@@ -23,6 +23,7 @@ public class RebatePaymentImpl implements IExternalPayment {
     @Autowired
     private ServiceFactory serviceFactory;
 
+    // todo 需解决init后依然为 null
     private IOrderService orderService;
     private IAfterSaleService afterSaleService;
     private ICustomerService customerService;
@@ -67,7 +68,7 @@ public class RebatePaymentImpl implements IExternalPayment {
     }
 
     @Override
-    public int getPatternId() {
-        return 1;
+    public String getPattern() {
+        return "001";
     }
 }

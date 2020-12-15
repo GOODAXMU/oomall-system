@@ -24,10 +24,9 @@ public class Payment {
     private static Long waitTime = 30L;
 
     public enum State {
-        NEW(0, "新创建"),
-        WAITING(1,"等待完成支付"),
-        SUCCESS(2, "完成支付"),
-        FAILED(3, "支付失败");
+        WAITING(0,"未支付"),
+        SUCCESS(1, "已支付"),
+        FAILED(2, "支付失败");
 
         private static final Map<Integer, Payment.State> stateMap;
 
@@ -96,10 +95,10 @@ public class Payment {
         this.afterSaleId = afterSaleId;
         this.amount = request.getPrice();
         this.actualAmount = request.getPrice();
-        this.pattern = request.getPattern();
+        this.pattern = request.getPaymentPattern();
         this.beginTime = LocalDateTime.now();
         this.endTime = this.beginTime.plusMinutes(30);
-        this.state = State.NEW;
+        this.state = State.WAITING;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
     }
@@ -135,7 +134,7 @@ public class Payment {
         this.pattern = pattern;
         this.amount = amount;
         this.actualAmount = amount;
-        this.state = State.NEW;
+        this.state = State.WAITING;
         // 反向支付的开始支付与结束支付时间无意义
     }
 
@@ -147,6 +146,7 @@ public class Payment {
         PaymentResponse vo = new PaymentResponse();
         vo.setId((this.id));
         vo.setOrderId(this.orderId);
+        vo.setAftersaleId(this.afterSaleId);
         vo.setAmount(this.amount);
         vo.setActualAmount(this.actualAmount);
         vo.setPayTime(this.payTime.toString());

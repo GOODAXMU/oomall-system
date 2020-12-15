@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 /**
  * @author xincong yao
  * @date 2020-11-9
+ * modified 2020-12-15
  */
 @ApiModel(description = "创建支付单方法的响应对象")
 @Data
@@ -21,4 +22,6 @@ public class RefundResponse {
 	private String state;
 	private String gmtCreateTime;
 	private String gmtModifiedTime;
+	private Long orderId;
+	private Long aftersaleId;
 }

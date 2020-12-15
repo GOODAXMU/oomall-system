@@ -20,7 +20,7 @@ public class PatternPayService {
 
     private Map<String, IExternalPayment> patternPay = new HashMap<>();
 
-    private Map<Integer, String> patternIds = new HashMap<>();
+    private Map<String, String> pattern2PatternName = new HashMap<>();
 
     @Autowired
     private ServiceFactory serviceFactory;
@@ -28,8 +28,8 @@ public class PatternPayService {
     @PostConstruct
     public void init() {
         for (Map.Entry<String, Object> e : serviceFactory.getPatternPayServices().entrySet()) {
-            patternPay.put(e.getKey(), (IExternalPayment)e.getValue());
-            patternIds.put(((IExternalPayment) e.getValue()).getPatternId(), e.getKey());
+            patternPay.put(((IExternalPayment) e.getValue()).getPattern(), (IExternalPayment) e.getValue());
+            pattern2PatternName.put(((IExternalPayment) e.getValue()).getPattern(), e.getKey());
         }
     }
 
@@ -39,9 +39,8 @@ public class PatternPayService {
      * @return
      */
     public Boolean payByPattern(Payment payment) {
-        return patternPay
-                .get(payment.getPattern())
-                .pay(payment);
+        IExternalPayment p = patternPay.get(payment.getPattern());
+        return null != p && p.pay(payment);
     }
 
     /**
@@ -50,16 +49,15 @@ public class PatternPayService {
      * @return
      */
     public Boolean refundByPattern(Payment payment) {
-        return patternPay
-                .get(payment.getPattern())
-                .refund(payment);
+        IExternalPayment p = patternPay.get(payment.getPattern());
+        return null != p && p.refund(payment);
     }
 
     /**
      * 获取所有可行的支付渠道
      * @return
      */
-    public Map<Integer, String> getPatternIds() {
-        return patternIds;
+    public Map<String, String> getPattern2PatternName() {
+        return pattern2PatternName;
     }
 }

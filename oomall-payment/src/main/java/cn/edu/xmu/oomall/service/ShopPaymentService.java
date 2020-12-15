@@ -98,7 +98,6 @@ public class ShopPaymentService {
         // 设置返款信息
         refund.setOrderId(orderId);
         refund.setAftersaleId(afterSaleId);
-        refund.setState(Refund.State.WAITING);
 
         // 创建用于返款的反向支付
         Payment payment = new Payment(r.getData().getPattern(), refund.getAmount(), orderId, afterSaleId);
@@ -112,7 +111,7 @@ public class ShopPaymentService {
         }
 
         if (refund.isRefundSuccess()) {
-            refundDao.saveRefund(refund);
+            return refundDao.saveRefund(refund);
         }
 
         return new Reply<>(refund);

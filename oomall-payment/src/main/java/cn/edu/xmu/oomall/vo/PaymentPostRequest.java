@@ -12,6 +12,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author xincong yao
  * @date 2020-11-9
+ * modified 2020-12-15
  */
 @ApiModel(description = "创建支付单方法的请求对象")
 @Data
@@ -24,5 +25,5 @@ public class PaymentPostRequest {
 	private Long price;
 
 	@NotBlank
-	private String pattern;
+	private String paymentPattern;
 }

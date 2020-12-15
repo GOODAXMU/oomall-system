@@ -19,6 +19,7 @@ public class PaymentResponse {
 
 	private Long id;
 	private Long orderId;
+	private Long aftersaleId;
 	private Long amount;
 	private Long actualAmount;
 	private String payTime;

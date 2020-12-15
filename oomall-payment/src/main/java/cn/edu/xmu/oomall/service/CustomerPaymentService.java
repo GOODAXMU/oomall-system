@@ -58,7 +58,7 @@ public class CustomerPaymentService {
         }
 
         // 检查用户和该订单是否匹配
-    if (!orderService.isCustomerOwnOrder(customerId, orderId)) {
+        if (!orderService.isCustomerOwnOrder(customerId, orderId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -67,8 +67,7 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
+        payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
 
         // 进行支付
         if (patternPaymentService.payByPattern(payment)) {
@@ -115,8 +114,7 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
+        payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
 
         // 进行支付
         if (patternPaymentService.payByPattern(payment)) {

@@ -69,9 +69,9 @@ public class CustomerPaymentController {
 	@GetMapping(value = "/payments/patterns", produces = "application/json;charset=UTF-8")
 	public Reply<List<PayPatternResponse>> getAllPattern() {
 		List<PayPatternResponse> r = new ArrayList<>();
-		for (Map.Entry<Integer, String> pattern : patternPayService.getPatternIds().entrySet()) {
+		for (Map.Entry<String, String> pattern : patternPayService.getPattern2PatternName().entrySet()) {
 			r.add(new PayPatternResponse(
-					String.format("%03d", pattern.getKey()),
+					pattern.getKey(),
 					pattern.getValue()));
 		}
 

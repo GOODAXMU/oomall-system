@@ -9,7 +9,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Wang Zhizhou
  * create 2020/11/26
- * modified 2020/12/14
+ * modified 2020/12/15
  */
 
 @Component
@@ -26,7 +26,7 @@ public class SimplePaymentImpl implements IExternalPayment {
     }
 
     @Override
-    public int getPatternId() {
-        return 2;
+    public String getPattern() {
+        return "002";
     }
 }
