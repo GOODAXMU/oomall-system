@@ -38,14 +38,16 @@ public class DefinePieceFreightModelTest {
      */
     @Test
     public void definePieceFreightModel() throws Exception {
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
         pieceItemRequest.setAdditionalItemPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
-        pieceItemRequest.setRegionId(1L);
+        pieceItemRequest.setRegionId(201L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/pieceItems")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems").header("authorization", token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -58,6 +60,8 @@ public class DefinePieceFreightModelTest {
     }
     @Test
     public void definePieceFreightModelSuccessfully() throws Exception {
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
         pieceItemRequest.setAdditionalItemPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
@@ -65,7 +69,7 @@ public class DefinePieceFreightModelTest {
         pieceItemRequest.setRegionId(2L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/pieceItems")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems").header("authorization", token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -78,6 +82,8 @@ public class DefinePieceFreightModelTest {
     }
     @Test
     public void definePieceFreightModelOutOfScope() throws Exception {
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
         pieceItemRequest.setAdditionalItemPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
@@ -85,10 +91,10 @@ public class DefinePieceFreightModelTest {
         pieceItemRequest.setRegionId(2L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(post("/shops/2/freightmodels/1/pieceItems")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/13/pieceItems").header("authorization", token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
-                .andExpect(status().isCreated())
+                .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()

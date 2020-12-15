@@ -32,7 +32,7 @@ public class ModifyWeightFreightModelTest {
     private MockMvc mvc;
 
     @Test
-    public void modifyFreightModel() throws Exception{
+    public void modifyWeightFreightModel() throws Exception{
         WeightItemRequest weightItemRequest = new WeightItemRequest();
         weightItemRequest.setAbovePrice(100L);
         weightItemRequest.setFiftyPrice(50L);
@@ -62,7 +62,7 @@ public class ModifyWeightFreightModelTest {
      * @throws Exception
      */
     @Test
-    public void modifyFreightModel1() throws Exception{
+    public void modifyWeightFreightModel1() throws Exception{
         WeightItemRequest weightItemRequest = new WeightItemRequest();
         weightItemRequest.setFirstWeight(3);
         weightItemRequest.setFirstWeightPrice(10L);

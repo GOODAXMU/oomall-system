@@ -1,6 +1,5 @@
 package cn.edu.xmu.oomall.service.dubbo;
 
-import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
 import cn.edu.xmu.oomall.constant.OrderStatus;
@@ -16,6 +15,7 @@ import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.repository.OrderItemRepository;
 import cn.edu.xmu.oomall.repository.OrderRepository;
 import cn.edu.xmu.oomall.util.OrderSnGenerator;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -30,6 +30,7 @@ import java.util.Optional;
  * @author xincong yao
  * @date 2020-11-30
  */
+@Slf4j
 @DubboService(version = "${oomall.order.version}")
 public class DubboOrderServiceImpl implements IDubboOrderService {
 
@@ -52,6 +53,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public AfterSaleDto getAfterSaleByOrderItemId(Long orderItemId) {
+		log.debug("getAfterSaleByOrderItemId: " + orderItemId);
+
 		Optional<OrderItemPo> o = orderItemRepository.findById(orderItemId);
 		if (o.isEmpty()) {
 			return null;
@@ -75,16 +78,19 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public Boolean isShopOwnOrder(Long shopId, Long orderId) {
+		log.debug("isShopOwnOrder: " + shopId + ", " + orderId);
 		return orderRepository.findIdByIdAndShopId(orderId, shopId) != null;
 	}
 
 	@Override
 	public Boolean isCustomerOwnOrder(Long customerId, Long orderId) {
+		log.debug("isCustomerOwnOrder: " + customerId + ", " + orderId);
 		return orderRepository.findIdByIdAndCustomerId(orderId, customerId) != null;
 	}
 
 	@Override
 	public Boolean isCustomerOwnOrderItem(Long customerId, Long orderItemId) {
+		log.debug("isCustomerOwnOrderItem: " + customerId + ", " + orderItemId);
 		Long orderId = orderItemRepository.findOrderIdById(orderItemId);
 		if (orderId == null) {
 			return false;
@@ -97,6 +103,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public OrderItemDto getOrderItem(Long orderItemId) {
+		log.debug("getOrderItem: " + orderItemId);
 		Optional<OrderItemPo> orderItem = orderItemRepository.findById(orderItemId);
 		if (orderItem.isEmpty()) {
 			return null;
@@ -117,6 +124,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public Boolean orderCanBePaid(Long id) {
+		log.debug("orderCanBePaid: " + id);
 		Integer r = orderRepository.findOrderStatusById(id);
 		int status = r == null ? -1 : r;
 		return OrderStatus.TO_BE_PAID.value() == status;
@@ -124,6 +132,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public void checkOrderPaid(Long id, Long amount) {
+		log.debug("checkOrderPaid: " + id + ", " + amount);
 		// 获取可支付的订单
 		OrderPo po = null;
 		if (orderCanBePaid(id)) {
@@ -197,6 +206,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public Long getOrderPresaleDeposit(Long id) {
+		log.debug("getOrderPresaleDeposit: " + id);
 		Long presaleId = orderRepository.findPreSaleIdById(id);
 		if (presaleId == null) {
 			return -1L;
@@ -207,6 +217,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public List<EffectiveShareDto> getEffectiveShareRecord() {
+		log.debug("getEffectiveShareRecord, " + LocalDateTime.now());
 		List<EffectiveShareDto> dtos = new ArrayList<>();
 
 		List<OrderPo> orders = orderRepository.findAllWhereStatusEqualsAndGmtModifiedBetween(
@@ -288,6 +299,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 	@Override
 	public Integer createExchangeOrder(ExchangeOrderDto dto) {
+		log.debug("createExchangeOrder: " + dto);
+
 		if (dto == null) {
 			return ResponseStatus.INTERNAL_SERVER_ERR.value();
 		}
@@ -320,6 +333,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		exOrder.setConsignee(dto.getConsignee());
 
 		exOrder = orderRepository.save(exOrder);
+		log.debug("new orderId: " + exOrder.getId());
 
 		OrderItemPo oi = new OrderItemPo();
 		oi.setOrderId(exOrder.getId());
@@ -328,13 +342,15 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		oi.setName(orderItemPo.getName());
 		oi.setPrice(orderItemPo.getPrice());
 
-		orderItemRepository.save(oi);
+		oi = orderItemRepository.save(oi);
+		log.debug("new orderItemId: " + oi.getId());
 
 		return ResponseStatus.OK.value();
 	}
 
 	@Override
 	public Boolean changeOrderState(OrderStateDto dto) {
+		log.debug("changeOrderState: " + dto);
 		int r = orderRepository.changeOrderStateWhenStateEquals(
 				dto.getOrderId(),
 				dto.getTo(), dto.getToSub(),

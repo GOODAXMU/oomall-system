@@ -38,4 +38,5 @@ public class DeletePieceFreightModelTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+
 }

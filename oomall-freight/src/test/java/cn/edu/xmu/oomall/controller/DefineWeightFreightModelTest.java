@@ -47,7 +47,7 @@ public class DefineWeightFreightModelTest {
         weightFreightModelDefineRequest.setTenPrice(10);
         weightFreightModelDefineRequest.setTrihunPrice(300);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/weightItems")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -70,7 +70,7 @@ public class DefineWeightFreightModelTest {
         weightFreightModelDefineRequest.setTenPrice(10);
         weightFreightModelDefineRequest.setTrihunPrice(300);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/1/weightItems")
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
@@ -93,7 +93,7 @@ public class DefineWeightFreightModelTest {
         weightFreightModelDefineRequest.setTenPrice(10);
         weightFreightModelDefineRequest.setTrihunPrice(300);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
-        String responseString = this.mvc.perform(post("/shops/2/freightmodels/1/weightItems")
+        String responseString = this.mvc.perform(post("/shops/2/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())

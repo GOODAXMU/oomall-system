@@ -30,7 +30,7 @@ public class DeleteWeightFreightModelTest {
     @Test
     public void deleteWeightFreightModel() throws Exception{
         String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",1L,2L))
-                .andExpect(status().isOk())
+                .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()

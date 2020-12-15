@@ -47,4 +47,5 @@ public class CreateFreightModelTest {
         log.info("reply: "+reply.toString());
         Assert.assertEquals(Long.valueOf(2),reply.getData().getId());
     }
+
 }
