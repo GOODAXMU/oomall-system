@@ -33,7 +33,8 @@ public class FreightModelGetResponse {
             FreightModelInner freightModelInner = new FreightModelInner(
                     freightModel.getId(), freightModel.getName(),
                     freightModel.getType(), freightModel.getIsDefault() == null ? false : freightModel.getIsDefault() == 1,
-                    freightModel.getGmtCreate().toString(), freightModel.getGmtModified().toString());
+                    freightModel.getGmtCreate() == null ? null : freightModel.getGmtCreate().toString(),
+                    freightModel.getGmtModified() == null ? null : freightModel.getGmtModified().toString());
             list.add(freightModelInner);
         }
     }
