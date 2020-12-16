@@ -44,6 +44,7 @@ public class WeightFreightModel {
 
     private Long rid;
 
+    private Long unit;
     /**
      * 构造函数
      * @param weightFreightModelPo Po对象

@@ -97,7 +97,7 @@ public class FreightDao {
         FreightModel freightModel = new FreightModel();
         try {
             freightModel = new FreightModel(freightModelRepository.findById(id).get());
-            if (!freightModel.getShopId().equals(shopId)) {
+            if (!shopId.equals(0L) && !freightModel.getShopId().equals(shopId)) {
                 return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
             }
         } catch (NoSuchElementException e) {
@@ -362,7 +362,7 @@ public class FreightDao {
      */
     public Reply deleteWeightFreightModel(Long id, Long shopId) {
         WeightFreightModel weightFreightModel = getWeightFreightModelById(id).getData();
-        if(null == weightFreightModel){
+        if (null == weightFreightModel) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
@@ -412,7 +412,7 @@ public class FreightDao {
      */
     public Reply deletePieceFreightModel(Long id, Long shopId) {
         PieceFreightModel pieceFreightModel = getPieceFreightModelById(id).getData();
-        if(null == pieceFreightModel){
+        if (null == pieceFreightModel) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         FreightModel freightModel = getFreightModelById(pieceFreightModel.getFreightModelId()).getData();
@@ -479,7 +479,7 @@ public class FreightDao {
         WeightFreightModelPo.setGmtModified(LocalDateTime.now().toString());
         WeightFreightModelPo.setGmtCreate(LocalDateTime.now().toString());
         FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
-        if(null==freightModel){
+        if (null == freightModel) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         if (!freightModel.getShopId().equals(shopId)) {
@@ -510,7 +510,7 @@ public class FreightDao {
         if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }
-        if(!freightModelReply.getData().getShopId().equals(shopId)){
+        if (!freightModelReply.getData().getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo();
@@ -534,7 +534,7 @@ public class FreightDao {
         if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }
-        if(!freightModelReply.getData().getShopId().equals(shopId)){
+        if (!freightModelReply.getData().getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo();
@@ -556,7 +556,7 @@ public class FreightDao {
     public Reply modifyWeightFreightModel(WeightFreightModel weightFreightModel, Long id, Long shopId) {
         WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
         WeightFreightModel weightFreightModel1 = getWeightFreightModelById(id).getData();
-        if(null == weightFreightModel1){
+        if (null == weightFreightModel1) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         FreightModel freightModel = getFreightModelById(weightFreightModel1.getFreightModelId()).getData();
@@ -566,8 +566,8 @@ public class FreightDao {
         WeightFreightModelPo weightFreightModelPo1 = new WeightFreightModelPo();
         weightFreightModelPo1.setRegionId(weightFreightModel.getRid());
         List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo1));
-        if(!weightFreightModelPos.isEmpty()){
-            if(weightFreightModelPos.size()!=1||weightFreightModel1.getRid()!=weightFreightModel.getRid()){
+        if (!weightFreightModelPos.isEmpty()) {
+            if (weightFreightModelPos.size() != 1 || weightFreightModel1.getRid() != weightFreightModel.getRid()) {
                 return new Reply(ResponseStatus.REGION_EXIST);
             }
         }
@@ -586,7 +586,7 @@ public class FreightDao {
     public Reply modifyPieceFreightModel(PieceFreightModel pieceFreightModel, Long id, Long shopId) {
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
         PieceFreightModel pieceFreightModel1 = getPieceFreightModelById(id).getData();
-        if(null == pieceFreightModel1){
+        if (null == pieceFreightModel1) {
             return new Reply(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         FreightModel freightModel = getFreightModelById(pieceFreightModel1.getFreightModelId()).getData();
@@ -596,8 +596,8 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo1 = new PieceFreightModelPo();
         pieceFreightModelPo1.setRegionId(pieceFreightModel.getRid());
         List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo1));
-        if(!pieceFreightModelPos.isEmpty()){
-            if(pieceFreightModelPos.size()!=1||pieceFreightModel1.getRid()!=pieceFreightModel.getRid()) {
+        if (!pieceFreightModelPos.isEmpty()) {
+            if (pieceFreightModelPos.size() != 1 || pieceFreightModel1.getRid() != pieceFreightModel.getRid()) {
                 return new Reply(ResponseStatus.REGION_EXIST);
             }
         }
@@ -618,8 +618,7 @@ public class FreightDao {
         WeightFreightModelPo weightFreightModelPo;
         try {
             weightFreightModelPo = weightModelRepository.findById(id).get();
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         Reply<WeightFreightModel> reply = new Reply<>(new WeightFreightModel(weightFreightModelPo));
@@ -634,7 +633,7 @@ public class FreightDao {
      */
     public Reply<PieceFreightModel> definePieceFreightModel(PieceFreightModel pieceFreightModel, Long shopId) {
         FreightModel freightModel = getFreightModelById(pieceFreightModel.getFreightModelId()).getData();
-        if(null==freightModel){
+        if (null == freightModel) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         if (!freightModel.getShopId().equals(shopId)) {
@@ -667,8 +666,7 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo;
         try {
             pieceFreightModelPo = pieceModelRepository.findById(id).get();
-        }
-        catch (NoSuchElementException e){
+        } catch (NoSuchElementException e) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         Reply<PieceFreightModel> reply = new Reply<>(new PieceFreightModel(pieceFreightModelPo));

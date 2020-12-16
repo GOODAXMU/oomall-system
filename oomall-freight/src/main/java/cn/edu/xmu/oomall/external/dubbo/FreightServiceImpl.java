@@ -64,6 +64,9 @@ public class FreightServiceImpl implements IFreightService {
     @Override
     public FreightModelDto getFreightModel(Long id) {
         FreightModel freightModel = freightService.getFreightModelById(id).getData();
+        if (freightModel == null) {
+            return null;
+        }
         return freightModel.createFreightModelDto();
     }
 }
