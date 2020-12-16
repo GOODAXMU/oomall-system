@@ -4,7 +4,6 @@ import cn.edu.xmu.oomall.OomallPaymentApplication;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -13,8 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 /**
  * @author Wang Zhizhou
@@ -143,7 +141,7 @@ public class CustomerPaymentControllerTest {
      * @throws Exception
      */
     @Test
-    public void getOrderRefund1() throws Exception {
+    public void getOrderRefundTest1() throws Exception {
         String response = mvc.perform(get("/orders/{id}/refunds", 1L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
@@ -159,7 +157,7 @@ public class CustomerPaymentControllerTest {
      * @throws Exception
      */
     @Test
-    public void getOrderRefund2() throws Exception {
+    public void getOrderRefundTest2() throws Exception {
         String response = mvc.perform(get("/orders/{id}/refunds", 10L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
@@ -175,7 +173,7 @@ public class CustomerPaymentControllerTest {
      * @throws Exception
      */
     @Test
-    public void getAfterSaleRefund1() throws Exception {
+    public void getAfterSaleRefundTest1() throws Exception {
         String response = mvc.perform(get("/aftersales/{id}/refunds", 5L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
@@ -191,7 +189,7 @@ public class CustomerPaymentControllerTest {
      * @throws Exception
      */
     @Test
-    public void getAfterSaleRefund2() throws Exception {
+    public void getAfterSaleRefundTest2() throws Exception {
         String response = mvc.perform(get("/aftersales/{id}/refunds", 1L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
@@ -207,7 +205,7 @@ public class CustomerPaymentControllerTest {
      * @throws Exception
      */
     @Test
-    public void getAfterSaleRefund3() throws Exception {
+    public void getAfterSaleRefundTest3() throws Exception {
         String response = mvc.perform(get("/aftersales/{id}/refunds", 7L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
@@ -218,6 +216,33 @@ public class CustomerPaymentControllerTest {
         Assert.assertEquals(expectedResponse, response);
     }
 
+    /**
+     * 为订单(id=25)创建普通支付
+     * @throws Exception
+     */
+    @Test
+    public void createPaymentTest1() throws Exception {
+        String response = mvc.perform(post("/orders/{id}/payments", 25L)
+                .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
+                .content("{\"price\": 0,\"paymentPattern\": \"002\"}")
+                .contentType("application/json"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+    }
 
-    // todo 创建支付与查询返款的 Test (sql缺失)
+    /**
+     * 为订单(id=25)创建返点支付
+     * @throws Exception
+     */
+    @Test
+    public void createPaymentTest2() throws Exception {
+        String response = mvc.perform(post("/orders/{id}/payments", 25L)
+                .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
+                .content("{\"price\": 0,\"paymentPattern\": \"001\"}")
+                .contentType("application/json"))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn().getResponse().getContentAsString();
+    }
 }

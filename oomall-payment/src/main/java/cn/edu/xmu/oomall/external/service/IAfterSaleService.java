@@ -30,13 +30,6 @@ public interface IAfterSaleService {
     Boolean afterSaleCanBePaid(Long id);
 
     /**
-     * 完成支付通知售后检查状态
-     * @param id        售后id
-     * @param amount    售后完成的支付
-     */
-    void checkAfterSalePaid(Long id, Long amount);
-
-    /**
      * 获取售后的顾客id
      * @param id 售后id
      * @return

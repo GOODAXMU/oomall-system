@@ -15,7 +15,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
- * modified 2020/12/14
+ * modified 2020/12/16
  */
 @Component
 public class RebatePaymentImpl implements IExternalPayment {
@@ -40,7 +40,7 @@ public class RebatePaymentImpl implements IExternalPayment {
         Long price = payment.getActualAmount();
         Long customerId = orderService.getCustomerIdByOrderId(payment.getOrderId());
 
-        return customerService.useRebate(customerId, price);
+        return customerService.useRebate(customerId, price.intValue()) != 0;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class RebatePaymentImpl implements IExternalPayment {
             return false;
         }
 
-        return customerService.refundRebate(customerId, amount);
+        return customerService.refundRebate(customerId, amount.intValue()) != 0;
     }
 
     @Override

@@ -107,6 +107,7 @@ public class CustomerPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家为售后单创建支付单")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -163,6 +164,7 @@ public class CustomerPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家查看售后支付信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -191,6 +193,7 @@ public class CustomerPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家查看返款信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -219,6 +222,7 @@ public class CustomerPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "买家查看售后返款信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),

@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/15
+ * modified 2020/12/16
  */
 
 @Data
@@ -96,8 +96,8 @@ public class Payment {
         this.amount = request.getPrice();
         this.actualAmount = request.getPrice();
         this.pattern = request.getPaymentPattern();
-        this.beginTime = LocalDateTime.now();
-        this.endTime = this.beginTime.plusMinutes(30);
+        this.beginTime = LocalDateTime.now().withNano(0);
+        this.endTime = this.beginTime.plusMinutes(30).withNano(0);
         this.state = State.WAITING;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
@@ -189,5 +189,12 @@ public class Payment {
      */
     public Boolean isPaySuccess() {
         return this.state == State.SUCCESS;
+    }
+
+    /**
+     * 设置现在时间为支付时间
+     */
+    public void setPayTime() {
+        this.payTime = LocalDateTime.now().withNano(0);
     }
 }

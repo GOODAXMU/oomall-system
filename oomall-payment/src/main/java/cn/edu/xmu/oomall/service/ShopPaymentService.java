@@ -19,7 +19,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/12/10
- * modified 2020/12/15
+ * modified 2020/12/16
  */
 
 @Service
@@ -53,8 +53,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long shopId) {
-        if (!orderService.isShopOwnOrder(shopId, orderId)) {
+        // 检查订单是否属于该商店
+        Boolean b = orderService.isShopOwnOrder(shopId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByOrderId(orderId);
@@ -66,8 +71,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (!afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
+        // 检查售后是否属于商店
+        Boolean b = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByAfterSaleId(afterSaleId);
@@ -89,10 +99,27 @@ public class ShopPaymentService {
         // 校验 shopId 与操作资源id
         Long orderId = r.getData().getOrderId();
         Long afterSaleId = r.getData().getAfterSaleId();
-        boolean shopOwnOrder     = null != orderId && orderService.isShopOwnOrder(shopId, orderId);
-        boolean shopOwnAfterSale = null != afterSaleId && afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
-        if (!shopOwnOrder && !shopOwnAfterSale) {
+
+        Boolean shopOwnOrder = null;
+        if (null != orderId) {
+            // 检查订单是否属于该商店
+            shopOwnOrder = orderService.isShopOwnOrder(shopId, orderId);
+        }
+
+        Boolean shopOwnAfterSale = null;
+        if (null  != afterSaleId) {
+            // 检查售后是否属于商店
+            shopOwnAfterSale = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        }
+
+        if (null == shopOwnOrder && null == shopOwnAfterSale) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        else if (null != shopOwnAfterSale && !shopOwnAfterSale) {
+            return new Reply<>((ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE));
+        }
+        else if (null != shopOwnOrder && !shopOwnOrder) {
+            return new Reply<>((ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE));
         }
 
         // 设置返款信息
@@ -123,8 +150,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long shopId) {
-        if (!orderService.isShopOwnOrder(shopId, orderId)) {
+        // 检查订单是否属于该商店
+        Boolean b = orderService.isShopOwnOrder(shopId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByOrderId(orderId);
@@ -136,8 +168,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (!afterSaleService.isShopOwnAfterSale(shopId, afterSaleId)) {
+        // 检查售后是否属于商店
+        Boolean b = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByAfterSaleId(afterSaleId);

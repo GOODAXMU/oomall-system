@@ -1,6 +1,8 @@
 package cn.edu.xmu.oomall.external.service.impl;
 
 import cn.edu.xmu.oomall.external.service.IAfterSaleService;
+import cn.edu.xmu.oomall.other.impl.IAftersaleService;
+import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
 
 /**
@@ -10,28 +12,26 @@ import org.springframework.stereotype.Component;
 @Component
 public class SimulateAfterSaleServiceImpl implements IAfterSaleService {
 
+    @DubboReference(version = "${oomall.external.afterSale-service.version}", cache = "false", timeout = 5000, check = false)
+    private IAftersaleService aftersaleService;
+
     @Override
     public Boolean isCustomerOwnAfterSale(Long customerId, Long afterSaleId) {
-        return true;
+        return aftersaleService.isCustomerOwnAftersale(customerId, afterSaleId);
     }
 
     @Override
     public Boolean isShopOwnAfterSale(Long shopId, Long afterSaleId) {
-        return true;
+        return aftersaleService.isShopOwnAftersale(shopId, afterSaleId);
     }
 
     @Override
     public Boolean afterSaleCanBePaid(Long id) {
-        return true;
-    }
-
-    @Override
-    public void checkAfterSalePaid(Long id, Long amount) {
-        /* do nothing */
+        return aftersaleService.aftersaleCanBePaid(id);
     }
 
     @Override
     public Long getCustomerIdByAfterSaleId(Long id) {
-        return 0L;
+        return aftersaleService.getCustomerIdByAftersaleId(id);
     }
 }
