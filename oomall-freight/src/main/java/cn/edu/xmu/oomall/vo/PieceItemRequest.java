@@ -33,5 +33,5 @@ public class PieceItemRequest {
 
     @NotNull
     @Min(value = 0)
-    private Long additionalItemPrice;
+    private Long additionalItemsPrice;
 }

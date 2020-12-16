@@ -567,7 +567,13 @@ public class FreightDao {
         weightFreightModelPo1.setRegionId(weightFreightModel.getRid());
         List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo1));
         if(!weightFreightModelPos.isEmpty()){
-            if(weightFreightModelPos.size()!=1||weightFreightModel1.getRid()!=weightFreightModel.getRid()){
+            int isExist = 0;
+            for(WeightFreightModelPo po : weightFreightModelPos){
+                if(po.getId().equals(weightFreightModelPo.getId())){
+                    isExist = 1;
+                }
+            }
+            if(isExist!=1||weightFreightModelPos.size()>1){
                 return new Reply(ResponseStatus.REGION_EXIST);
             }
         }
@@ -596,8 +602,14 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo1 = new PieceFreightModelPo();
         pieceFreightModelPo1.setRegionId(pieceFreightModel.getRid());
         List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo1));
-        if(!pieceFreightModelPos.isEmpty()){
-            if(pieceFreightModelPos.size()!=1||pieceFreightModel1.getRid()!=pieceFreightModel.getRid()) {
+        if(!pieceFreightModelPos.isEmpty()) {
+            int isExist = 0;
+            for(PieceFreightModelPo po : pieceFreightModelPos){
+                if(po.getId().equals(pieceFreightModelPo)){
+                    isExist = 1;
+                }
+            }
+            if(isExist!=1||pieceFreightModelPos.size()>1){
                 return new Reply(ResponseStatus.REGION_EXIST);
             }
         }

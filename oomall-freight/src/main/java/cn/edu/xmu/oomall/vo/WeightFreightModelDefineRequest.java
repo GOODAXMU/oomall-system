@@ -14,35 +14,27 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class WeightFreightModelDefineRequest {
-    @NotNull
     @Min(value = 0)
-    private Integer firstWeight;
+    private Long firstWeight;
 
-    @NotNull
     @Min(value = 0)
-    private Integer firstWeightFreight;
+    private Long firstWeightFreight;
 
-    @NotNull
     @Min(value = 0)
-    private Integer tenPrice;
+    private Long tenPrice;
 
-    @NotNull
     @Min(value = 0)
-    private Integer fiftyPrice;
+    private Long fiftyPrice;
 
-    @NotNull
     @Min(value = 0)
-    private Integer hundredPrice;
+    private Long hundredPrice;
 
-    @NotNull
     @Min(value = 0)
-    private Integer trihunPrice;
+    private Long trihunPrice;
 
-    @NotNull
     @Min(value = 0)
-    private Integer abovePrice;
+    private Long abovePrice;
 
-    @NotNull
     @Min(value = 0)
-    private Integer regionId;
+    private Long regionId;
 }

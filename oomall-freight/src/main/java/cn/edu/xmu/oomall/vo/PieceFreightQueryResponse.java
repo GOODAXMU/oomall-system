@@ -30,7 +30,7 @@ public class PieceFreightQueryResponse {
 
 	private Integer additionalItems;
 
-	private Long additionalItemPrice;
+	private Long additionalItemsPrice;
 
 	private String gmtCreate;
 
@@ -42,7 +42,7 @@ public class PieceFreightQueryResponse {
 		firstItem = pieceFreightModelPo.getFirstItems();
 		firstItemPrice = pieceFreightModelPo.getFirstItemsPrice();
 		additionalItems = pieceFreightModelPo.getAdditionalItems();
-		additionalItemPrice = pieceFreightModelPo.getAdditionalItemsPrice();
+		additionalItemsPrice = pieceFreightModelPo.getAdditionalItemsPrice();
 		gmtCreate = pieceFreightModelPo.getGmtCreate().toString();
 		gmtModified = pieceFreightModelPo.getGmtModified().toString();
 	}

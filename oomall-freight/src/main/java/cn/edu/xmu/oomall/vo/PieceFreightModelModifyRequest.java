@@ -15,24 +15,19 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PieceFreightModelModifyRequest {
-    @NotNull
     @Min(value = 0)
     private Long regionId;
 
-    @NotNull
     @Min(value = 0)
     private Integer firstItem;
 
-    @NotNull
     @Min(value = 0)
     private Long firstItemPrice;
 
-    @NotNull
     @Min(value = 0)
     private Integer additionalItems;
 
-    @NotNull
     @Min(value = 0)
-    private Long additionalItemPrice;
+    private Long additionalItemsPrice;
 
 }
