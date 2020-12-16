@@ -711,7 +711,7 @@ public class TotalTest2 {
                 .returnResult()
                 .getResponseBodyContent();
 
-        String expectedResponse = "{\"errno\":505";
+        String expectedResponse = "{\"errno\":505}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), false);
     }
 
@@ -752,7 +752,7 @@ public class TotalTest2 {
         byte[] responseString = webClient.put().uri("/shops/1/weightItems/201").header("authorization", token)
                 .bodyValue(json)
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isOk()
                 .expectBody()
                 .returnResult()
                 .getResponseBodyContent();
@@ -888,7 +888,7 @@ public class TotalTest2 {
         String token = creatTestToken(1L, 1L, 1000);
         byte[] responseString = webClient.delete().uri("/shops/1/pieceItems/200").header("authorization", token)
                 .exchange()
-                .expectStatus().isNotFound()
+                .expectStatus().isOk()
                 .expectBody()
                 .returnResult()
                 .getResponseBodyContent();

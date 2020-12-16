@@ -25,8 +25,8 @@ public class WeightFreightModelQueryResponse {
     private Long hundredPrice;
     private Long triHundredPrice;
     private Long abovePrice;
-    private LocalDateTime gmtCreate;
-    private LocalDateTime gmtModified;
+    private String gmtCreate;
+    private String gmtModified;
 
     public WeightFreightModelQueryResponse(WeightFreightModelPo weightFreightModelPo){
         id = weightFreightModelPo.getId();
@@ -37,8 +37,8 @@ public class WeightFreightModelQueryResponse {
         hundredPrice = weightFreightModelPo.getHundredPrice();
         triHundredPrice = weightFreightModelPo.getTrihunPrice();
         abovePrice = weightFreightModelPo.getAbovePrice();
-        gmtCreate = LocalDateTime.now();
-        gmtModified = LocalDateTime.now();
+        gmtCreate = LocalDateTime.now().toString();
+        gmtModified = LocalDateTime.now().toString();
     }
 
     public List<WeightFreightModelQueryResponse> WeightFreightModelQueryResponseListTransfer(List<WeightFreightModelPo> weightFreightModelPos){

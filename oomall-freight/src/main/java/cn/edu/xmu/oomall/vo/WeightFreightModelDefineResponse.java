@@ -22,8 +22,8 @@ public class WeightFreightModelDefineResponse {
     private Long hundredPrice;
     private Long triHundredPrice;
     private Long abovePrice;
-    private LocalDateTime gmtCreate;
-    private LocalDateTime gmtModified;
+    private String gmtCreate;
+    private String gmtModified;
     
     public WeightFreightModelDefineResponse(WeightFreightModel weightFreightModel){
         firstWeight = weightFreightModel.getFirstWeight();
@@ -33,7 +33,7 @@ public class WeightFreightModelDefineResponse {
         hundredPrice = weightFreightModel.getHundredPrice();
         triHundredPrice = weightFreightModel.getTrihunPrice();
         abovePrice = weightFreightModel.getAbovePrice();
-        gmtCreate = LocalDateTime.now();
-        gmtModified = LocalDateTime.now();
+        gmtCreate = LocalDateTime.now().toString();
+        gmtModified = LocalDateTime.now().toString();
     }
 }

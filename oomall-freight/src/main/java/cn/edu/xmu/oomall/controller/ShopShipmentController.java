@@ -161,12 +161,14 @@ public class ShopShipmentController {
     @ApiOperation(value = "管理员查询件数模板明细")
     @GetMapping(value = "/shops/{shopId}/freightmodels/{id}/pieceItems", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
+    @Audit
     public Reply<List<PieceFreightQueryResponse>> getPieceItemsModel(
             @NotNull @Min(value = 0) @PathVariable Long shopId,
             @NotNull @Min(value = 0) @PathVariable Long id,
             @Depart Long uShopId) {
 
-        return freightModelService.queryPieceFreightModel(id, shopId, uShopId);
+        Reply<List<PieceFreightQueryResponse>> reply = freightModelService.queryPieceFreightModel(id, shopId, uShopId);
+        return reply;
     }
 
     @ApiOperation(value = "管理员修改件数模板明细")
