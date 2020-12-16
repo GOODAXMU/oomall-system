@@ -2,7 +2,6 @@ package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
 import cn.edu.xmu.oomall.vo.PieceFreightModelModifyRequest;
-import cn.edu.xmu.oomall.vo.PieceItemRequest;
 import com.alibaba.fastjson.JSON;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +32,7 @@ public class ModifyPieceFreightModelTest {
     @Test
     public void modifyPieceFreightModel() throws Exception{
         PieceFreightModelModifyRequest pieceItemRequest = new PieceFreightModelModifyRequest();
-        pieceItemRequest.setAdditionalItemPrice(1L);
+        pieceItemRequest.setAdditionalItemsPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
         pieceItemRequest.setRegionId(1L);
@@ -58,7 +57,7 @@ public class ModifyPieceFreightModelTest {
         pieceItemRequest.setFirstItem(3);
         pieceItemRequest.setFirstItemPrice(12L);
         pieceItemRequest.setAdditionalItems(2);
-        pieceItemRequest.setAdditionalItemPrice(16L);
+        pieceItemRequest.setAdditionalItemsPrice(16L);
         String json = JSON.toJSONString(pieceItemRequest);
         String responseString = this.mvc.perform(put("/shops/1/pieceItems/10000")
                 .contentType("application/json;charset=UTF-8")
@@ -79,7 +78,7 @@ public class ModifyPieceFreightModelTest {
         pieceItemRequest.setFirstItem(3);
         pieceItemRequest.setFirstItemPrice(12L);
         pieceItemRequest.setAdditionalItems(2);
-        pieceItemRequest.setAdditionalItemPrice(16L);
+        pieceItemRequest.setAdditionalItemsPrice(16L);
         String json = JSON.toJSONString(pieceItemRequest);
         String responseString = this.mvc.perform(put("/shops/1/pieceItems/209")
                 .contentType("application/json;charset=UTF-8")
@@ -99,7 +98,7 @@ public class ModifyPieceFreightModelTest {
         pieceItemRequest.setFirstItem(3);
         pieceItemRequest.setFirstItemPrice(12L);
         pieceItemRequest.setAdditionalItems(2);
-        pieceItemRequest.setAdditionalItemPrice(16L);
+        pieceItemRequest.setAdditionalItemsPrice(16L);
         String json = JSON.toJSONString(pieceItemRequest);
         String responseString = this.mvc.perform(put("/shops/1/pieceItems/209")
                 .contentType("application/json;charset=UTF-8")

@@ -44,6 +44,7 @@ public class WeightFreightModel {
 
     private Long rid;
 
+    private Long unit;
     /**
      * 构造函数
      * @param weightFreightModelPo Po对象
@@ -83,14 +84,14 @@ public class WeightFreightModel {
      */
     public WeightFreightModel(WeightItemRequest weightFreightModelDefineRequest,Long id){
         this.id=id;
-        firstWeight= Long.valueOf(weightFreightModelDefineRequest.getFirstWeight());
-        firstWeightFreight= Long.valueOf(weightFreightModelDefineRequest.getFirstWeightPrice());
-        tenPrice= Long.valueOf(weightFreightModelDefineRequest.getTenPrice());
-        fiftyPrice= Long.valueOf(weightFreightModelDefineRequest.getFiftyPrice());
-        hundredPrice= Long.valueOf(weightFreightModelDefineRequest.getHundredPrice());
-        trihunPrice= Long.valueOf(weightFreightModelDefineRequest.getTrihunPrice());
-        abovePrice= Long.valueOf(weightFreightModelDefineRequest.getAbovePrice());
-        rid= Long.valueOf(weightFreightModelDefineRequest.getRegionId());
+        firstWeight= weightFreightModelDefineRequest.getFirstWeight();
+        firstWeightFreight= weightFreightModelDefineRequest.getFirstWeightPrice();
+        tenPrice= weightFreightModelDefineRequest.getTenPrice();
+        fiftyPrice= weightFreightModelDefineRequest.getFiftyPrice();
+        hundredPrice= weightFreightModelDefineRequest.getHundredPrice();
+        trihunPrice= weightFreightModelDefineRequest.getTrihunPrice();
+        abovePrice= weightFreightModelDefineRequest.getAbovePrice();
+        rid= weightFreightModelDefineRequest.getRegionId();
     }
 
     /**

@@ -1,10 +1,8 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderFreightApplication;
-import cn.edu.xmu.oomall.vo.FreightModelDefineRequest;
 import cn.edu.xmu.oomall.vo.PieceItemRequest;
 import com.alibaba.fastjson.JSON;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.skyscreamer.jsonassert.JSONAssert;
@@ -41,7 +39,7 @@ public class DefinePieceFreightModelTest {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
 
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
-        pieceItemRequest.setAdditionalItemPrice(1L);
+        pieceItemRequest.setAdditionalItemsPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
         pieceItemRequest.setRegionId(201L);
@@ -63,7 +61,7 @@ public class DefinePieceFreightModelTest {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
 
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
-        pieceItemRequest.setAdditionalItemPrice(1L);
+        pieceItemRequest.setAdditionalItemsPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
         pieceItemRequest.setRegionId(2L);
@@ -85,7 +83,7 @@ public class DefinePieceFreightModelTest {
         String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
 
         PieceItemRequest pieceItemRequest = new PieceItemRequest();
-        pieceItemRequest.setAdditionalItemPrice(1L);
+        pieceItemRequest.setAdditionalItemsPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
         pieceItemRequest.setRegionId(2L);

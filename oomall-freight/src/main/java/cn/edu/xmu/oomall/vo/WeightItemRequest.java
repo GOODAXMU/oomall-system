@@ -16,35 +16,27 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 public class WeightItemRequest {
 
-    @NotNull
     @Min(value = 0)
     private Long regionId;
 
-    @NotNull
     @Min(value = 0)
-    private Integer firstWeight;
+    private Long firstWeight;
 
-    @NotNull
     @Min(value = 0)
     private Long firstWeightPrice;
 
-    @NotNull
     @Min(value = 0)
     private Long tenPrice;
 
-    @NotNull
     @Min(value = 0)
     private Long fiftyPrice;
 
-    @NotNull
     @Min(value = 0)
     private Long hundredPrice;
 
-    @NotNull
     @Min(value = 0)
     private Long trihunPrice;
 
-    @NotNull
     @Min(value = 0)
     private Long abovePrice;
 

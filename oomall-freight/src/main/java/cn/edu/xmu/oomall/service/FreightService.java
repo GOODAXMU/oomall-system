@@ -120,6 +120,7 @@ public class FreightService {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
+                weightFreightModel.setUnit(freightModel.getUnit());
                 weightFreightModels.add(weightFreightModel);
             } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);

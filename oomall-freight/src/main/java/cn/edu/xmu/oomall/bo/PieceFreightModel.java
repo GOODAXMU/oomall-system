@@ -66,7 +66,7 @@ public class PieceFreightModel {
         firstItem = pieceFreightModelInfo.getFirstItem();
         firstItemPrice = pieceFreightModelInfo.getFirstItemPrice();
         additionalItems = pieceFreightModelInfo.getAdditionalItems();
-        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemPrice();
+        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemsPrice();
     }
 
     /**
@@ -80,7 +80,7 @@ public class PieceFreightModel {
         firstItem = pieceFreightModelInfo.getFirstItem();
         firstItemPrice = pieceFreightModelInfo.getFirstItemPrice();
         additionalItems = pieceFreightModelInfo.getAdditionalItems();
-        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemPrice();
+        additionalItemsPrice = pieceFreightModelInfo.getAdditionalItemsPrice();
     }
 
     /**

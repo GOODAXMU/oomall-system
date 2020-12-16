@@ -44,7 +44,7 @@ public class TotalTest2 {
                 .returnResult()
                 .getResponseBodyContent();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":88}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":8}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
 
@@ -344,7 +344,6 @@ public class TotalTest2 {
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), false);
     }
 
-
     /**
      * 测试获取运费模板功能
      * 全部获取
@@ -382,6 +381,7 @@ public class TotalTest2 {
                 .returnResult()
                 .getResponseBodyContent();
 
+        System.out.println(new String(responseString, "UTF-8"));
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":10,\"total\":1,\"pages\":1,\"list\":[{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
@@ -425,6 +425,7 @@ public class TotalTest2 {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":2,\"pageSize\":2,\"total\":4,\"pages\":2,\"list\":[{\"id\":11,\"name\":\"测试模板3\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
+
 
     /**
      * 测试修改模板功能

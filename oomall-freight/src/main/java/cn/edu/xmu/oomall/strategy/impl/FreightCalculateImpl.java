@@ -96,13 +96,15 @@ public class FreightCalculateImpl implements IFreightCalculate {
             totalCount += item.getCount();
         }
         for (PieceFreightModel pieceFreightModel : pieceFreightModels) {
-            Long curPrice = Long.valueOf(0);
-            if (totalCount <= pieceFreightModel.getFirstItem()) {
-                curPrice = pieceFreightModel.getFirstItemPrice();
-            } else {
-                curPrice += pieceFreightModel.getFirstItemPrice();
-                curPrice += (totalCount - pieceFreightModel.getFirstItem() + 1) / pieceFreightModel.getAdditionalItems()
-                        * pieceFreightModel.getAdditionalItemsPrice();
+            Long curPrice = pieceFreightModel.getFirstItemPrice();
+            if (totalCount > pieceFreightModel.getFirstItem()) {
+                if ((totalCount - pieceFreightModel.getFirstItem()) % pieceFreightModel.getAdditionalItems() > 0) {
+                    curPrice += ((totalCount - pieceFreightModel.getFirstItem()) / pieceFreightModel.getAdditionalItems() + 1)
+                            * pieceFreightModel.getAdditionalItemsPrice();
+                } else {
+                    curPrice += (totalCount - pieceFreightModel.getFirstItem()) / pieceFreightModel.getAdditionalItems()
+                            * pieceFreightModel.getAdditionalItemsPrice();
+                }
             }
             if (curPrice > maxPrice) {
                 maxPrice = curPrice;
@@ -143,13 +145,15 @@ public class FreightCalculateImpl implements IFreightCalculate {
 
     @Override
     public Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel) {
-        Long price = Long.valueOf(0);
-        if (item.getCount() <= pieceFreightModel.getFirstItem()) {
-            price = pieceFreightModel.getFirstItemPrice();
-        } else {
-            price += pieceFreightModel.getFirstItemPrice();
-            price += (item.getCount() - pieceFreightModel.getFirstItem() + 1) / pieceFreightModel.getAdditionalItems()
-                    * pieceFreightModel.getAdditionalItemsPrice();
+        Long price = pieceFreightModel.getFirstItemPrice();
+        if (item.getCount() > pieceFreightModel.getFirstItem()) {
+            if ((item.getCount() - pieceFreightModel.getFirstItem()) % pieceFreightModel.getAdditionalItems() > 0) {
+                price += ((item.getCount() - pieceFreightModel.getFirstItem()) / pieceFreightModel.getAdditionalItems() + 1)
+                        * pieceFreightModel.getAdditionalItemsPrice();
+            } else {
+                price += (item.getCount() - pieceFreightModel.getFirstItem()) / pieceFreightModel.getAdditionalItems()
+                        * pieceFreightModel.getAdditionalItemsPrice();
+            }
         }
         return price;
     }

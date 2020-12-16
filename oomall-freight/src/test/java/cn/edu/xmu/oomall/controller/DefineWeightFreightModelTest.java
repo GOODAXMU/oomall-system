@@ -38,14 +38,14 @@ public class DefineWeightFreightModelTest {
     @Test
     public void defineWeightFreightModel() throws Exception {
         WeightFreightModelDefineRequest weightFreightModelDefineRequest = new WeightFreightModelDefineRequest();
-        weightFreightModelDefineRequest.setAbovePrice(200);
-        weightFreightModelDefineRequest.setFiftyPrice(100);
-        weightFreightModelDefineRequest.setFirstWeight(1);
-        weightFreightModelDefineRequest.setFirstWeightFreight(1);
-        weightFreightModelDefineRequest.setHundredPrice(200);
-        weightFreightModelDefineRequest.setRegionId(201);
-        weightFreightModelDefineRequest.setTenPrice(10);
-        weightFreightModelDefineRequest.setTrihunPrice(300);
+        weightFreightModelDefineRequest.setAbovePrice(200L);
+        weightFreightModelDefineRequest.setFiftyPrice(100L);
+        weightFreightModelDefineRequest.setFirstWeight(1L);
+        weightFreightModelDefineRequest.setFirstWeightFreight(1L);
+        weightFreightModelDefineRequest.setHundredPrice(200L);
+        weightFreightModelDefineRequest.setRegionId(201L);
+        weightFreightModelDefineRequest.setTenPrice(10L);
+        weightFreightModelDefineRequest.setTrihunPrice(300L);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
         String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")
@@ -61,14 +61,14 @@ public class DefineWeightFreightModelTest {
     @Test
     public void defineWeightFreightModelSuccessfully() throws Exception {
         WeightFreightModelDefineRequest weightFreightModelDefineRequest = new WeightFreightModelDefineRequest();
-        weightFreightModelDefineRequest.setAbovePrice(200);
-        weightFreightModelDefineRequest.setFiftyPrice(100);
-        weightFreightModelDefineRequest.setFirstWeight(1);
-        weightFreightModelDefineRequest.setFirstWeightFreight(1);
-        weightFreightModelDefineRequest.setHundredPrice(200);
-        weightFreightModelDefineRequest.setRegionId(1);
-        weightFreightModelDefineRequest.setTenPrice(10);
-        weightFreightModelDefineRequest.setTrihunPrice(300);
+        weightFreightModelDefineRequest.setAbovePrice(200L);
+        weightFreightModelDefineRequest.setFiftyPrice(100L);
+        weightFreightModelDefineRequest.setFirstWeight(1L);
+        weightFreightModelDefineRequest.setFirstWeightFreight(1L);
+        weightFreightModelDefineRequest.setHundredPrice(200L);
+        weightFreightModelDefineRequest.setRegionId(1L);
+        weightFreightModelDefineRequest.setTenPrice(10L);
+        weightFreightModelDefineRequest.setTrihunPrice(300L);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
         String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")
@@ -84,14 +84,14 @@ public class DefineWeightFreightModelTest {
     @Test
     public void defineWeightFreightModelOutOfScope() throws Exception {
         WeightFreightModelDefineRequest weightFreightModelDefineRequest = new WeightFreightModelDefineRequest();
-        weightFreightModelDefineRequest.setAbovePrice(200);
-        weightFreightModelDefineRequest.setFiftyPrice(100);
-        weightFreightModelDefineRequest.setFirstWeight(1);
-        weightFreightModelDefineRequest.setFirstWeightFreight(1);
-        weightFreightModelDefineRequest.setHundredPrice(200);
-        weightFreightModelDefineRequest.setRegionId(3);
-        weightFreightModelDefineRequest.setTenPrice(10);
-        weightFreightModelDefineRequest.setTrihunPrice(300);
+        weightFreightModelDefineRequest.setAbovePrice(200L);
+        weightFreightModelDefineRequest.setFiftyPrice(100L);
+        weightFreightModelDefineRequest.setFirstWeight(1L);
+        weightFreightModelDefineRequest.setFirstWeightFreight(1L);
+        weightFreightModelDefineRequest.setHundredPrice(200L);
+        weightFreightModelDefineRequest.setRegionId(3L);
+        weightFreightModelDefineRequest.setTenPrice(10L);
+        weightFreightModelDefineRequest.setTrihunPrice(300L);
         String json = JSON.toJSONString(weightFreightModelDefineRequest);
         String responseString = this.mvc.perform(post("/shops/2/freightmodels/9/weightItems")
                 .contentType("application/json;charset=UTF-8")

@@ -36,7 +36,7 @@ public class ModifyWeightFreightModelTest {
         WeightItemRequest weightItemRequest = new WeightItemRequest();
         weightItemRequest.setAbovePrice(100L);
         weightItemRequest.setFiftyPrice(50L);
-        weightItemRequest.setFirstWeight(1);
+        weightItemRequest.setFirstWeight(1L);
         weightItemRequest.setFirstWeightPrice(1L);
         weightItemRequest.setHundredPrice(100L);
         weightItemRequest.setRegionId(1L);
@@ -64,7 +64,7 @@ public class ModifyWeightFreightModelTest {
     @Test
     public void modifyWeightFreightModel1() throws Exception{
         WeightItemRequest weightItemRequest = new WeightItemRequest();
-        weightItemRequest.setFirstWeight(3);
+        weightItemRequest.setFirstWeight(3L);
         weightItemRequest.setFirstWeightPrice(10L);
         weightItemRequest.setTenPrice(12L);
         weightItemRequest.setFiftyPrice(14L);
@@ -85,4 +85,5 @@ public class ModifyWeightFreightModelTest {
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+
 }

@@ -40,7 +40,7 @@ public class PieceItemResponse {
 
     @NotNull
     @Min(value = 0)
-    private Long additionalItemPrice;
+    private Long additionalItemsPrice;
 
     @NotNull
     private String gmtCreate;
@@ -54,7 +54,7 @@ public class PieceItemResponse {
         firstItem = pieceFreightModelPo.getFirstItems();
         firstItemPrice = pieceFreightModelPo.getFirstItemsPrice();
         additionalItems = pieceFreightModelPo.getAdditionalItems();
-        additionalItemPrice = pieceFreightModelPo.getAdditionalItemsPrice();
+        additionalItemsPrice = pieceFreightModelPo.getAdditionalItemsPrice();
         gmtCreate = LocalDateTime.now().toString();
         gmtModified = LocalDateTime.now().toString();
     }
@@ -64,7 +64,7 @@ public class PieceItemResponse {
         firstItem = pieceFreightModel.getFirstItem();
         firstItemPrice = pieceFreightModel.getFirstItemPrice();
         additionalItems = pieceFreightModel.getAdditionalItems();
-        additionalItemPrice = pieceFreightModel.getAdditionalItemsPrice();
+        additionalItemsPrice = pieceFreightModel.getAdditionalItemsPrice();
         gmtCreate = LocalDateTime.now().toString();
         gmtModified = LocalDateTime.now().toString();
     }
