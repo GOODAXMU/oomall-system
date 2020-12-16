@@ -79,26 +79,48 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 	@Override
 	public Boolean isShopOwnOrder(Long shopId, Long orderId) {
 		log.debug("isShopOwnOrder: " + shopId + ", " + orderId);
-		return orderRepository.findIdByIdAndShopId(orderId, shopId) != null;
+
+		Optional<OrderPo> op = orderRepository.findById(orderId);
+		if (op.isEmpty()) {
+			return null;
+		}
+
+		OrderPo po = op.get();
+
+		return po.getShopId().equals(shopId);
 	}
 
 	@Override
 	public Boolean isCustomerOwnOrder(Long customerId, Long orderId) {
 		log.debug("isCustomerOwnOrder: " + customerId + ", " + orderId);
-		return orderRepository.findIdByIdAndCustomerId(orderId, customerId) != null;
+
+		Optional<OrderPo> op = orderRepository.findById(orderId);
+		if (op.isEmpty()) {
+			return null;
+		}
+
+		OrderPo po = op.get();
+
+		return po.getCustomerId().equals(customerId);
 	}
 
 	@Override
 	public Boolean isCustomerOwnOrderItem(Long customerId, Long orderItemId) {
 		log.debug("isCustomerOwnOrderItem: " + customerId + ", " + orderItemId);
+
 		Long orderId = orderItemRepository.findOrderIdById(orderItemId);
 		if (orderId == null) {
-			return false;
+			return null;
 		}
 
-		Long cId = orderRepository.findCustomerIdById(orderId);
+		Optional<OrderPo> op = orderRepository.findById(orderId);
+		if (op.isEmpty()) {
+			return null;
+		}
 
-		return cId != null && cId.equals(customerId);
+		OrderPo po = op.get();
+
+		return po.getCustomerId().equals(customerId);
 	}
 
 	@Override
