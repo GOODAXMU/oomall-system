@@ -32,9 +32,9 @@ public class PieceFreightQueryResponse {
 
 	private Long additionalItemPrice;
 
-	private LocalDateTime gmtCreate;
+	private String gmtCreate;
 
-	private LocalDateTime gmtModified;
+	private String gmtModified;
 
 	public PieceFreightQueryResponse(PieceFreightModelPo pieceFreightModelPo){
 		id = pieceFreightModelPo.getId();
@@ -43,6 +43,8 @@ public class PieceFreightQueryResponse {
 		firstItemPrice = pieceFreightModelPo.getFirstItemsPrice();
 		additionalItems = pieceFreightModelPo.getAdditionalItems();
 		additionalItemPrice = pieceFreightModelPo.getAdditionalItemsPrice();
+		gmtCreate = pieceFreightModelPo.getGmtCreate().toString();
+		gmtModified = pieceFreightModelPo.getGmtModified().toString();
 	}
 
 	public List<PieceFreightQueryResponse> PieceFreightQueryResponseListTransfer(List<PieceFreightModelPo> pieceFreightModelPos){

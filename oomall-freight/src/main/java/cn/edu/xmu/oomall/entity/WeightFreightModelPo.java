@@ -42,9 +42,9 @@ public class WeightFreightModelPo {
 
 	private Long regionId;
 
-	private LocalDateTime gmtCreate;
+	private String gmtCreate;
 
-	private LocalDateTime gmtModified;
+	private String gmtModified;
 
 	public WeightFreightModelPo(WeightFreightModel weightFreightModel){
 		id=weightFreightModel.getId();
@@ -57,7 +57,7 @@ public class WeightFreightModelPo {
 		trihunPrice=weightFreightModel.getTrihunPrice();
 		abovePrice=weightFreightModel.getAbovePrice();
 		regionId=weightFreightModel.getRid();
-		gmtModified=LocalDateTime.now();
+		gmtModified=LocalDateTime.now().toString();
 	}
 
 }

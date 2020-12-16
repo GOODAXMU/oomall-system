@@ -43,10 +43,10 @@ public class PieceItemResponse {
     private Long additionalItemPrice;
 
     @NotNull
-    private LocalDateTime gmtCreate;
+    private String gmtCreate;
 
     @NotNull
-    private LocalDateTime gmtModified;
+    private String gmtModified;
 
     public PieceItemResponse(PieceFreightModelPo pieceFreightModelPo){
         id = pieceFreightModelPo.getId();
@@ -55,8 +55,8 @@ public class PieceItemResponse {
         firstItemPrice = pieceFreightModelPo.getFirstItemsPrice();
         additionalItems = pieceFreightModelPo.getAdditionalItems();
         additionalItemPrice = pieceFreightModelPo.getAdditionalItemsPrice();
-        gmtCreate = LocalDateTime.now();
-        gmtModified = LocalDateTime.now();
+        gmtCreate = LocalDateTime.now().toString();
+        gmtModified = LocalDateTime.now().toString();
     }
     public PieceItemResponse(PieceFreightModel pieceFreightModel){
         id = pieceFreightModel.getId();
@@ -65,7 +65,7 @@ public class PieceItemResponse {
         firstItemPrice = pieceFreightModel.getFirstItemPrice();
         additionalItems = pieceFreightModel.getAdditionalItems();
         additionalItemPrice = pieceFreightModel.getAdditionalItemsPrice();
-        gmtCreate = LocalDateTime.now();
-        gmtModified = LocalDateTime.now();
+        gmtCreate = LocalDateTime.now().toString();
+        gmtModified = LocalDateTime.now().toString();
     }
 }

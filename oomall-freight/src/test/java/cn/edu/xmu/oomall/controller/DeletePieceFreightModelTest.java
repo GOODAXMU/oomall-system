@@ -29,13 +29,24 @@ public class DeletePieceFreightModelTest {
 
     @Test
     public void deletePieceFreightModel() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",1L,1L))
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",1L,201L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+    @Test
+    public void deletePieceFreightModel1() throws Exception{
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",1L,301L))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 

@@ -43,7 +43,7 @@ public class ModifyWeightFreightModelTest {
         weightItemRequest.setTenPrice(10L);
         weightItemRequest.setTrihunPrice(300L);
         String json = JSON.toJSONString(weightItemRequest);
-        String responseString = this.mvc.perform(put("/shops/1/weightItems/2")
+        String responseString = this.mvc.perform(put("/shops/1/weightItems/201")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())

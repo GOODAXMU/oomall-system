@@ -39,7 +39,7 @@ public class ModifyPieceFreightModelTest {
         pieceItemRequest.setRegionId(1L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(put("/shops/1/pieceItems/1")
+        String responseString = this.mvc.perform(put("/shops/1/pieceItems/201")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())
@@ -90,6 +90,41 @@ public class ModifyPieceFreightModelTest {
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+    @Test
+    public void modifyPieceFreightModel3() throws Exception{
+        PieceFreightModelModifyRequest pieceItemRequest = new PieceFreightModelModifyRequest();
+        pieceItemRequest.setRegionId(210L);
+        pieceItemRequest.setFirstItem(3);
+        pieceItemRequest.setFirstItemPrice(12L);
+        pieceItemRequest.setAdditionalItems(2);
+        pieceItemRequest.setAdditionalItemPrice(16L);
+        String json = JSON.toJSONString(pieceItemRequest);
+        String responseString = this.mvc.perform(put("/shops/1/pieceItems/209")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    @Test
+    public void modifyPieceFreightModel6() throws Exception {
+        String json = "{\"additionalItemPrice\":16,\"additionalItems\":2,\"firstItem\":3,\"firstItemPrice\":12,\"regionId\":200}";
+        String responseString = this.mvc.perform(put("/shops/1/pieceItems/201")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":803}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 }

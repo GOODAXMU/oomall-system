@@ -47,7 +47,7 @@ public class DefinePieceFreightModelTest {
         pieceItemRequest.setRegionId(201L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems").header("authorization", token)
+        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())
