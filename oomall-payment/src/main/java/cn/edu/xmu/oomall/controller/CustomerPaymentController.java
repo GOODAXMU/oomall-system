@@ -24,7 +24,7 @@ import java.util.Map;
  * @author xincong yao
  * @date 2020-11-9
  * @author Wang Zhizhou
- * modified 2020/12/14
+ * modified 2020/12/16
  */
 @Api(value = "供买家访问的支付api")
 @Validated
@@ -206,7 +206,7 @@ public class CustomerPaymentController {
 			@LoginUser Long customerId) {
 
 		Reply<List<Refund>>	r = customerPaymentService.getRefundsByOrderId(id, customerId);
-		if (r.isOk()) {
+		if (!r.isOk()) {
 			return new Reply<>(r.getResponseStatus());
 		}
 

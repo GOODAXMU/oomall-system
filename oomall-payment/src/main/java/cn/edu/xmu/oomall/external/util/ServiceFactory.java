@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author xincong yao
  * @date 2020-11-16
- * modified 2020-12-15
+ * modified 2020-12-16
  */
 @Component
 @Slf4j
@@ -59,12 +59,12 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 
 	@Override
 	public void afterPropertiesSet() {
-		for (String s : paymentServiceName.split("\\|")) {
-			patternPayServices.put(s.replace("Impl", ""), applicationContext.getBean(getBeanName(s)));
-		}
 		services.add(applicationContext.getBean(getBeanName(orderServiceName)));
 		services.add(applicationContext.getBean(getBeanName(customerServiceName)));
 		services.add(applicationContext.getBean(getBeanName(afterSaleServiceName)));
+		for (String s : paymentServiceName.split("\\|")) {
+			patternPayServices.put(s.replace("Impl", ""), applicationContext.getBean(getBeanName(s)));
+		}
 	}
 
 	@Override
