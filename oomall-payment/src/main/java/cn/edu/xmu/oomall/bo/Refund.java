@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/29
- * modified 2020/12/15
+ * modified 2020/12/17
  */
 @Data
 public class Refund {
@@ -128,9 +128,9 @@ public class Refund {
         vo.setId(this.id);
         vo.setPaymentId(this.paymentId);
         vo.setAmount(this.amount);
-        vo.setState(this.state.description);
-        vo.setGmtCreateTime(this.gmtCreated.toString());
-        vo.setGmtModifiedTime(this.gmtModified.toString());
+        vo.setState(this.state.code);
+        vo.setGmtCreate(this.gmtCreated.toString());
+        vo.setGmtModified(this.gmtModified.toString());
         vo.setOrderId(this.orderId);
         vo.setAftersaleId(this.aftersaleId);
 

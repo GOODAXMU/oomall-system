@@ -150,12 +150,12 @@ public class Payment {
         vo.setAmount(this.amount);
         vo.setActualAmount(this.actualAmount);
         vo.setPayTime(this.payTime.toString());
-        vo.setPayPattern(this.pattern);
+        vo.setPaymentPattern(this.pattern);
         vo.setBeginTime(this.beginTime.toString());
         vo.setEndTime(this.endTime.toString());
         vo.setState(this.state.getCode());
-        vo.setGmtCreateTime(this.gmtCreated.toString());
-        vo.setGmtModifiedTime(this.gmtModified.toString());
+        vo.setGmtCreate(this.gmtCreated.toString());
+        vo.setGmtModified(this.gmtModified.toString());
 
         return vo;
     }

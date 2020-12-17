@@ -23,7 +23,6 @@ public class RebatePaymentImpl implements IExternalPayment {
     @Autowired
     private ServiceFactory serviceFactory;
 
-    // todo 需解决init后依然为 null
     private IOrderService orderService;
     private IAfterSaleService afterSaleService;
     private ICustomerService customerService;

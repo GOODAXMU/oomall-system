@@ -183,7 +183,4 @@ public class ShopPaymentControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         Assert.assertEquals(expectedResponse, response);
     }
-
-
-    // todo 创建返款与查询返款的 Test (sql缺失)
 }
