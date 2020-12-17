@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author zhibin lan, Jianheng HUANG
  * @date 2020-11-09
+ * modified by: Jianheng HUANG, date: 2020-12-17
  */
 @ApiModel(description = "获取订单的响应对象")
 @Data
@@ -43,6 +44,10 @@ public class OrderSummaryGetResponse {
         private Long originPrice;
         private Long discountPrice;
         private Long freightPrice;
+
+        private Long grouponId;
+        private Long presaleId;
+        private String shipmentSn;
     }
 
     public void setPageInfo(PageInfo pageInfo) {
@@ -70,7 +75,9 @@ public class OrderSummaryGetResponse {
             summary.setOriginPrice(o.getOriginPrice());
             summary.setDiscountPrice(o.getDiscountPrice());
             summary.setFreightPrice(o.getFreightPrice());
-
+            summary.setGrouponId(o.getGrouponId());
+            summary.setPresaleId(o.getPresaleId());
+            summary.setShipmentSn(o.getShipmentSn());
             summaries.add(summary);
         }
         this.list = summaries;

@@ -27,54 +27,96 @@ public class ShopOrderControllerTest {
     /**
      * 1 获取商铺订单概要测试1
      * 正常访问本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(0)
     public void getAllShopOrdersTest1() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?pageSize=2", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?pageSize=2", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[{\"id\":240000,\"customerId\":2830,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240001,\"customerId\":4298,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"page\":1,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[" +
+                "{\"id\":240000,\"customerId\":2830,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240001,\"customerId\":4298,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
     /**
      * 2 获取商铺订单概要测试2
      * 正常访问本商铺的订单（分页）
+     *
      * @throws Exception
      */
     @Test
     @Order(1)
     public void getAllShopOrdersTest2() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?page=2&pageSize=2", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?page=2&pageSize=2", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":2,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[{\"id\":240002,\"customerId\":5344,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240003,\"customerId\":2830,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"page\":2,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[" +
+                "{\"id\":240002,\"customerId\":5344,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240003,\"customerId\":2830,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
     /**
      * 3 获取商铺订单概要测试3
      * 正常访问本商铺的订单（分页大小）
+     *
      * @throws Exception
      */
     @Test
     @Order(2)
     public void getAllShopOrdersTest3() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?page=2&pageSize=5", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?page=2&pageSize=5", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":2,\"pageSize\":5,\"total\":26,\"pages\":6,\"list\":[{\"id\":240005,\"customerId\":5344,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240006,\"customerId\":2830,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240007,\"customerId\":4298,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240008,\"customerId\":5344,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null},{\"id\":240009,\"customerId\":2830,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"page\":2,\"pageSize\":5,\"total\":26,\"pages\":6,\"list\":[" +
+                "{\"id\":240005,\"customerId\":5344,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240006,\"customerId\":2830,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240007,\"customerId\":4298,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240008,\"customerId\":5344,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
+                "{\"id\":240009,\"customerId\":2830,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
 
     }
@@ -82,30 +124,37 @@ public class ShopOrderControllerTest {
     /**
      * 4 获取商铺订单概要测试4
      * 正常访问本商铺的订单（订单号）
+     *
      * @throws Exception
      */
     @Test
     @Order(3)
     public void getAllShopOrdersTest4() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=2020121229742&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=2020121229742&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":1,\"pages\":1,\"list\":[{\"id\":240025,\"customerId\":7,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":3,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"page\":1,\"pageSize\":1,\"total\":1,\"pages\":1,\"list\":[" +
+                "{\"id\":240025,\"customerId\":7,\"shopId\":4567," +
+                "\"pid\":null,\"orderType\":0,\"state\":3,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
     /**
      * 5 获取商铺订单概要测试5
      * 访问非本商铺的订单（订单号）
+     *
      * @throws Exception
      */
     @Test
     @Order(4)
     public void getAllShopOrdersTest5() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=2019071257669&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=2019071257669&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -118,12 +167,13 @@ public class ShopOrderControllerTest {
     /**
      * 6 获取商铺订单概要测试6
      * 访问不存在的订单（订单号）
+     *
      * @throws Exception
      */
     @Test
     @Order(5)
     public void getAllShopOrdersTest6() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=20190712576690000&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=20190712576690000&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -136,18 +186,24 @@ public class ShopOrderControllerTest {
     /**
      * 7 获取商铺订单概要测试7
      * 正常访问本商铺的订单（顾客id）
+     *
      * @throws Exception
      */
     @Test
     @Order(6)
     public void getAllShopOrdersTest7() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=7&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=7&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":3,\"pages\":3,\"list\":[{\"id\":240022,\"customerId\":7,\"shopId\":1,\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"page\":1,\"pageSize\":1,\"total\":3,\"pages\":3,\"list\":[" +
+                "{\"id\":240022,\"customerId\":7,\"shopId\":4567,\"pid\":null,\"orderType\":0," +
+                "\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null," +
+                "\"discountPrice\":null,\"freightPrice\":null," +
+                "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -156,12 +212,13 @@ public class ShopOrderControllerTest {
      * 访问非本商铺的订单（顾客id）
      * （顾客没下过本商铺的订单，但下过其他的订单）
      * （操作的资源id不存在）
+     *
      * @throws Exception
      */
     @Test
     @Order(7)
     public void getAllShopOrdersTest8() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -176,12 +233,13 @@ public class ShopOrderControllerTest {
      * 访问非本商铺的订单（顾客id+订单序列号）
      * （订单序列号存在但不属于该顾客）
      * （操作的资源id不存在）
+     *
      * @throws Exception
      */
     @Test
     @Order(8)
     public void getAllShopOrdersTest9() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&orderSn=2019121224844&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&orderSn=2019121224844&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -196,12 +254,13 @@ public class ShopOrderControllerTest {
      * 访问非本商铺的订单（顾客id+订单序列号）
      * （订单序列号存在且属于该顾客但不属于本商铺）
      * （操作的资源id不存在）
+     *
      * @throws Exception
      */
     @Test
     @Order(9)
     public void getAllShopOrdersTest10() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=5344&orderSn=2019121224844&pageSize=1", 1)
+        String response = mvc.perform(get("/shops/{shopId}/orders?customerId=5344&orderSn=2019121224844&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -214,18 +273,18 @@ public class ShopOrderControllerTest {
     /**
      * 11 获取商铺订单详细内容测试1
      * 访问不存在的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(10)
     public void getShopOrderDetailsTest1() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 666666L)
+        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 666666L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        
 
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
         Assert.assertEquals(expectedResponse, response);
@@ -234,17 +293,18 @@ public class ShopOrderControllerTest {
     /**
      * 12 获取商铺订单详细内容测试2
      * 访问不属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(11)
     public void getShopOrderDetailsTest2() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 2L)
+        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 2L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        
+
 
         String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
         Assert.assertEquals(expectedResponse, response);
@@ -253,31 +313,44 @@ public class ShopOrderControllerTest {
     /**
      * 13 获取商铺订单详细内容测试3
      * 访问属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(12)
     public void getShopOrderDetailsTest3() throws Exception {
-        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 240000L)
+        String response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 240000L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
-        
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240000,\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"},\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null,\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"},\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null,\"message\":null,\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\",\"couponId\":null,\"grouponId\":null,\"orderItems\":[]}}";
+
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240000," +
+                "\"orderSn\":\"2020112681600\"," +
+                "\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"}," +
+                "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
+                "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"rebateNum\":null,\"message\":null," +
+                "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\"," +
+                "\"couponId\":null,\"grouponId\":null," +
+                "\"presaleId\":null,\"shipmentSn\":null,\"orderItems\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
     /**
      * 14 店家留言测试1
      * 访问不存在的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(13)
     public void addShopOrderMessageTest1() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 1L, 666666L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 4567L, 666666L)
                 .content("{\"message\": \"6666\"}").contentType("application/json")
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
@@ -292,12 +365,13 @@ public class ShopOrderControllerTest {
     /**
      * 15 店家留言测试2
      * 访问不属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(14)
     public void addShopOrderMessageTest2() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 1L, 1L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 4567L, 1L)
                 .content("{\"message\": \"6666\"}").contentType("application/json"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -311,12 +385,13 @@ public class ShopOrderControllerTest {
     /**
      * 16 店家留言测试3
      * 访问属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(15)
     public void addShopOrderMessageTest3() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 1L, 240020L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}", 4567L, 240020L)
                 .content("{\"message\": \"6666\"}").contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -326,13 +401,24 @@ public class ShopOrderControllerTest {
 
         Assert.assertEquals(expectedResponse, response);
 
-        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 240020L)
+        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 240020L)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240020,\"customer\":{\"id\":4298,\"userName\":\"abee\",\"name\":\"wilson\"},\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null,\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"},\"pid\":null,\"orderType\":null,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null,\"message\":\"6666\",\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘媛媛\",\"couponId\":null,\"grouponId\":null,\"orderItems\":[]}}";
+        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"id\":240020,\"orderSn\":\"2020112681717\"," +
+                "\"customer\":{\"id\":4298,\"userName\":\"abee\",\"name\":\"wilson\"}," +
+                "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
+                "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
+                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"rebateNum\":null,\"message\":\"6666\"," +
+                "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘媛媛\"," +
+                "\"couponId\":null,\"grouponId\":null," +
+                "\"presaleId\":null,\"shipmentSn\":null,\"orderItems\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -340,12 +426,13 @@ public class ShopOrderControllerTest {
     /**
      * 17 店家取消订单测试1
      * 访问不存在的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(16)
     public void cancelShopOrderTest1() throws Exception {
-        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 1L, 66666L)
+        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 4567L, 66666L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -359,12 +446,13 @@ public class ShopOrderControllerTest {
     /**
      * 18 店家取消订单测试2
      * 访问不属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(17)
     public void cancelShopOrderTest2() throws Exception {
-        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 1L, 1L)
+        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 4567L, 1L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -379,12 +467,13 @@ public class ShopOrderControllerTest {
     /**
      * 19 店家取消订单测试3
      * 访问属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(18)
     public void cancelShopOrderTest3() throws Exception {
-        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 1L, 240021L)
+        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 4567L, 240021L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -394,13 +483,24 @@ public class ShopOrderControllerTest {
 
         Assert.assertEquals(expectedResponse, response);
 
-        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 240021L)
+        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 240021L)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240021,\"customer\":{\"id\":1,\"userName\":\"abee\",\"name\":\"wilson\"},\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null,\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"},\"pid\":null,\"orderType\":null,\"state\":4,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null,\"message\":null,\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘勤\",\"couponId\":null,\"grouponId\":null,\"orderItems\":[]}}";
+        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
+                "\"id\":240021,\"orderSn\":\"2020112681718\"," +
+                "\"customer\":{\"id\":1,\"userName\":\"abee\",\"name\":\"wilson\"}," +
+                "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
+                "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
+                "\"pid\":null,\"orderType\":0,\"state\":4,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"rebateNum\":null,\"message\":null," +
+                "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘勤\"," +
+                "\"couponId\":null,\"grouponId\":null," +
+                "\"presaleId\":null,\"shipmentSn\":null,\"orderItems\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -408,12 +508,13 @@ public class ShopOrderControllerTest {
      * 20 店家取消订单测试4
      * 访问属于本商铺的订单
      * 但当前订单状态为“已完成”
+     *
      * @throws Exception
      */
     @Test
     @Order(19)
     public void cancelShopOrderTest4() throws Exception {
-        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 1L, 240025L)
+        String response = mvc.perform(delete("/shops/{shopId}/orders/{id}", 4567L, 240025L)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -427,12 +528,13 @@ public class ShopOrderControllerTest {
     /**
      * 21 店家标记订单发货1
      * 访问不存在的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(20)
     public void markShopOrderDeliverTest1() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 1L, 66666666L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 4567L, 66666666L)
                 .content("{\"freightSn\": \"8888\"}").contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isNotFound())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -446,12 +548,13 @@ public class ShopOrderControllerTest {
     /**
      * 22 店家取消订单测试2
      * 访问不属于本商铺的订单
+     *
      * @throws Exception
      */
     @Test
     @Order(21)
     public void markShopOrderDeliverTest2() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 1L, 1L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 4567L, 1L)
                 .content("{\"freightSn\": \"8888\"}").contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -466,12 +569,13 @@ public class ShopOrderControllerTest {
      * 23 店家取消订单测试3
      * 访问属于本商铺的订单
      * （但是当前订单状态并非“付款完成”）
+     *
      * @throws Exception
      */
     @Test
     @Order(22)
     public void markShopOrderDeliverTest3() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 1L, 240024L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 4567L, 240024L)
                 .content("{\"freightSn\": \"8888\"}").contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -483,15 +587,16 @@ public class ShopOrderControllerTest {
     }
 
     /**
-     * 23 店家取消订单测试4
+     * 24 店家取消订单测试4
      * 访问属于本商铺的订单
      * 当前订单状态为“付款完成”
+     *
      * @throws Exception
      */
     @Test
-    @Order(22)
+    @Order(23)
     public void markShopOrderDeliverTest4() throws Exception {
-        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 1L, 240019L)
+        String response = mvc.perform(put("/shops/{shopId}/orders/{id}/deliver", 4567L, 240019L)
                 .content("{\"freightSn\": \"8888\"}").contentType("application/json;charset=UTF-8"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
@@ -501,13 +606,24 @@ public class ShopOrderControllerTest {
 
         Assert.assertEquals(expectedResponse, response);
 
-        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 1L, 240019L)
+        response = mvc.perform(get("/shops/{shopId}/orders/{id}", 4567L, 240019L)
                 .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240019,\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"},\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null,\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"},\"pid\":null,\"orderType\":null,\"state\":24,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null,\"message\":null,\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\",\"couponId\":null,\"grouponId\":null,\"orderItems\":[]}}";
+        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":240019," +
+                "\"orderSn\":\"2020112681716\"," +
+                "\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"}," +
+                "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
+                "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
+                "\"pid\":null,\"orderType\":0,\"state\":24,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
+                "\"rebateNum\":null,\"message\":null," +
+                "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\"," +
+                "\"couponId\":null,\"grouponId\":null," +
+                "\"presaleId\":null,\"shipmentSn\":null,\"orderItems\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
