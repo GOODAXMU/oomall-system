@@ -27,9 +27,9 @@ public class PatternPayService {
 
     @PostConstruct
     public void init() {
-        for (Map.Entry<String, Object> e : serviceFactory.getPatternPayServices().entrySet()) {
-            patternPay.put(((IExternalPayment) e.getValue()).getPattern(), (IExternalPayment) e.getValue());
-            pattern2PatternName.put(((IExternalPayment) e.getValue()).getPattern(), e.getKey());
+        for (IExternalPayment o : serviceFactory.getPatternPayServices()) {
+            patternPay.put(o.getPattern(), o);
+            pattern2PatternName.put(o.getPattern(), o.getPatternName());
         }
     }
 

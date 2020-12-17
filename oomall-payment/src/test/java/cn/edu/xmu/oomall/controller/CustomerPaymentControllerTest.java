@@ -52,7 +52,7 @@ public class CustomerPaymentControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"payPattern\":\"001\",\"name\":\"RebatePayment\"},{\"payPattern\":\"002\",\"name\":\"SimplePayment\"}]}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"payPattern\":\"001\",\"name\":\"返点支付\"},{\"payPattern\":\"002\",\"name\":\"模拟支付渠道\"}]}";
         Assert.assertEquals(expectedResponse, response);
     }
 

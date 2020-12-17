@@ -29,4 +29,9 @@ public class SimplePaymentImpl implements IExternalPayment {
     public String getPattern() {
         return "002";
     }
+
+    @Override
+    public String getPatternName() {
+        return "模拟支付渠道";
+    }
 }

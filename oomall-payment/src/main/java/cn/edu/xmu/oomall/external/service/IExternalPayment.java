@@ -29,4 +29,10 @@ public interface IExternalPayment {
      * @return
      */
     String getPattern();
+
+    /**
+     * 返回支付的渠道名称
+     * @return
+     */
+    String getPatternName();
 }

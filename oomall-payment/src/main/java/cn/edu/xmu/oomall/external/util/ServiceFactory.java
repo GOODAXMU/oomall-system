@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.external.util;
 
+import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,7 +36,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 
 
 	private List<Object> services = new ArrayList<>();
-	private Map<String, Object> patternPayServices = new HashMap<>();
+	private List<IExternalPayment> patternPayServices = new ArrayList<>();
 
 	public Object get(Class c) {
 		if (c == null || !c.isInterface()) {
@@ -53,7 +54,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 		return null;
 	}
 
-	public Map<String, Object> getPatternPayServices() {
+	public List<IExternalPayment> getPatternPayServices() {
 		return patternPayServices;
 	}
 
@@ -63,7 +64,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 		services.add(applicationContext.getBean(getBeanName(customerServiceName)));
 		services.add(applicationContext.getBean(getBeanName(afterSaleServiceName)));
 		for (String s : paymentServiceName.split("\\|")) {
-			patternPayServices.put(s.replace("Impl", ""), applicationContext.getBean(getBeanName(s)));
+			patternPayServices.add((IExternalPayment) applicationContext.getBean(getBeanName(s)));
 		}
 	}
 

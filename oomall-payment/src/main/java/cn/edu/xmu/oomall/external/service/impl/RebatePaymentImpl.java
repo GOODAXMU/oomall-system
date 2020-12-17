@@ -71,4 +71,9 @@ public class RebatePaymentImpl implements IExternalPayment {
     public String getPattern() {
         return "001";
     }
+
+    @Override
+    public String getPatternName() {
+        return "返点支付";
+    }
 }
