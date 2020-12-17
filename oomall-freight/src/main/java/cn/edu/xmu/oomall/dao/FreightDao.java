@@ -475,9 +475,9 @@ public class FreightDao {
      * @return WeightFreightModel
      */
     public Reply<WeightFreightModel> defineWeightFreightModel(WeightFreightModel weightFreightModel, Long shopId) {
-        WeightFreightModelPo WeightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
-        WeightFreightModelPo.setGmtModified(LocalDateTime.now().toString());
-        WeightFreightModelPo.setGmtCreate(LocalDateTime.now().toString());
+        WeightFreightModelPo weightFreightModelPo = new WeightFreightModelPo(weightFreightModel);
+        weightFreightModelPo.setGmtModified(LocalDateTime.now().toString());
+        weightFreightModelPo.setGmtCreate(LocalDateTime.now().toString());
         FreightModel freightModel = getFreightModelById(weightFreightModel.getFreightModelId()).getData();
         if (null == freightModel) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -485,12 +485,19 @@ public class FreightDao {
         if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if (null != getWeightFreightModelByRid(weightFreightModel.getRid())) {
-            return new Reply<>(ResponseStatus.REGION_EXIST);
+        WeightFreightModelPo weightFreightModelPo1 = new WeightFreightModelPo();
+        weightFreightModelPo1.setFreightModelId(weightFreightModel.getFreightModelId());
+        List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo1));
+        if(!weightFreightModelPos.isEmpty()){
+            for(WeightFreightModelPo w : weightFreightModelPos){
+                if((w.getRegionId().equals(weightFreightModel.getRid()))){
+                    return new Reply<>(ResponseStatus.REGION_EXIST);
+                }
+            }
         }
         Reply<WeightFreightModel> reply = new Reply<>();
         try {
-            reply.setData(new WeightFreightModel(weightModelRepository.saveAndFlush(WeightFreightModelPo)));
+            reply.setData(new WeightFreightModel(weightModelRepository.saveAndFlush(weightFreightModelPo)));
             log.debug("insert data: " + reply.getData());
         } catch (Exception e) {
             log.debug("数据库错误: " + e.getMessage());
@@ -651,8 +658,15 @@ public class FreightDao {
         if (!freightModel.getShopId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if (null != getPieceFreightModelByRid(pieceFreightModel.getRid()).getData()) {
-            return new Reply<>(ResponseStatus.REGION_EXIST);
+        PieceFreightModelPo pieceFreightModelPo1 = new PieceFreightModelPo();
+        pieceFreightModelPo1.setFreightModelId(pieceFreightModel.getFreightModelId());
+        List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo1));
+        if(!pieceFreightModelPos.isEmpty()){
+            for(PieceFreightModelPo p : pieceFreightModelPos){
+                if(p.getRegionId().equals(pieceFreightModel.getRid())){
+                    return new Reply<>(ResponseStatus.REGION_EXIST);
+                }
+            }
         }
         PieceFreightModelPo pieceFreightModelPo = new PieceFreightModelPo(pieceFreightModel);
         pieceFreightModelPo.setGmtModified(LocalDateTime.now());
