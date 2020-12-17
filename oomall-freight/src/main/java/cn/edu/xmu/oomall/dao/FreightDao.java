@@ -566,7 +566,7 @@ public class FreightDao {
         WeightFreightModelPo weightFreightModelPo1 = new WeightFreightModelPo();
         weightFreightModelPo1.setRegionId(weightFreightModel.getRid());
         List<WeightFreightModelPo> weightFreightModelPos = weightModelRepository.findAll(SpecificationFactory.get(weightFreightModelPo1));
-        if (!weightFreightModelPos.isEmpty()) {
+        if (!weightFreightModelPos.isEmpty()&&weightFreightModel.getRid()!=null) {
             int isExist = 0;
             for (WeightFreightModelPo po : weightFreightModelPos) {
                 if (po.getId().equals(weightFreightModelPo.getId())) {
@@ -602,7 +602,7 @@ public class FreightDao {
         PieceFreightModelPo pieceFreightModelPo1 = new PieceFreightModelPo();
         pieceFreightModelPo1.setRegionId(pieceFreightModel.getRid());
         List<PieceFreightModelPo> pieceFreightModelPos = pieceModelRepository.findAll(SpecificationFactory.get(pieceFreightModelPo1));
-        if (!pieceFreightModelPos.isEmpty()) {
+        if (!pieceFreightModelPos.isEmpty()&&pieceFreightModel.getRid()!=null) {
             int isExist = 0;
             for (PieceFreightModelPo po : pieceFreightModelPos) {
                 if (po.getId().equals(pieceFreightModelPo)) {
