@@ -245,7 +245,8 @@ public class OrderDao {
         if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if (o.getState() == OrderStatus.COMPLETED.value()) {
+        if (o.getState() == OrderStatus.COMPLETED.value() ||
+                o.getState() == OrderStatus.CANCELED.value()) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
