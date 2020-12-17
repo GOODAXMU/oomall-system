@@ -59,7 +59,7 @@ public class GetPieceFreightModelTest {
                 .andReturn()
                 .getResponse()
                 .getContentAsString();
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"id\":206,\"regionId\":200,\"firstItem\":1,\"firstItemPrice\":50,\"additionalItems\":1,\"additionalItemPrice\":60,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":207,\"regionId\":201,\"firstItem\":1,\"firstItemPrice\":20,\"additionalItems\":2,\"additionalItemPrice\":12,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":208,\"regionId\":202,\"firstItem\":2,\"firstItemPrice\":30,\"additionalItems\":1,\"additionalItemPrice\":20,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":[{\"id\":206,\"regionId\":200,\"firstItem\":1,\"firstItemPrice\":50,\"additionalItems\":1,\"additionalItemsPrice\":60,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":207,\"regionId\":201,\"firstItem\":1,\"firstItemPrice\":20,\"additionalItems\":2,\"additionalItemsPrice\":12,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":208,\"regionId\":202,\"firstItem\":2,\"firstItemPrice\":30,\"additionalItems\":1,\"additionalItemsPrice\":20,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}";
         System.out.println("responseString :" + responseString );
         Assert.assertEquals(expectedResponse, responseString);
     }

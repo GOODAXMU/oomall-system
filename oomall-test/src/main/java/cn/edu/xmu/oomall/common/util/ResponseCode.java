@@ -75,6 +75,10 @@ public enum ResponseCode {
     FREIGHTNAME_SAME(802,"运费模板名重复"),
     REGION_SAME(803,"运费模板中该地区已经定义"),
     REFUND_MORE(804,"退款金额超过支付金额"),
+    REGION_NOT_REACH(805,"该地区不可达"),
+    SHOP_ID_NOTEXIST(825,"不存在对应的shopid"),
+    DEFAULTMODEL_EXISTED(826,"已经存在对应的默认模板"),
+    MODEL_ID_NOTEXIST(827,"shopid不存在对应的模板id"),
     /***************************************************
      *    商品模块错误码
      **************************************************/
@@ -89,7 +93,13 @@ public enum ResponseCode {
     USER_HASSHOP(908,"用户已经有店铺"),
     COUPON_NOTBEGIN(909,"未到优惠卷领取时间"),
     COUPON_FINISH(910,"优惠卷领罄"),
-    COUPON_END(911,"优惠卷活动终止");
+    COUPON_END(911,"优惠卷活动终止"),
+    STATE_NOCHANGE(920,"状态未改变"),
+    DELETE_ONLINE_NOTALLOW(931, "不允许删除已上线状态的活动"),
+    DELETE_CHANGAE_NOTALLOW(932, "不允许修改已删除活动的状态"),
+    COMMENT_EXISTED(941,"该订单条目已评论"),
+    BRAND_NAME_SAME(990,"品牌名称已存在"),
+    CATEGORY_NAME_SAME(991, "类目名称已存在");
 
     private int code;
     private String message;

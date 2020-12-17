@@ -51,13 +51,13 @@ public class CustomerShipmentController {
     }
 
     @ApiOperation(value = "获取运费模板概要")
-    @GetMapping(value = "freightmodels/{id}", produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "/shops/{shopId}/freightmodels/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     @Audit
     public Reply<FreightModelSummaryGetResponse> getFreightModelSummary(
             @NotNull @Min(value = 0) @PathVariable Long id,
-            @Depart Long shopId) {
-        Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id, shopId);
+            @PathVariable Long shopId,@Depart Long uShopId) {
+        Reply<FreightModel> freightModelReply = freightService.getFreightModelById(id, shopId,uShopId);
         if (!freightModelReply.isOk()) {
             return new Reply<>(freightModelReply.getResponseStatus());
         }

@@ -17,6 +17,7 @@ public class FreightModelInner {
     private Long id;
     private String name;
     private Integer type;
+    private Long unit;
     private Boolean defaultModel;
     private String gmtCreate;
     private String gmtModified;
