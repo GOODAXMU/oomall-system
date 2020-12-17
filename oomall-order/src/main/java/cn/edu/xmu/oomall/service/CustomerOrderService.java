@@ -13,6 +13,7 @@ import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -76,31 +77,40 @@ public class CustomerOrderService {
 	}
 
 	public Reply<Object> deleteOrCancelSelfOrder(Long id, Long customerId) {
-		OrderPo order = orderDao.getOrderPoByIdAndCustomerId(id, customerId);
+		Reply<OrderPo> r = orderDao.getOrderPoByIdAndCustomerId(id, customerId);
 
-		if (order == null) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		if (!r.isOk()) {
+			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
 		}
 
-		if (order.getState() == OrderStatus.COMPLETED.value()) {
+		OrderPo order = r.getData();
+
+		if (order.getState() >= OrderStatus.COMPLETED.value()) {
 			return orderDao.deleteSelfOrder(id);
 		} else if (order.getSubState() < OrderStatus.DELIVERED.value()) {
 			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value(), null);
+		} else if (order.getSubState() == OrderStatus.DELIVERED.value()) {
+			return new Reply<>(ResponseStatus.ORDER_FORBID);
 		} else {
 			return new Reply<>(ResponseStatus.OK);
 		}
 	}
 
 	public Reply<Object> confirmOrder(Long id, Long customerId) {
-		Reply<Order> r = orderDao.getOrderByIdAndCustomerId(id, customerId);
+		Reply<OrderPo> r = orderDao.getOrderPoByIdAndCustomerId(id, customerId);
 		if (!r.isOk()) {
-			return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
 		}
 
 		return orderDao.confirmOrder(id);
 	}
 
 	public Reply<Object> groupon2Normal(Long id, Long customerId) {
+		Reply<OrderPo> r = orderDao.getOrderPoByIdAndCustomerId(id, customerId);
+		if (!r.isOk()) {
+			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
+		}
+		
 		return orderDao.groupon2Normal(id, customerId);
 	}
 

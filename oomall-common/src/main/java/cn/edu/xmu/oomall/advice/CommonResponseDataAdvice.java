@@ -29,6 +29,13 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 	static {
 		STATUS_MAP.put(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE.value(), HttpStatus.FORBIDDEN);
 		STATUS_MAP.put(ResponseStatus.RESOURCE_ID_NOT_EXIST.value(), HttpStatus.NOT_FOUND);
+		STATUS_MAP.put(ResponseStatus.ORDER_FORBID.value(), HttpStatus.OK);
+		STATUS_MAP.put(ResponseStatus.FREIGHT_NAME_EXIST.value(), HttpStatus.OK);
+		STATUS_MAP.put(ResponseStatus.REGION_EXIST.value(), HttpStatus.OK);
+		STATUS_MAP.put(ResponseStatus.REFUND_EXCESS.value(), HttpStatus.OK);
+		STATUS_MAP.put(ResponseStatus.REGION_NOT_REACH.value(), HttpStatus.OK);
+		STATUS_MAP.put(ResponseStatus.OUT_OF_STOCK.value(), HttpStatus.OK);
+
 	}
 
 	/**

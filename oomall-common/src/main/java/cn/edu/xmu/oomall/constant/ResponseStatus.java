@@ -25,12 +25,12 @@ public enum ResponseStatus {
 	/******************************
 	 * 订单模块状态码
 	 ******************************/
-	ORDER_FORBID(800,"订单状态禁止"),
+	ORDER_FORBID(801,"订单状态禁止"),
 	FREIGHT_NAME_EXIST(802,"运费模板名重复"),
 	REGION_EXIST(803,"运费模板中该地区已经定义"),
 	REFUND_EXCESS(804,"退款金额超过支付金额"),
 	REGION_NOT_REACH(805,"该地区不可达"),
-
+	DEFAULT_MODEL_EXISTED(826,"存在默认模板"),
 
 	/******************************
 	 * 非订单模块状态码

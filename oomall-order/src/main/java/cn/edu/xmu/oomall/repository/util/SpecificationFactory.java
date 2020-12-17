@@ -136,7 +136,7 @@ public class SpecificationFactory {
 
 	public static Specification<OrderPo> get(
 			Long customerId, String orderSn, Integer state,
-			LocalDateTime beginTime, LocalDateTime endTime) {
+			LocalDateTime beginTime, LocalDateTime endTime, boolean beDeleted) {
 		return (Specification<OrderPo>) (root, criteriaQuery, builder) -> {
 			List<Predicate> predicates = new ArrayList<>();
 
@@ -155,6 +155,7 @@ public class SpecificationFactory {
 			if (endTime != null) {
 				predicates.add(builder.lessThanOrEqualTo(root.get("gmtCreate"), endTime));
 			}
+			predicates.add(builder.equal(root.get("beDeleted"), beDeleted ? 1 : 0));
 
 			return builder.and(predicates.toArray(new Predicate[0]));
 		};
