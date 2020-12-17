@@ -274,7 +274,7 @@ public class OrderDao {
         if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if (o.getState() != OrderStatus.PAID.value()) {
+        if (o.getState()!=OrderStatus.TO_BE_RECEIVED.value()||o.getSubState() != OrderStatus.PAID.value()) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
         int r = orderRepository.markShopOrderDelievered(id, OrderStatus.DELIVERED.value(), shipmentSn);

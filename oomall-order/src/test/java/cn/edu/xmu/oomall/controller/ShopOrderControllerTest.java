@@ -42,11 +42,11 @@ public class ShopOrderControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
                 "\"page\":1,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[" +
                 "{\"id\":240000,\"customerId\":2830,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240001,\"customerId\":4298,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
@@ -70,11 +70,11 @@ public class ShopOrderControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
                 "\"page\":2,\"pageSize\":2,\"total\":26,\"pages\":13,\"list\":[" +
                 "{\"id\":240002,\"customerId\":5344,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240003,\"customerId\":2830,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
@@ -98,23 +98,23 @@ public class ShopOrderControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
                 "\"page\":2,\"pageSize\":5,\"total\":26,\"pages\":6,\"list\":[" +
                 "{\"id\":240005,\"customerId\":5344,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240006,\"customerId\":2830,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240007,\"customerId\":4298,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240008,\"customerId\":5344,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}," +
                 "{\"id\":240009,\"customerId\":2830,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
@@ -139,7 +139,7 @@ public class ShopOrderControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
                 "\"page\":1,\"pageSize\":1,\"total\":1,\"pages\":1,\"list\":[" +
                 "{\"id\":240025,\"customerId\":7,\"shopId\":4567," +
-                "\"pid\":null,\"orderType\":0,\"state\":3,\"subState\":null,\"gmtCreate\":1607628573," +
+                "\"pid\":null,\"orderType\":0,\"state\":3,\"subState\":24,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
@@ -201,7 +201,7 @@ public class ShopOrderControllerTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{" +
                 "\"page\":1,\"pageSize\":1,\"total\":3,\"pages\":3,\"list\":[" +
                 "{\"id\":240022,\"customerId\":7,\"shopId\":4567,\"pid\":null,\"orderType\":0," +
-                "\"state\":6,\"subState\":null,\"gmtCreate\":1607628573,\"originPrice\":null," +
+                "\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\",\"originPrice\":null," +
                 "\"discountPrice\":null,\"freightPrice\":null," +
                 "\"grouponId\":null,\"presaleId\":null,\"shipmentSn\":null}]}}";
         Assert.assertEquals(expectedResponse, response);
@@ -331,8 +331,8 @@ public class ShopOrderControllerTest {
                 "\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"}," +
                 "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
                 "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
-                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
+                "\"gmtModified\":\"2020-12-10T19:29:33\",\"confirmTime\":null," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"rebateNum\":null,\"message\":null," +
                 "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\"," +
@@ -412,8 +412,8 @@ public class ShopOrderControllerTest {
                 "\"customer\":{\"id\":4298,\"userName\":\"abee\",\"name\":\"wilson\"}," +
                 "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
                 "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
-                "\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":1607628573," +
-                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
+                "\"gmtModified\":\"2020-12-10T19:29:33\",\"confirmTime\":null," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"rebateNum\":null,\"message\":\"6666\"," +
                 "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘媛媛\"," +
@@ -494,8 +494,8 @@ public class ShopOrderControllerTest {
                 "\"customer\":{\"id\":1,\"userName\":\"abee\",\"name\":\"wilson\"}," +
                 "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
                 "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
-                "\"pid\":null,\"orderType\":0,\"state\":4,\"subState\":null,\"gmtCreate\":1607628573," +
-                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"pid\":null,\"orderType\":0,\"state\":4,\"subState\":21,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
+                "\"gmtModified\":\"2020-12-10T19:29:33\",\"confirmTime\":null," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"rebateNum\":null,\"message\":null," +
                 "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘勤\"," +
@@ -520,7 +520,7 @@ public class ShopOrderControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":800,\"errmsg\":\"订单状态禁止\"}";
+        String expectedResponse = "{\"errno\":801,\"errmsg\":\"订单状态禁止\"}";
 
         Assert.assertEquals(expectedResponse, response);
     }
@@ -581,7 +581,7 @@ public class ShopOrderControllerTest {
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":800,\"errmsg\":\"订单状态禁止\"}";
+        String expectedResponse = "{\"errno\":801,\"errmsg\":\"订单状态禁止\"}";
 
         Assert.assertEquals(expectedResponse, response);
     }
@@ -617,8 +617,8 @@ public class ShopOrderControllerTest {
                 "\"customer\":{\"id\":2830,\"userName\":\"abee\",\"name\":\"wilson\"}," +
                 "\"shop\":{\"id\":345,\"name\":\"super shop\",\"state\":null," +
                 "\"gmtCreate\":\"2020-11-27T07:59:58.623756500\",\"gmtModified\":\"2020-11-27T07:59:58.623756500\"}," +
-                "\"pid\":null,\"orderType\":0,\"state\":24,\"subState\":null,\"gmtCreate\":1607628573," +
-                "\"gmtModified\":1607628573,\"confirmTime\":null," +
+                "\"pid\":null,\"orderType\":0,\"state\":2,\"subState\":24,\"gmtCreate\":\"2020-12-10T19:29:33\"," +
+                "\"gmtModified\":\"2020-12-10T19:29:33\",\"confirmTime\":null," +
                 "\"originPrice\":null,\"discountPrice\":null,\"freightPrice\":null," +
                 "\"rebateNum\":null,\"message\":null," +
                 "\"regionId\":null,\"address\":null,\"mobile\":\"13959288888\",\"consignee\":\"刘慧\"," +

@@ -39,7 +39,7 @@ public class OrderSummaryGetResponse {
         private Integer orderType;
         private Integer state;
         private Integer subState;
-        private Long gmtCreate;
+        private String gmtCreate;
 
         private Long originPrice;
         private Long discountPrice;
@@ -71,7 +71,7 @@ public class OrderSummaryGetResponse {
             summary.setOrderType(o.getOrderType());
             summary.setState(o.getState());
             summary.setSubState(o.getSubState());
-            summary.setGmtCreate(o.getGmtCreated().toEpochSecond(ZoneOffset.UTC));
+            summary.setGmtCreate(o.getGmtCreated().toString());
             summary.setOriginPrice(o.getOriginPrice());
             summary.setDiscountPrice(o.getDiscountPrice());
             summary.setFreightPrice(o.getFreightPrice());
