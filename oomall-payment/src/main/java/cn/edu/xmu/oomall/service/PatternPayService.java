@@ -7,27 +7,30 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
  * @author Wang Zhizhou
  * create 2020/12/11
+ * modified 2020/12/15
  */
 @Component
 public class PatternPayService {
 
-    private Map<String, IExternalPayment> patternPay;
+    private Map<String, IExternalPayment> patternPay = new HashMap<>();
+
+    private Map<String, String> pattern2PatternName = new HashMap<>();
 
     @Autowired
     private ServiceFactory serviceFactory;
 
     @PostConstruct
     public void init() {
-        // todo 装填 patternPay
-        for (Object service : serviceFactory.getServices()) {
-
+        for (IExternalPayment o : serviceFactory.getPatternPayServices()) {
+            patternPay.put(o.getPattern(), o);
+            pattern2PatternName.put(o.getPattern(), o.getPatternName());
         }
-
     }
 
     /**
@@ -36,7 +39,8 @@ public class PatternPayService {
      * @return
      */
     public Boolean payByPattern(Payment payment) {
-        return patternPay.get(payment.getPaymentPattern().getPatternName()).pay(payment);
+        IExternalPayment p = patternPay.get(payment.getPattern());
+        return null != p && p.pay(payment);
     }
 
     /**
@@ -45,7 +49,15 @@ public class PatternPayService {
      * @return
      */
     public Boolean refundByPattern(Payment payment) {
-        return patternPay.get(payment.getPaymentPattern().getPatternName()).refund(payment);
+        IExternalPayment p = patternPay.get(payment.getPattern());
+        return null != p && p.refund(payment);
     }
 
+    /**
+     * 获取所有可行的支付渠道
+     * @return
+     */
+    public Map<String, String> getPattern2PatternName() {
+        return pattern2PatternName;
+    }
 }

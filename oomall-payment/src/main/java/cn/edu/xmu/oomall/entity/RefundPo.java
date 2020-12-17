@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
  * @author yan song
  * @date 2020-11-07
  * @author Wang Zhizhou
- * modified 2020/11/29
+ * modified 2020/12/15
  */
 
 @Data
@@ -29,15 +29,18 @@ public class RefundPo {
 
 	private Long amount;
 
-	private String paySn;
-
 	private Long orderId;
 
 	private Long aftersaleId;
 
 	private Integer state;
 
-	private LocalDateTime gmtCreated;
+	private LocalDateTime gmtCreate;
 
 	private LocalDateTime gmtModified;
+
+	public void setGmt() {
+		this.gmtCreate = LocalDateTime.now().withNano(0);
+		this.gmtModified = LocalDateTime.now().withNano(0);
+	}
 }

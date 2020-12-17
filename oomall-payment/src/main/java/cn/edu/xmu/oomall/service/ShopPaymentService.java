@@ -6,12 +6,10 @@ import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
 import cn.edu.xmu.oomall.external.service.IAfterSaleService;
-import cn.edu.xmu.oomall.external.service.IExternalPayment;
 import cn.edu.xmu.oomall.external.service.IOrderService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -21,7 +19,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/12/10
- * modified 2020/12/11
+ * modified 2020/12/16
  */
 
 @Service
@@ -40,11 +38,12 @@ public class ShopPaymentService {
     private PatternPayService patternPayService;
 
     private IOrderService orderService;
-    private IAfterSaleService afterSaleServer;
+    private IAfterSaleService afterSaleService;
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXService
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
+        afterSaleService = (IAfterSaleService) serviceFactory.get(IAfterSaleService.class);
     }
 
 
@@ -54,8 +53,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long shopId) {
-        if (orderService.isShopOwnOrder(shopId, orderId)) {
+        // 检查订单是否属于该商店
+        Boolean b = orderService.isShopOwnOrder(shopId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByOrderId(orderId);
@@ -67,8 +71,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+        // 检查售后是否属于商店
+        Boolean b = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByAfterSaleId(afterSaleId);
@@ -90,20 +99,35 @@ public class ShopPaymentService {
         // 校验 shopId 与操作资源id
         Long orderId = r.getData().getOrderId();
         Long afterSaleId = r.getData().getAfterSaleId();
-        boolean shopOwnOrder     = null != orderId && orderService.isShopOwnOrder(shopId, orderId);
-        boolean shopOwnAfterSale = null != afterSaleId && afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId);
-        if (!shopOwnOrder && !shopOwnAfterSale) {
+
+        Boolean shopOwnOrder = null;
+        if (null != orderId) {
+            // 检查订单是否属于该商店
+            shopOwnOrder = orderService.isShopOwnOrder(shopId, orderId);
+        }
+
+        Boolean shopOwnAfterSale = null;
+        if (null  != afterSaleId) {
+            // 检查售后是否属于商店
+            shopOwnAfterSale = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        }
+
+        if (null == shopOwnOrder && null == shopOwnAfterSale) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        else if (null != shopOwnAfterSale && !shopOwnAfterSale) {
+            return new Reply<>((ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE));
+        }
+        else if (null != shopOwnOrder && !shopOwnOrder) {
+            return new Reply<>((ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE));
         }
 
         // 设置返款信息
         refund.setOrderId(orderId);
         refund.setAftersaleId(afterSaleId);
-        refund.setPaySn("refund" + UUID.randomUUID().toString());
-        refund.setState(Refund.State.WAITING);
 
         // 创建用于返款的反向支付
-        Payment payment = new Payment(r.getData().getPaymentPattern(), refund.getAmount(), orderId, afterSaleId);
+        Payment payment = new Payment(r.getData().getPattern(), refund.getAmount(), orderId, afterSaleId);
 
         // 返款是否成功
         if (patternPayService.refundByPattern(payment)) {
@@ -114,7 +138,7 @@ public class ShopPaymentService {
         }
 
         if (refund.isRefundSuccess()) {
-            refundDao.saveRefund(refund);
+            return refundDao.saveRefund(refund);
         }
 
         return new Reply<>(refund);
@@ -126,8 +150,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long shopId) {
-        if (orderService.isShopOwnOrder(shopId, orderId)) {
+        // 检查订单是否属于该商店
+        Boolean b = orderService.isShopOwnOrder(shopId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByOrderId(orderId);
@@ -139,8 +168,13 @@ public class ShopPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundsByAfterSaleId(Long afterSaleId, Long shopId) {
-        if (afterSaleServer.isShopOwnAfterSale(shopId, afterSaleId)) {
+        // 检查售后是否属于商店
+        Boolean b = afterSaleService.isShopOwnAfterSale(shopId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByAfterSaleId(afterSaleId);

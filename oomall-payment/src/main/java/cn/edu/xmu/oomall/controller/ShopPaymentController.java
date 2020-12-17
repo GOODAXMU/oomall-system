@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.annotation.Audit;
 import cn.edu.xmu.oomall.bo.Payment;
 import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.service.ShopPaymentService;
@@ -34,6 +35,7 @@ public class ShopPaymentController {
 	@Autowired
 	private ShopPaymentService shopPaymentService;
 
+	@Audit
 	@ApiOperation(value = "管理员查询订单的支付信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -63,6 +65,7 @@ public class ShopPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "管理员查询售后单的支付信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -92,6 +95,7 @@ public class ShopPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "管理员创建退款单")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -119,6 +123,7 @@ public class ShopPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "管理员查询订单的退款信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -148,6 +153,7 @@ public class ShopPaymentController {
 	}
 
 
+	@Audit
 	@ApiOperation(value = "管理员查询售后单的退款信息", produces = "application/json;charset=UTF-8")
 	@ApiImplicitParams({
 			@ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),

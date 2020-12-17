@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/11
+ * modified 2020/12/16
  */
 
 @Service
@@ -43,7 +43,8 @@ public class CustomerPaymentService {
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXServer
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
+        afterSaleServer = (IAfterSaleService) serviceFactory.get(IAfterSaleService.class);
     }
 
     /**
@@ -56,9 +57,13 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.FIELD_INVALID);
         }
 
-        // 检查用户和该订单是否匹配
-    if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+        // 检查顾客查询订单属于本顾客
+        Boolean b = orderService.isCustomerOwnOrder(customerId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         // 根据订单状态确认是否允许支付
@@ -66,12 +71,11 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
+        payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
 
         // 进行支付
         if (patternPaymentService.payByPattern(payment)) {
-            payment.setPayTime(LocalDateTime.now());
+            payment.setPayTime();
             payment.setState(Payment.State.SUCCESS);
         }
         else {
@@ -81,12 +85,16 @@ public class CustomerPaymentService {
 
         // 支付成果才写入数据库
         if (payment.isPaySuccess()) {
-            paymentDao.savePayment(payment);
+            Reply<Payment> r = paymentDao.savePayment(payment);
+            if (r.isOk()) {
+                // 提醒订单服务器检查支付状态
+                orderService.checkOrderPaid(orderId, paymentDao.calcOrderPayments(orderId));
+            }
+
+            return r;
         }
 
-        // 提醒订单服务器检查支付状态
-        orderService.checkOrderPaid(orderId, paymentDao.calcOrderPayments(orderId));
-
+        // 支付失败并不报错, 返回失败的支付信息
         return new Reply<>(payment);
     }
 
@@ -100,9 +108,13 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.FIELD_INVALID);
         }
 
-        // 检查用户和该售后是否匹配
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        // 检查顾客查询售后属于本顾客
+        Boolean b = afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         // 根据订单状态确认是否允许支付
@@ -110,12 +122,11 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
 
-        payment.setPaySn(payment.getPaymentPattern() + UUID.randomUUID().toString());
-        payment.setState(Payment.State.WAITING);
+        payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
 
         // 进行支付
         if (patternPaymentService.payByPattern(payment)) {
-            payment.setPayTime(LocalDateTime.now());
+            payment.setPayTime();
             payment.setState(Payment.State.SUCCESS);
         }
         else {
@@ -125,12 +136,12 @@ public class CustomerPaymentService {
 
         // 支付成果才写入数据库
         if (payment.isPaySuccess()) {
-            paymentDao.savePayment(payment);
+            Reply<Payment> r = paymentDao.savePayment(payment);
+
+            return r;
         }
 
-        // 提醒订单服务器检查支付状态
-        afterSaleServer.checkAfterSalePaid(afterSaleId, paymentDao.calcAfterSalePayments(afterSaleId));
-
+        // 支付失败不报错, 返回失败的支付信息
         return new Reply<>(payment);
     }
 
@@ -141,8 +152,12 @@ public class CustomerPaymentService {
      */
     public Reply<List<Payment>> getPaymentsByOrderId(Long orderId, Long customerId) {
         // 检查顾客查询订单属于本顾客
-        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+        Boolean b = orderService.isCustomerOwnOrder(customerId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByOrderId(orderId);
@@ -154,8 +169,13 @@ public class CustomerPaymentService {
      * @return
      */
     public Reply<List<Payment>> getPaymentsByAfterSaleId(Long afterSaleId, Long customerId) {
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        // 检查顾客查询售后属于本顾客
+        Boolean b = afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return paymentDao.getPaymentsByAfterSaleId(afterSaleId);
@@ -168,8 +188,12 @@ public class CustomerPaymentService {
      */
     public Reply<List<Refund>> getRefundsByOrderId(Long orderId, Long customerId) {
         // 检查顾客查询订单属于本顾客
-        if (orderService.isCustomerOwnOrder(customerId, orderId)) {
+        Boolean b = orderService.isCustomerOwnOrder(customerId, orderId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByOrderId(orderId);
@@ -181,8 +205,13 @@ public class CustomerPaymentService {
      * @return
      */
     public Reply<List<Refund>> getRefundByAfterSaleId(Long afterSaleId, Long customerId) {
-        if (afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId)) {
+        // 检查顾客查询售后属于本顾客
+        Boolean b = afterSaleServer.isCustomerOwnAfterSale(customerId, afterSaleId);
+        if (null == b) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!b) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
         return refundDao.getRefundsByAfterSaleId(afterSaleId);

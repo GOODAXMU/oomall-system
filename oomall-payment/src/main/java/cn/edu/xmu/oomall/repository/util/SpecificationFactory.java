@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * @author xincong yao
  * @date 2020-11-10
+ * modified 2020-12-14
  * <p>
  * 不支持根据id查询
  * 构造复杂对象来执行id查询性能低
@@ -52,8 +53,8 @@ public class SpecificationFactory {
 			if (payment.getState() != null) {
 				predicates.add(builder.equal(root.get("state"), payment.getState()));
 			}
-			if (payment.getGmtCreated() != null) {
-				predicates.add(builder.equal(root.get("gmtCreated"), payment.getGmtCreated()));
+			if (payment.getGmtCreate() != null) {
+				predicates.add(builder.equal(root.get("gmtCreated"), payment.getGmtCreate()));
 			}
 			if (payment.getGmtModified() != null) {
 				predicates.add(builder.equal(root.get("gmtModified"), payment.getGmtModified()));
@@ -73,9 +74,6 @@ public class SpecificationFactory {
 			if (refund.getAmount() != null) {
 				predicates.add(builder.equal(root.get("amount"), refund.getAmount()));
 			}
-			if (refund.getPaySn() != null) {
-				predicates.add(builder.equal(root.get("paySn"), refund.getPaySn()));
-			}
 			if (refund.getOrderId() != null) {
 				predicates.add(builder.equal(root.get("orderId"), refund.getOrderId()));
 			}
@@ -85,8 +83,8 @@ public class SpecificationFactory {
 			if (refund.getState() != null) {
 				predicates.add(builder.equal(root.get("state"), refund.getState()));
 			}
-			if (refund.getGmtCreated() != null) {
-				predicates.add(builder.equal(root.get("gmtCreated"), refund.getGmtCreated()));
+			if (refund.getGmtCreate() != null) {
+				predicates.add(builder.equal(root.get("gmtCreated"), refund.getGmtCreate()));
 			}
 			if (refund.getGmtModified() != null) {
 				predicates.add(builder.equal(root.get("gmtModified"), refund.getGmtModified()));

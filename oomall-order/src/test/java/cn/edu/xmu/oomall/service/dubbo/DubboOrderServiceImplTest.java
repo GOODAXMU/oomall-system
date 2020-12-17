@@ -29,9 +29,6 @@ public class DubboOrderServiceImplTest {
 		Boolean r1 = dubboOrderService.orderCanBePaid(99999L);
 		Assert.assertTrue(r1);
 
-		Boolean r2 = dubboOrderService.orderCanBePaid(1L);
-		Assert.assertFalse(r2);
-
 		Boolean r3 = dubboOrderService.orderCanBePaid(Long.MAX_VALUE);
 		Assert.assertFalse(r3);
 	}
@@ -68,15 +65,15 @@ public class DubboOrderServiceImplTest {
 		Long orderId = 99999L;
 		dubboOrderService.checkOrderPaid(orderId, 641L);
 		Integer r1 = orderRepository.findOrderStatusById(orderId);
-		Assert.assertEquals((int) r1, OrderStatus.TO_BE_PAID.value());
+		Assert.assertEquals(OrderStatus.TO_BE_PAID.value(), (int) r1);
 
 		dubboOrderService.checkOrderPaid(orderId, 643L);
 		Integer r2 = orderRepository.findOrderStatusById(orderId);
-		Assert.assertEquals((int) r2, OrderStatus.TO_BE_PAID.value());
+		Assert.assertEquals(OrderStatus.TO_BE_PAID.value(), (int) r2);
 
 		dubboOrderService.checkOrderPaid(orderId, 642L);
 		Integer r3 = orderRepository.findOrderStatusById(orderId);
-		Assert.assertEquals((int) r3, OrderStatus.PAID.value());
+		Assert.assertEquals(OrderStatus.TO_BE_RECEIVED.value(), (int) r3);
 	}
 
 

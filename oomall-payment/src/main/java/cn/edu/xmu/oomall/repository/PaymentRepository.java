@@ -14,7 +14,7 @@ import java.util.List;
  * @author xincong yao
  * @date 2020-11-10
  * @author Wang Zhizhou
- * modified 2020/12/10
+ * modified 2020/12/14
  */
 public interface PaymentRepository extends
 		JpaRepository<PaymentPo, Long>,
@@ -40,18 +40,14 @@ public interface PaymentRepository extends
 	@Query(value = "UPDATE PaymentPo po SET po.state = :state WHERE po.id = :id")
 	int updatePaymentState(Long id, Integer state);
 
-	// todo 写查询sql
 	@Modifying
 	@Transactional
-	@Query
+	@Query(value = "SELECT p FROM PaymentPo p WHERE p.orderId = :oid")
 	List<PaymentPo> findAllByOrderId(Long oid);
 
 
-	// todo 写查询sql
 	@Modifying
 	@Transactional
-	@Query
+	@Query(value = "SELECT p FROM PaymentPo p WHERE p.aftersaleId = :aid")
 	List<PaymentPo> findAllByAfterSaleId(Long aid);
-
-
 }

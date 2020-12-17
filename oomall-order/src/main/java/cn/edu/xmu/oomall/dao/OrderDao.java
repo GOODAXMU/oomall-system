@@ -15,6 +15,7 @@ import cn.edu.xmu.oomall.vo.Reply;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
@@ -49,7 +50,7 @@ public class OrderDao {
                                         PageInfo pageInfo, Boolean withParent) {
 
         Page<OrderPo> orderPoPage = orderRepository.findAll(
-                SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime),
+                SpecificationFactory.get(customerId, orderSn, state, beginTime, endTime, false),
                 PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
 
         pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
@@ -57,6 +58,10 @@ public class OrderDao {
         List<Order> orders = new ArrayList<>();
         for (OrderPo op : orderPoPage.getContent()) {
             if (op.getPid() != null && op.getPid() == 0 && !withParent) {
+                continue;
+            }
+            // be_deleted字段为1表示已删除
+            if (op.getBeDeleted() != null && op.getBeDeleted() == 1) {
                 continue;
             }
             orders.add(Order.toOrder(op));
@@ -114,6 +119,9 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         OrderPo opo = op.get();
+        if (opo.getBeDeleted() != null && opo.getBeDeleted() == 1) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         if (opo.getCustomerId() == null || !opo.getCustomerId().equals(customerId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
@@ -159,14 +167,23 @@ public class OrderDao {
     public Reply<Object> updateOrderDeliveryInformation(Order o) {
         OrderPo po = OrderPo.toOrderPo(o);
 
-        int r = orderRepository.updateWhenStateLessThanAndSubStateNotEquals(
-                po, OrderStatus.COMPLETED.value(), OrderStatus.DELIVERED.value());
-
-        if (r <= 0) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-        } else {
-            return new Reply<>(ResponseStatus.OK);
+        Optional<OrderPo> db = orderRepository.findById(o.getId());
+        if (db.isEmpty()) {
+            return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
+
+        OrderPo t = db.get();
+
+        if (!t.getCustomerId().equals(o.getCustomer().getId())) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        }
+
+        if (t.getState() < OrderStatus.COMPLETED.value() && t.getSubState() != null && t.getSubState() != OrderStatus.DELIVERED.value()) {
+            orderRepository.update(po);
+            return new Reply<>();
+        }
+
+        return new Reply<>(ResponseStatus.ORDER_FORBID);
     }
 
     /**
@@ -294,13 +311,16 @@ public class OrderDao {
         return new Reply<>(ResponseStatus.OK);
     }
 
-    public OrderPo getOrderPoByIdAndCustomerId(Long id, Long customerId) {
+    public Reply<OrderPo> getOrderPoByIdAndCustomerId(Long id, Long customerId) {
         Optional<OrderPo> op = orderRepository.findById(id);
         OrderPo po = op.isEmpty() ? null : op.get();
-        if (po == null || !customerId.equals(po.getCustomerId())) {
-            return null;
+        if (po == null) {
+            return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
+        if (!customerId.equals(po.getCustomerId())) {
+            return new Reply<>(HttpStatus.FORBIDDEN, ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
-        return po;
+        return new Reply<>(po);
     }
 }

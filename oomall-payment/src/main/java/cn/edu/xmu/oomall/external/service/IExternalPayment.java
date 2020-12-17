@@ -7,7 +7,7 @@ import javax.validation.constraints.NotNull;
 /**
  * @author Wang Zhizhou
  * create 2020/11/26
- * modified 2020/12/11
+ * modified 2020/12/15
  */
 public interface IExternalPayment {
     /**
@@ -23,4 +23,16 @@ public interface IExternalPayment {
      * @return
      */
     Boolean refund(@NotNull Payment payment);
+
+    /**
+     * 返回该支付的渠道
+     * @return
+     */
+    String getPattern();
+
+    /**
+     * 返回支付的渠道名称
+     * @return
+     */
+    String getPatternName();
 }

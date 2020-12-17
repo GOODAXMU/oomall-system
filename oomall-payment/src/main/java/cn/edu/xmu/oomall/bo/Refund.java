@@ -12,16 +12,15 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/29
- * modified 2020/12/11
+ * modified 2020/12/17
  */
 @Data
 public class Refund {
 
     public enum State {
-        NEW(0, "新创建"),
-        WAITING(1,"等待完成退款"),
-        SUCCESS(2, "完成退款"),
-        FAILED(3, "退款失败");
+        WAITING(0, "未退款"),
+        SUCCESS(1, "已退款"),
+        FAILED(2, "退款失败");
 
         private static final Map<Integer, Refund.State> stateMap;
 
@@ -59,8 +58,6 @@ public class Refund {
 
     private Long amount;
 
-    private String paySn;
-
     private Long orderId;
 
     private Long aftersaleId;
@@ -77,11 +74,11 @@ public class Refund {
      * @param vo        请求vo
      */
     public Refund(Long paymentId, RefundPostRequest vo) {
-        this.paymentId = id;
+        this.paymentId = paymentId;
         this.amount = vo.getAmount();
         this.orderId = null;
         this.aftersaleId = null;
-        this.state = State.NEW;
+        this.state = State.WAITING;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
     }
@@ -90,11 +87,10 @@ public class Refund {
         this.id = po.getId();
         this.paymentId = po.getPaymentId();
         this.amount = po.getAmount();
-        this.paySn = po.getPaySn();
         this.orderId = po.getOrderId();
         this.aftersaleId = po.getAftersaleId();
         this.state = State.getStateByCode(po.getState());
-        this.gmtCreated = po.getGmtCreated();
+        this.gmtCreated = po.getGmtCreate();
         this.gmtModified = po.getGmtModified();
     }
 
@@ -102,7 +98,7 @@ public class Refund {
         this.paymentId = paymentId;
         this.aftersaleId = aftersaleId;
         this.amount = amount;
-        this.state = State.NEW;
+        this.state = State.WAITING;
     }
 
     /**
@@ -114,11 +110,10 @@ public class Refund {
         po.setId(this.id);
         po.setPaymentId(this.paymentId);
         po.setAmount(this.amount);
-        po.setPaySn(this.paySn);
         po.setOrderId(this.orderId);
         po.setAftersaleId(this.aftersaleId);
         po.setState(this.state.code);
-        po.setGmtCreated(this.gmtCreated);
+        po.setGmtCreate(this.gmtCreated);
         po.setGmtModified(this.gmtModified);
 
         return po;
@@ -133,9 +128,11 @@ public class Refund {
         vo.setId(this.id);
         vo.setPaymentId(this.paymentId);
         vo.setAmount(this.amount);
-        vo.setState(this.state.description);
-        vo.setGmtCreateTime(this.gmtCreated.toString());
-        vo.setGmtModifiedTime(this.gmtModified.toString());
+        vo.setState(this.state.code);
+        vo.setGmtCreate(this.gmtCreated.toString());
+        vo.setGmtModified(this.gmtModified.toString());
+        vo.setOrderId(this.orderId);
+        vo.setAftersaleId(this.aftersaleId);
 
         return vo;
     }

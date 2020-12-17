@@ -12,7 +12,7 @@ public interface ICustomerService {
      * @param rebate        使用的返点数额
      * @return  true or false
      */
-    Boolean useRebate(Long customerId, Long rebate);
+    Integer useRebate(Long customerId, Integer rebate);
 
     /**
      * 返款返还顾客的返点, 返还应必然成功
@@ -20,5 +20,5 @@ public interface ICustomerService {
      * @param rebate        返还返点
      * @return
      */
-    Boolean refundRebate(Long customerId, Long rebate);
+    Integer refundRebate(Long customerId, Integer rebate);
 }

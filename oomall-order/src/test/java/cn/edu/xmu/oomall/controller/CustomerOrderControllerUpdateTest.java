@@ -30,7 +30,7 @@ public class CustomerOrderControllerUpdateTest {
 
 	@Test
 	public void updateSelfOrderTest() throws Exception {
-		String response = mvc.perform(put("/orders/{id}", 1L)
+		String response = mvc.perform(put("/orders/{id}", 100007L)
 				.header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM")
 				.content("{\"consignee\": \"consigneeeee\",\"regionId\": 100,\"address\": \"xiamen\",\"mobile\": \"1334567890\"}").contentType("application/json;charset=UTF-8"))
 				.andExpect(status().isOk())

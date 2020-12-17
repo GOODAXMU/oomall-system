@@ -1,6 +1,9 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.OomallOrderApplication;
+import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.entity.OrderPo;
+import cn.edu.xmu.oomall.repository.OrderRepository;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,9 +31,23 @@ public class CustomerOrderControllerConfirmOrderTest {
 	@Autowired
 	private MockMvc mvc;
 
+	@Autowired
+	private OrderRepository orderRepository;
+
 	@Test
-	public void confirmOrderTest() throws Exception {
-		String response = mvc.perform(put("/orders/{id}/confirm", 1L).header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
+	public void confirmOrderTest0() throws Exception {
+		String response = mvc.perform(put("/orders/{id}/confirm", 100000L).header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andReturn().getResponse().getContentAsString();
+
+		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
+		Assert.assertEquals(expectedResponse, response);
+	}
+
+	@Test
+	public void confirmOrderTest1() throws Exception {
+		String response = mvc.perform(put("/orders/{id}/confirm", 100001L).header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();

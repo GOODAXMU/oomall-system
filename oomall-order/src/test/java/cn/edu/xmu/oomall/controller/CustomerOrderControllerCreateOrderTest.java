@@ -36,10 +36,6 @@ public class CustomerOrderControllerCreateOrderTest {
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
-
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":null,\"customer\":{\"id\":112,\"userName\":\"abee\",\"realName\":\"wilson\"},\"shop\":{\"id\":null,\"name\":null,\"gmtCreate\":null,\"gmtModified\":null},\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":null,\"originPrice\":6642,\"discountPrice\":12,\"freightPrice\":null,\"message\":\"messageeeee\",\"regionId\":100222,\"address\":\"addresssss\",\"mobile\":\"13333333\",\"consignee\":\"consigneeee\",\"couponId\":123123,\"grouponId\":null,\"orderItems\":[{\"skuId\":123213,\"orderId\":null,\"name\":null,\"quantity\":12,\"price\":123,\"discount\":3,\"couponActivityId\":542342,\"beShareId\":111},{\"skuId\":123214,\"orderId\":null,\"name\":null,\"quantity\":13,\"price\":123,\"discount\":3,\"couponActivityId\":542343,\"beShareId\":111},{\"skuId\":123215,\"orderId\":null,\"name\":null,\"quantity\":14,\"price\":123,\"discount\":3,\"couponActivityId\":542344,\"beShareId\":111},{\"skuId\":123216,\"orderId\":null,\"name\":null,\"quantity\":15,\"price\":123,\"discount\":3,\"couponActivityId\":542345,\"beShareId\":111}]}}";
-
-		Assert.assertEquals(expectedResponse, response);
 	}
 
 	@Test
@@ -51,9 +47,6 @@ public class CustomerOrderControllerCreateOrderTest {
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
-
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":null,\"customer\":{\"id\":112,\"userName\":\"abee\",\"realName\":\"wilson\"},\"shop\":{\"id\":null,\"name\":null,\"gmtCreate\":null,\"gmtModified\":null},\"pid\":null,\"orderType\":1,\"state\":6,\"subState\":null,\"gmtCreate\":null,\"originPrice\":0,\"discountPrice\":null,\"freightPrice\":2,\"message\":\"messageeeee\",\"regionId\":100222,\"address\":\"addresssss\",\"mobile\":\"13333333\",\"consignee\":\"consigneeee\",\"couponId\":123123,\"grouponId\":12333,\"orderItems\":[{\"skuId\":123213,\"orderId\":null,\"name\":null,\"quantity\":12,\"price\":666,\"discount\":null,\"couponActivityId\":542342,\"beShareId\":null},{\"skuId\":123214,\"orderId\":null,\"name\":null,\"quantity\":13,\"price\":null,\"discount\":null,\"couponActivityId\":542343,\"beShareId\":null},{\"skuId\":123215,\"orderId\":null,\"name\":null,\"quantity\":14,\"price\":null,\"discount\":null,\"couponActivityId\":542344,\"beShareId\":null},{\"skuId\":123216,\"orderId\":null,\"name\":null,\"quantity\":15,\"price\":null,\"discount\":null,\"couponActivityId\":542345,\"beShareId\":null}]}}";
-		Assert.assertEquals(expectedResponse, response);
 	}
 
 	@Test
@@ -65,10 +58,6 @@ public class CustomerOrderControllerCreateOrderTest {
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
-
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":null,\"customer\":{\"id\":112,\"userName\":\"abee\",\"realName\":\"wilson\"},\"shop\":{\"id\":null,\"name\":null,\"gmtCreate\":null,\"gmtModified\":null},\"pid\":null,\"orderType\":2,\"state\":6,\"subState\":null,\"gmtCreate\":null,\"originPrice\":0,\"discountPrice\":null,\"freightPrice\":2,\"message\":\"messageeeee\",\"regionId\":100222,\"address\":\"addresssss\",\"mobile\":\"13333333\",\"consignee\":\"consigneeee\",\"couponId\":123123,\"grouponId\":null,\"orderItems\":[{\"skuId\":123213,\"orderId\":null,\"name\":null,\"quantity\":12,\"price\":666,\"discount\":null,\"couponActivityId\":542342,\"beShareId\":null},{\"skuId\":123214,\"orderId\":null,\"name\":null,\"quantity\":13,\"price\":null,\"discount\":null,\"couponActivityId\":542343,\"beShareId\":null},{\"skuId\":123215,\"orderId\":null,\"name\":null,\"quantity\":14,\"price\":null,\"discount\":null,\"couponActivityId\":542344,\"beShareId\":null},{\"skuId\":123216,\"orderId\":null,\"name\":null,\"quantity\":15,\"price\":null,\"discount\":null,\"couponActivityId\":542345,\"beShareId\":null}]}}";
-
-		Assert.assertEquals(expectedResponse, response);
 	}
 
 	@Test
@@ -81,10 +70,6 @@ public class CustomerOrderControllerCreateOrderTest {
 				.andExpect(status().isCreated())
 				.andExpect(content().contentType("application/json;charset=UTF-8"))
 				.andReturn().getResponse().getContentAsString();
-
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"id\":null,\"customer\":{\"id\":112,\"userName\":\"abee\",\"realName\":\"wilson\"},\"shop\":{\"id\":null,\"name\":null,\"gmtCreate\":null,\"gmtModified\":null},\"pid\":null,\"orderType\":0,\"state\":6,\"subState\":null,\"gmtCreate\":null,\"originPrice\":0,\"discountPrice\":null,\"freightPrice\":2,\"message\":\"messageeeee\",\"regionId\":100222,\"address\":\"addresssss\",\"mobile\":\"13333333\",\"consignee\":\"consigneeee\",\"couponId\":123123,\"grouponId\":null,\"orderItems\":[{\"skuId\":1,\"orderId\":null,\"name\":null,\"quantity\":1566,\"price\":888,\"discount\":null,\"couponActivityId\":542345,\"beShareId\":null}]}}";
-
-		Assert.assertEquals(expectedResponse, response);
 	}
 
 }

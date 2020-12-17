@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/11
+ * modified 2020/12/16
  */
 
 @Data
@@ -24,10 +24,9 @@ public class Payment {
     private static Long waitTime = 30L;
 
     public enum State {
-        NEW(0, "新创建"),
-        WAITING(1,"等待完成支付"),
-        SUCCESS(2, "完成支付"),
-        FAILED(3, "支付失败");
+        WAITING(0,"未支付"),
+        SUCCESS(1, "已支付"),
+        FAILED(2, "支付失败");
 
         private static final Map<Integer, Payment.State> stateMap;
 
@@ -59,40 +58,6 @@ public class Payment {
         }
     }
 
-    public enum Pattern {
-        REBATE(1, "RebatePayment"),
-        SIMPLE(2, "SimplePayment");
-
-        private static final Map<Integer, Payment.Pattern> stateMap;
-
-        static { //由类加载机制，静态块初始加载对应的枚举属性到map中，而不用每次取属性时，遍历一次所有枚举值
-            stateMap = new HashMap();
-            for (Payment.Pattern enum1 : values()) {
-                stateMap.put(enum1.patternId, enum1);
-            }
-        }
-
-        private int patternId;
-        private String patternName;
-
-        Pattern(int patternId, String patternName) {
-            this.patternId = patternId;
-            this.patternName = patternName;
-        }
-
-        public static Payment.Pattern getById(Integer patternId) {
-            return stateMap.get(patternId);
-        }
-
-        public Integer getPatternId() {
-            return patternId;
-        }
-
-        public String getPatternName() {
-            return patternName;
-        }
-    }
-
     private Long id;
 
     private Long afterSaleId;
@@ -101,7 +66,7 @@ public class Payment {
 
     private Long actualAmount;
 
-    private Pattern paymentPattern;
+    public String pattern;
 
     private LocalDateTime payTime;
 
@@ -130,10 +95,10 @@ public class Payment {
         this.afterSaleId = afterSaleId;
         this.amount = request.getPrice();
         this.actualAmount = request.getPrice();
-        this.paymentPattern = Pattern.valueOf(request.getPattern());
-        this.beginTime = LocalDateTime.now();
-        this.endTime = this.beginTime.plusMinutes(30);
-        this.state = State.NEW;
+        this.pattern = request.getPaymentPattern();
+        this.beginTime = LocalDateTime.now().withNano(0);
+        this.endTime = this.beginTime.plusMinutes(30).withNano(0);
+        this.state = State.WAITING;
         this.gmtCreated = LocalDateTime.now();
         this.gmtModified = LocalDateTime.now();
     }
@@ -147,14 +112,14 @@ public class Payment {
         this.afterSaleId = po.getAftersaleId();
         this.amount = po.getAmount();
         this.actualAmount = po.getActualAmount();
-        this.paymentPattern = Pattern.getById(po.getPaymentPattern());
+        this.pattern = po.getPaymentPattern();
         this.payTime = po.getPayTime();
         this.paySn = po.getPaySn();
         this.beginTime = po.getBeginTime();
         this.endTime = po.getEndTime();
         this.orderId = po.getOrderId();
         this.state = Payment.State.getStateByCode(po.getState());
-        this.gmtCreated = po.getGmtCreated();
+        this.gmtCreated = po.getGmtCreate();
         this.gmtModified = po.getGmtModified();
     }
 
@@ -163,13 +128,13 @@ public class Payment {
      * @param pattern
      * @param amount
      */
-    public Payment(Pattern pattern, Long amount, Long orderId, Long afterSaleId) {
+    public Payment(String pattern, Long amount, Long orderId, Long afterSaleId) {
         this.orderId = orderId;
         this.afterSaleId = afterSaleId;
-        this.paymentPattern = pattern;
+        this.pattern = pattern;
         this.amount = amount;
         this.actualAmount = amount;
-        this.state = State.NEW;
+        this.state = State.WAITING;
         // 反向支付的开始支付与结束支付时间无意义
     }
 
@@ -181,15 +146,16 @@ public class Payment {
         PaymentResponse vo = new PaymentResponse();
         vo.setId((this.id));
         vo.setOrderId(this.orderId);
+        vo.setAftersaleId(this.afterSaleId);
         vo.setAmount(this.amount);
         vo.setActualAmount(this.actualAmount);
         vo.setPayTime(this.payTime.toString());
-        vo.setPayPattern(this.paymentPattern.toString());
+        vo.setPaymentPattern(this.pattern);
         vo.setBeginTime(this.beginTime.toString());
         vo.setEndTime(this.endTime.toString());
-        vo.setState(this.state.getDescription());
-        vo.setGmtCreateTime(this.gmtCreated.toString());
-        vo.setGmtModifiedTime(this.gmtModified.toString());
+        vo.setState(this.state.getCode());
+        vo.setGmtCreate(this.gmtCreated.toString());
+        vo.setGmtModified(this.gmtModified.toString());
 
         return vo;
     }
@@ -204,14 +170,14 @@ public class Payment {
         po.setAftersaleId(this.afterSaleId);
         po.setAmount(this.amount);
         po.setActualAmount(this.actualAmount);
-        po.setPaymentPattern(this.paymentPattern.getPatternId());
+        po.setPaymentPattern(this.pattern);
         po.setPayTime(this.payTime);
         po.setPaySn(this.paySn);
         po.setBeginTime(this.beginTime);
         po.setEndTime(this.endTime);
         po.setOrderId(this.orderId);
         po.setState(this.state.getCode());
-        po.setGmtCreated(this.gmtCreated);
+        po.setGmtCreate(this.gmtCreated);
         po.setGmtModified(this.gmtModified);
 
         return po;
@@ -223,5 +189,12 @@ public class Payment {
      */
     public Boolean isPaySuccess() {
         return this.state == State.SUCCESS;
+    }
+
+    /**
+     * 设置现在时间为支付时间
+     */
+    public void setPayTime() {
+        this.payTime = LocalDateTime.now().withNano(0);
     }
 }

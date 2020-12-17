@@ -5,7 +5,9 @@ import cn.edu.xmu.oomall.bo.Refund;
 import cn.edu.xmu.oomall.dao.PaymentDao;
 import cn.edu.xmu.oomall.dao.RefundDao;
 import cn.edu.xmu.oomall.dto.OrderItemDto;
+import cn.edu.xmu.oomall.external.service.IAfterSaleService;
 import cn.edu.xmu.oomall.external.service.IOrderService;
+import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IDubboPaymentService;
 import cn.edu.xmu.oomall.service.PatternPayService;
 import cn.edu.xmu.oomall.vo.Reply;
@@ -16,7 +18,12 @@ import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.UUID;
 
-@DubboService(version = "${oomall.payment.version}")
+/**
+ * @author Wang Zhizhou
+ * create 2020/12/11
+ * modified 2020/12/15
+ */
+//@DubboService(version = "${oomall.payment.version}")
 public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
     @Autowired
@@ -28,23 +35,29 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
     @Autowired
     private PatternPayService patternPayService;
 
+    @Autowired
+    private ServiceFactory serviceFactory;
+
     private IOrderService orderService;
 
     @PostConstruct
     public void init() {
-        // todo 装填 IXXService
+        orderService = (IOrderService) serviceFactory.get(IOrderService.class);
     }
 
     @Override
     public Boolean createRefund(Long afterSaleId, Long orderItemId, Integer quantity) {
         OrderItemDto oi = orderService.getOrderItem(orderItemId);
+        if (null == oi) {
+            return false;
+        }
 
         Long deposit = orderService.getOrderPresaleDeposit(oi.getOrderId());
         Reply<List<Payment>> r = paymentDao.getPaymentsByOrderId(oi.getOrderId());
 
-        if (!r.isOk()) {                // 查询失败无从返款
+        if (!r.isOk()) {            // 查询失败无从返款
             return false;
-        } else if (deposit > 0){   // 存在定金, 定金无法返款
+        } else if (deposit > 0){    // 存在定金, 定金无法返款
             r.getData().removeIf(payment -> payment.getActualAmount() == deposit);
         }
 
@@ -61,10 +74,9 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
         for (Payment payment : r.getData()) {
             Long amount = (long)(payment.getActualAmount() * refundRate);
             Refund refund = new Refund(payment.getId(), afterSaleId, amount);
-            refund.setPaySn("refund" + UUID.randomUUID().toString());
             refund.setState(Refund.State.WAITING);
 
-            Payment rePayment = new Payment(payment.getPaymentPattern(), amount, oi.getOrderId(), afterSaleId);
+            Payment rePayment = new Payment(payment.getPattern(), amount, oi.getOrderId(), afterSaleId);
             // 返款是否成功
             if (patternPayService.refundByPattern(rePayment)) {
                 refund.setState(Refund.State.SUCCESS);
