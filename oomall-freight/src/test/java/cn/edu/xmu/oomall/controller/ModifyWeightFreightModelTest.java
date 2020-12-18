@@ -42,8 +42,11 @@ public class ModifyWeightFreightModelTest {
         weightItemRequest.setRegionId(201231L);
         weightItemRequest.setTenPrice(10L);
         weightItemRequest.setTrihunPrice(300L);
-        String json = JSON.toJSONString(weightItemRequest);
-        String responseString = this.mvc.perform(put("/shops/1/weightItems/201")
+        String json = "{\n" +
+                "    \"firstWeightFreight\": 519,\n" +
+                "    \"tenPrice\": 391\n" +
+                "}";
+        String responseString = this.mvc.perform(put("/shops/1/weightItems/202")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isOk())
@@ -86,4 +89,50 @@ public class ModifyWeightFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    @Test
+    public void modifyWeightFreightModel2() throws Exception{
+        WeightItemRequest weightItemRequest = new WeightItemRequest();
+        weightItemRequest.setFirstWeight(3L);
+        weightItemRequest.setFirstWeightPrice(10L);
+        weightItemRequest.setTenPrice(12L);
+        weightItemRequest.setFiftyPrice(14L);
+        weightItemRequest.setHundredPrice(16L);
+        weightItemRequest.setTrihunPrice(18L);
+        weightItemRequest.setAbovePrice(30L);
+        weightItemRequest.setRegionId(205L);
+        System.out.println(weightItemRequest);
+        String json = "{\n" +
+                "    \"firstWeightFreight\": 519,\n" +
+                "    \"tenPrice\": 391,\n" +
+                "    \"regionId\": 111\n" +
+                "}";
+        String responseString = this.mvc.perform(put("/shops/{shopId}/weightItems/{id}",295,55555)
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":803,\"errmsg\":\"运费模板中该地区已经定义\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    @Test
+    public void modifyWeightFreightModel3() throws Exception{
+        String json = "{\n" +
+                "    \"firstWeightFreight\": 519,\n" +
+                "    \"tenPrice\": 391\n" +
+                "}";
+        String responseString = this.mvc.perform(put("/shops/{shopId}/weightItems/{id}",296,55555)
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
 }

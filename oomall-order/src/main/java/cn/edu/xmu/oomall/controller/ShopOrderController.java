@@ -54,7 +54,7 @@ public class ShopOrderController {
             @RequestParam(required = false) String beginTime,
             @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "20") Integer pageSize) {
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
         PageInfo pageInfo = new PageInfo(page, pageSize);
 
         Reply<Object> r = shopOrderService.getShopOrders(shopId, customerId, orderSn,

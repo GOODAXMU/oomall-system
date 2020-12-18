@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/29
- * modified 2020/12/17
+ * modified 2020/12/18
  */
 @Data
 public class Refund {
@@ -43,6 +43,13 @@ public class Refund {
             return stateMap.get(code);
         }
 
+        public static Integer getCodeByState(State state) {
+            if (null == state) {
+                return null;
+            }
+
+            return state.code;
+        }
         public Integer getCode() {
             return code;
         }
@@ -50,6 +57,7 @@ public class Refund {
         public String getDescription() {
             return description;
         }
+
     }
 
     private Long id;
@@ -112,7 +120,7 @@ public class Refund {
         po.setAmount(this.amount);
         po.setOrderId(this.orderId);
         po.setAftersaleId(this.aftersaleId);
-        po.setState(this.state.code);
+        po.setState(State.getCodeByState(this.state));
         po.setGmtCreate(this.gmtCreated);
         po.setGmtModified(this.gmtModified);
 
@@ -128,9 +136,9 @@ public class Refund {
         vo.setId(this.id);
         vo.setPaymentId(this.paymentId);
         vo.setAmount(this.amount);
-        vo.setState(this.state.code);
-        vo.setGmtCreate(this.gmtCreated.toString());
-        vo.setGmtModified(this.gmtModified.toString());
+        vo.setState(State.getCodeByState(this.state));
+        vo.setGmtCreate(String.valueOf(this.gmtCreated));
+        vo.setGmtModified(String.valueOf(this.gmtModified));
         vo.setOrderId(this.orderId);
         vo.setAftersaleId(this.aftersaleId);
 

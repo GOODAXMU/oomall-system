@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/28
- * modified 2020/12/11
+ * modified 2020/12/18
  */
 public interface IOrderService {
 
@@ -20,20 +20,23 @@ public interface IOrderService {
     Boolean isCustomerOwnOrder(Long customerId, Long orderId);
 
     /**
+     * 获得订单当前状态应该支付的金额
+     * @param customerId    支付顾客id
+     * @param orderId       支付订单id
+     * @return  null    ->  不存在该id的订单 (资源不存在)
+     *         -1       ->  用户与订单不匹配 (资源操作不匹配)
+     *          0       ->  订单不可支付 (订单状态禁止)
+     *         > 0      ->  可支付金额 (正常支付)
+     */
+    Long priceOrderCanBePaid(Long customerId, Long orderId);
+
+    /**
      * 检查商店是否拥有该订单
      * @param shopId    商店id
      * @param orderId   订单id
      * @return
      */
     Boolean isShopOwnOrder(Long shopId, Long orderId);
-
-
-    /**
-     * 查看订单是否可以进行支付
-     * @param id 订单id
-     * @return
-     */
-    Boolean orderCanBePaid(Long id);
 
     /**
      * 根据已完成的支付数额修改订单状态

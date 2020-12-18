@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/16
+ * modified 2020/12/18
  */
 
 @Data
@@ -47,6 +47,14 @@ public class Payment {
 
         public static Payment.State getStateByCode(Integer code) {
             return stateMap.get(code);
+        }
+
+        public static Integer getCodeByState(State state) {
+            if (null == state) {
+                return null;
+            }
+
+            return state.code;
         }
 
         public Integer getCode() {
@@ -149,13 +157,13 @@ public class Payment {
         vo.setAftersaleId(this.afterSaleId);
         vo.setAmount(this.amount);
         vo.setActualAmount(this.actualAmount);
-        vo.setPayTime(this.payTime.toString());
+        vo.setPayTime(String.valueOf(this.payTime));
         vo.setPaymentPattern(this.pattern);
-        vo.setBeginTime(this.beginTime.toString());
-        vo.setEndTime(this.endTime.toString());
-        vo.setState(this.state.getCode());
-        vo.setGmtCreate(this.gmtCreated.toString());
-        vo.setGmtModified(this.gmtModified.toString());
+        vo.setBeginTime(String.valueOf(this.beginTime));
+        vo.setEndTime(String.valueOf(this.endTime));
+        vo.setState(State.getCodeByState(this.state));
+        vo.setGmtCreate(String.valueOf(this.gmtCreated));
+        vo.setGmtModified(String.valueOf(this.gmtModified));
 
         return vo;
     }
@@ -176,7 +184,7 @@ public class Payment {
         po.setBeginTime(this.beginTime);
         po.setEndTime(this.endTime);
         po.setOrderId(this.orderId);
-        po.setState(this.state.getCode());
+        po.setState(State.getCodeByState(this.state));
         po.setGmtCreate(this.gmtCreated);
         po.setGmtModified(this.gmtModified);
 

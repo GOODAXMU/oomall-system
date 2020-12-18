@@ -29,7 +29,7 @@ public class DeletePieceFreightModelTest {
 
     @Test
     public void deletePieceFreightModel() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",1L,201L))
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",1L,202L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -47,6 +47,17 @@ public class DeletePieceFreightModelTest {
                 .getResponse()
                 .getContentAsString();
         String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+    @Test
+    public void deletePieceFreightMode2() throws Exception{
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/pieceItems/{id}",2L,202L))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 

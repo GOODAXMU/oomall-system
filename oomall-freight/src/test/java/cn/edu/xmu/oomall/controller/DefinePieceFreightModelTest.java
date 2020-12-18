@@ -48,7 +48,7 @@ public class DefinePieceFreightModelTest {
         String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems")
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()
@@ -66,8 +66,14 @@ public class DefinePieceFreightModelTest {
         pieceItemRequest.setFirstItem(1);
         pieceItemRequest.setRegionId(2L);
         pieceItemRequest.setFirstItemPrice(1L);
-        String json = JSON.toJSONString(pieceItemRequest);
-        String responseString = this.mvc.perform(post("/shops/1/freightmodels/9/pieceItems").header("authorization", token)
+        String json = "{\n" +
+                "  \"regionId\": 200,\n" +
+                "  \"firstItem\": 2,\n" +
+                "  \"firstItemPrice\": 10000,\n" +
+                "  \"additionalItems\": 2,\n" +
+                "  \"additionalItemsPrice\": 5000\n" +
+                "}";
+        String responseString = this.mvc.perform(post("/shops/{shopId}/freightmodels/{id}/pieceItems",47012,47011).header("authorization", token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
                 .andExpect(status().isCreated())

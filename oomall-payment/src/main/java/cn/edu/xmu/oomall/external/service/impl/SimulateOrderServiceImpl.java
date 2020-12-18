@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Wang Zhizhou
  * create 2020/12/14
- * modified 2020/12/16
+ * modified 2020/12/18
  */
 @Component
 public class SimulateOrderServiceImpl implements IOrderService {
@@ -24,13 +24,13 @@ public class SimulateOrderServiceImpl implements IOrderService {
     }
 
     @Override
-    public Boolean isShopOwnOrder(Long shopId, Long orderId) {
-        return orderService.isShopOwnOrder(shopId, orderId);
+    public Long priceOrderCanBePaid(Long customerId, Long orderId) {
+        return orderService.priceOrderCanBePaid(customerId, orderId);
     }
 
     @Override
-    public Boolean orderCanBePaid(Long id) {
-        return orderService.orderCanBePaid(id);
+    public Boolean isShopOwnOrder(Long shopId, Long orderId) {
+        return orderService.isShopOwnOrder(shopId, orderId);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class SimulateOrderServiceImpl implements IOrderService {
 
     @Override
     public Long getCustomerIdByOrderId(Long id) {
-//        return orderService.;
+        // todo
         return 0L;
     }
 

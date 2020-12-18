@@ -56,4 +56,17 @@ public class DeleteFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
+    @Test
+    public void deleteFreightModel2() throws Exception{
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+        String responseString = this.mvc.perform(delete("/shops/2/freightmodels/9").header("authorization",token))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
 }

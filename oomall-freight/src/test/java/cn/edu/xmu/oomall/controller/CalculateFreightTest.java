@@ -54,4 +54,20 @@ public class CalculateFreightTest {
 		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":8}";
 		JSONAssert.assertEquals(expectedResponse, responseString, true);
 	}
+
+	@Test
+	public void calculateFreight1() throws Exception {
+		String json = "[{\"count\":1,\"skuId\":1275}]";
+		System.out.println(json);
+		String responseString = this.mvc.perform(post("/region/2001/price")
+				.contentType("application/json;charset=UTF-8")
+				.content(json))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType("application/json;charset=UTF-8"))
+				.andReturn()
+				.getResponse()
+				.getContentAsString();
+		String expectedResponse = "{\"errno\":805}";
+		JSONAssert.assertEquals(expectedResponse, responseString, false);
+	}
 }

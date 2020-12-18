@@ -86,8 +86,8 @@ public interface OrderRepository extends
 
 	@Modifying
 	@Transactional
-	@Query(value = "UPDATE OrderPo p SET p.beDeleted = 1 WHERE p.id = :id")
-	int deleteSelfOrderById(Long id);
+	@Query(value = "UPDATE OrderPo p SET p.beDeleted = :val WHERE p.id = :id")
+	int deleteSelfOrderById(Long id, Integer val);
 
 	@Modifying
 	@Transactional

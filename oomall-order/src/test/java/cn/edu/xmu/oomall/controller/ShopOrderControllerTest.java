@@ -156,11 +156,11 @@ public class ShopOrderControllerTest {
     public void getAllShopOrdersTest5() throws Exception {
         String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=2019071257669&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":0,\"pages\":0,\"list\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -175,11 +175,11 @@ public class ShopOrderControllerTest {
     public void getAllShopOrdersTest6() throws Exception {
         String response = mvc.perform(get("/shops/{shopId}/orders?orderSn=20190712576690000&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":0,\"pages\":0,\"list\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -211,7 +211,6 @@ public class ShopOrderControllerTest {
      * 8 获取商铺订单概要测试8
      * 访问非本商铺的订单（顾客id）
      * （顾客没下过本商铺的订单，但下过其他的订单）
-     * （操作的资源id不存在）
      *
      * @throws Exception
      */
@@ -220,11 +219,11 @@ public class ShopOrderControllerTest {
     public void getAllShopOrdersTest8() throws Exception {
         String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":0,\"pages\":0,\"list\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -232,7 +231,6 @@ public class ShopOrderControllerTest {
      * 9 获取商铺订单概要测试9
      * 访问非本商铺的订单（顾客id+订单序列号）
      * （订单序列号存在但不属于该顾客）
-     * （操作的资源id不存在）
      *
      * @throws Exception
      */
@@ -241,11 +239,11 @@ public class ShopOrderControllerTest {
     public void getAllShopOrdersTest9() throws Exception {
         String response = mvc.perform(get("/shops/{shopId}/orders?customerId=734&orderSn=2019121224844&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
-                .andExpect(status().isNotFound())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":504,\"errmsg\":\"操作的资源id不存在\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":0,\"pages\":0,\"list\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 
@@ -253,7 +251,6 @@ public class ShopOrderControllerTest {
      * 10 获取商铺订单概要测试10
      * 访问非本商铺的订单（顾客id+订单序列号）
      * （订单序列号存在且属于该顾客但不属于本商铺）
-     * （操作的资源id不存在）
      *
      * @throws Exception
      */
@@ -262,11 +259,11 @@ public class ShopOrderControllerTest {
     public void getAllShopOrdersTest10() throws Exception {
         String response = mvc.perform(get("/shops/{shopId}/orders?customerId=5344&orderSn=2019121224844&pageSize=1", 4567)
                 .header("authorization", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjAzMDkxMTA1ODhVIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjowLCJleHAiOjM3NTQ0NDE1MTIsInVzZXJJZCI6MTEyLCJpYXQiOjE2MDY5NTc4NjV9.FWk_Gc8yEVrah74GyBQRB3gTnw1nz_riMuAvrujF1uM"))
-                .andExpect(status().isForbidden())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn().getResponse().getContentAsString();
 
-        String expectedResponse = "{\"errno\":505,\"errmsg\":\"操作的资源id不是自己的对象\"}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":1,\"total\":0,\"pages\":0,\"list\":[]}}";
         Assert.assertEquals(expectedResponse, response);
     }
 

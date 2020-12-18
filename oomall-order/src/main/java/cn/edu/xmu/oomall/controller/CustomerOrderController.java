@@ -86,7 +86,7 @@ public class CustomerOrderController {
 			@RequestParam(required = false) String beginTime,
 			@RequestParam(required = false) String endTime,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
-			@RequestParam(required = false, defaultValue = "20") Integer pageSize,
+			@RequestParam(required = false, defaultValue = "10") Integer pageSize,
 			@LoginUser Long customerId) {
 		PageInfo pageInfo = new PageInfo(page, pageSize);
 		List<Order> os = customerOrderService.getOrders(

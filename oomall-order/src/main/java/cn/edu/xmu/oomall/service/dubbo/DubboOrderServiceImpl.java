@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.service.dubbo;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
+import cn.edu.xmu.oomall.constant.DbOrderStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
@@ -63,6 +64,11 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 		OrderPo orderPo = orderRepository.findOrderSnAndShopIdById(orderItemPo.getOrderId());
 		if (orderPo == null) {
+			return null;
+		}
+
+		if (orderPo.getState() == OrderStatus.COMPLETED.value()
+				|| (orderPo.getBeDeleted() != null && orderPo.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
 			return null;
 		}
 
@@ -379,5 +385,35 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 				dto.getFrom(), dto.getFromSub()
 		);
 		return r == 1;
+	}
+
+	@Override
+	public Long priceOrderCanBePaid(Long customerId, Long orderId) {
+		Optional<OrderPo> op = orderRepository.findById(orderId);
+		if (op.isEmpty()) {
+			return null;
+		}
+
+		OrderPo po = op.get();
+
+		if (!po.getCustomerId().equals(customerId)) {
+			return -1L;
+		}
+
+		if (po.getState() >= OrderStatus.TO_BE_RECEIVED.value()) {
+			return 0L;
+		}
+
+		if (po.getOrderType() == OrderType.PRESALE.value()) {
+			if (po.getSubState() == OrderStatus.NEW.value()) {
+				return activityService.getPreSaleDeposit(po.getPresaleId());
+			} else {
+				return activityService.getPreSaleBalance(po.getPresaleId());
+			}
+		} else {
+			Long o = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
+			Long d = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
+			return o - d;
+		}
 	}
 }
