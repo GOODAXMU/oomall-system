@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.dao;
 
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
+import cn.edu.xmu.oomall.constant.DbOrderStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
@@ -60,8 +61,7 @@ public class OrderDao {
             if (op.getPid() != null && op.getPid() == 0 && !withParent) {
                 continue;
             }
-            // be_deleted字段为1表示已删除
-            if (op.getBeDeleted() != null && op.getBeDeleted() == 1) {
+            if (op.getBeDeleted() != null && op.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
                 continue;
             }
             orders.add(Order.toOrder(op));
@@ -119,7 +119,7 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         OrderPo opo = op.get();
-        if (opo.getBeDeleted() != null && opo.getBeDeleted() == 1) {
+        if (opo.getBeDeleted() != null && opo.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         if (opo.getCustomerId() == null || !opo.getCustomerId().equals(customerId)) {
@@ -168,7 +168,7 @@ public class OrderDao {
         OrderPo po = OrderPo.toOrderPo(o);
 
         Optional<OrderPo> db = orderRepository.findById(o.getId());
-        if (db.isEmpty()) {
+        if (db.isEmpty() || (db.get().getBeDeleted() != null && db.get().getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
             return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
@@ -210,7 +210,7 @@ public class OrderDao {
     }
 
     public Reply<Object> deleteSelfOrder(Long id) {
-        int r = orderRepository.deleteSelfOrderById(id);
+        int r = orderRepository.deleteSelfOrderById(id, DbOrderStatus.BE_DELETED.value());
 
         if (r <= 0) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
@@ -298,7 +298,7 @@ public class OrderDao {
         if (r <= 0) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         } else {
-            return new Reply<>(ResponseStatus.OK);
+            return new Reply<>(HttpStatus.CREATED, ResponseStatus.OK);
         }
     }
 
@@ -315,7 +315,7 @@ public class OrderDao {
     public Reply<OrderPo> getOrderPoByIdAndCustomerId(Long id, Long customerId) {
         Optional<OrderPo> op = orderRepository.findById(id);
         OrderPo po = op.isEmpty() ? null : op.get();
-        if (po == null) {
+        if (po == null || (po.getBeDeleted() != null && po.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
             return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
         if (!customerId.equals(po.getCustomerId())) {

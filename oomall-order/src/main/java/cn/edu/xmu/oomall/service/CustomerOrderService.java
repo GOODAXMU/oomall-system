@@ -4,6 +4,7 @@ import cn.edu.xmu.oomall.bo.Customer;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
+import cn.edu.xmu.oomall.constant.DbOrderStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.dao.OrderDao;
@@ -12,6 +13,7 @@ import cn.edu.xmu.oomall.external.service.*;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.Reply;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -85,12 +87,17 @@ public class CustomerOrderService {
 
 		OrderPo order = r.getData();
 
+		if (order.getBeDeleted() != null && order.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
+			return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+
 		if (order.getState() >= OrderStatus.COMPLETED.value()) {
 			return orderDao.deleteSelfOrder(id);
-		} else if (order.getSubState() < OrderStatus.DELIVERED.value()) {
+		} else if (order.getState() <= OrderStatus.TO_BE_RECEIVED.value()) {
+			if (order.getSubState() == OrderStatus.DELIVERED.value()) {
+				return new Reply<>(ResponseStatus.ORDER_FORBID);
+			}
 			return orderDao.updateOrderState(id, OrderStatus.CANCELED.value(), null);
-		} else if (order.getSubState() == OrderStatus.DELIVERED.value()) {
-			return new Reply<>(ResponseStatus.ORDER_FORBID);
 		} else {
 			return new Reply<>(ResponseStatus.OK);
 		}
@@ -102,6 +109,11 @@ public class CustomerOrderService {
 			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
 		}
 
+		OrderPo po = r.getData();
+		if (po == null || (po.getBeDeleted() != null && po.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
+			return new Reply<>(HttpStatus.NOT_FOUND, ResponseStatus.RESOURCE_ID_NOT_EXIST);
+		}
+
 		return orderDao.confirmOrder(id);
 	}
 
@@ -110,6 +122,8 @@ public class CustomerOrderService {
 		if (!r.isOk()) {
 			return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
 		}
+
+		OrderPo po = r.getData();
 		
 		return orderDao.groupon2Normal(id, customerId);
 	}
