@@ -277,7 +277,7 @@ public class FreightDao {
             freightModels.add(new FreightModel(po));
         }
 
-        return new Reply<List<FreightModel>>(freightModels);
+        return new Reply<>(freightModels);
     }
 
     /**

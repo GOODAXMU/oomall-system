@@ -64,4 +64,26 @@ public class GetWeightFreightModelTest {
         JSONAssert.assertEquals(expectedResponse, responseString, false);
 
     }
+
+    /**
+     * 测试获取重量运费模板明细
+     * 操作资源id不是自己对象
+     * @author yan song
+     * @throws Exception
+     */
+    @Test
+    public void getWeightFreightModels2() throws Exception{
+        String token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ0aGlzIGlzIGEgdG9rZW4iLCJhdWQiOiJNSU5JQVBQIiwidG9rZW5JZCI6IjIwMjAxMjA1MTk1NDQ5MjdLIiwiaXNzIjoiT09BRCIsImRlcGFydElkIjoxLCJleHAiOjM3NTQ2NTI5MzYsInVzZXJJZCI6MSwiaWF0IjoxNjA3MTY5Mjg5fQ.jJUTyU6Y53XRasLDqHFcT5VDQZm8qRx06MepkRGI9H0";
+
+        //todo 过该测试（gmt时间精确到秒不要到毫秒）
+        String responseString = this.mvc.perform(get("/shops/2/freightmodels/11/weightItems").header("authorization", token))
+                .andExpect(status().isForbidden())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":505}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+
+    }
 }
