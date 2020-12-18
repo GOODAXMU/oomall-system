@@ -39,6 +39,7 @@ public class PieceFreightModel {
 
     private Long additionalItemsPrice;
 
+    private Long unit;
     /**
      * 构造函数
      *

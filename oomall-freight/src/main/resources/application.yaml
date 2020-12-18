@@ -79,6 +79,9 @@ oomall:
       name: WangGoodsServiceImpl
       #name: SimulatedGoodsServiceImpl
       version: 0.0.1-SNAPSHOT
+    region-service:
+      name: JiangRegionServiceImpl
+      version: 0.0.1-SNAPSHOT
 
   strategy:
     freight-calculate:
