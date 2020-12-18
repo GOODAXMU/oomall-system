@@ -68,6 +68,7 @@ public class FreightService {
     public void init() {
         goodService = (IGoodService) serviceFactory.get(IGoodService.class);
         freightCalculate = (IFreightCalculate) serviceFactory.get(IFreightCalculate.class);
+        regionService = (IRegionService) serviceFactory.get(IRegionService.class);
     }
 
     /**
@@ -123,7 +124,7 @@ public class FreightService {
                 //如果没找到尝试寻找其上级地区
                 if (!reply.isOk()) {
                     Long pRid = regionService.getSuperiorRegionId(rid);
-                    while (!pRid.equals(-1L)) {
+                    while (pRid != null && !pRid.equals(-1L)) {
                         freightModel.setRid(pRid);
                         reply = freightDao.getWeightFreightModel(freightModel);
                         if (reply.isOk()) {
@@ -131,19 +132,18 @@ public class FreightService {
                         }
                         pRid = regionService.getSuperiorRegionId(pRid);
                     }
-                    if (!reply.isOk()) {
-                        return new Reply<>(reply.getResponseStatus());
-                    }
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
-                weightFreightModel.setUnit(freightModel.getUnit());
-                weightFreightModels.add(weightFreightModel);
+                if (null != weightFreightModel) {
+                    weightFreightModel.setUnit(freightModel.getUnit());
+                    weightFreightModels.add(weightFreightModel);
+                }
             } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 //如果没找到尝试寻找其上级地区
                 if (!reply.isOk()) {
                     Long pRid = regionService.getSuperiorRegionId(rid);
-                    while (!pRid.equals(-1L)) {
+                    while (pRid != null && !pRid.equals(-1L)) {
                         freightModel.setRid(pRid);
                         reply = freightDao.getPieceFreightModel(freightModel);
                         if (reply.isOk()) {
@@ -151,19 +151,20 @@ public class FreightService {
                         }
                         pRid = regionService.getSuperiorRegionId(pRid);
                     }
-                    if (!reply.isOk()) {
-                        return new Reply<>(reply.getResponseStatus());
-                    }
                 }
                 PieceFreightModel pieceFreightModel = reply.getData();
-                pieceFreightModel.setUnit(freightModel.getUnit());
-                pieceFreightModels.add(pieceFreightModel);
+                if (null != pieceFreightModel) {
+                    pieceFreightModel.setUnit(freightModel.getUnit());
+                    pieceFreightModels.add(pieceFreightModel);
+                }
             }
         }
 
+        if (pieceFreightModels.isEmpty() && weightFreightModels.isEmpty()) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
         //计算
         return new Reply<>(freightCalculate.calculateFreight(purchaseItems, weightFreightModels, pieceFreightModels));
-
     }
 
     /**

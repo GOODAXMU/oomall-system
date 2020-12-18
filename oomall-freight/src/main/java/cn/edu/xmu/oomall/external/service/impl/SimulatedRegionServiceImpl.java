@@ -7,6 +7,6 @@ import org.springframework.stereotype.Component;
 public class SimulatedRegionServiceImpl implements IRegionService {
     @Override
     public Long getSuperiorRegionId(Long regionId){
-        return 14L;
+        return -1L;
     }
 }

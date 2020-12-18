@@ -3,11 +3,9 @@ package cn.edu.xmu.oomall.external.service.impl;
 import cn.edu.xmu.oomall.external.service.IGoodService;
 import org.apache.dubbo.config.annotation.DubboReference;
 import org.springframework.stereotype.Component;
-
 @Component
 public class WangGoodsServiceImpl implements IGoodService {
 
-    // todo 外部服务未配置
     @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000, check = false)
     private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
