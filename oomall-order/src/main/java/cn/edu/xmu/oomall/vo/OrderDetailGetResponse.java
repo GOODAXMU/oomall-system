@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -106,9 +107,9 @@ public class OrderDetailGetResponse {
     private Integer state;
     private Integer subState;
 
-    private Long gmtCreate;
-    private Long gmtModified;
-    private Long confirmTime;
+    private String gmtCreate;
+    private String gmtModified;
+    private String confirmTime;
 
     private Long originPrice;
     private Long discountPrice;
@@ -142,13 +143,13 @@ public class OrderDetailGetResponse {
         this.subState = o.getSubState();
 
         if (o.getGmtCreated() != null) {
-            this.gmtCreate = o.getGmtCreated().toEpochSecond(ZoneOffset.UTC);
+            this.gmtCreate = o.getGmtCreated().toString();
         }
         if (o.getGmtModified() != null) {
-            this.gmtModified = o.getGmtModified().toEpochSecond(ZoneOffset.UTC);
+            this.gmtModified = o.getGmtModified().toString();
         }
         if (o.getConfirmTime() != null) {
-            this.confirmTime = o.getConfirmTime().toEpochSecond(ZoneOffset.UTC);
+            this.confirmTime = o.getConfirmTime().toString();
         }
 
         this.originPrice = o.getOriginPrice();
