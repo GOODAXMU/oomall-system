@@ -55,22 +55,6 @@ public class DefineFreightModelTest {
                 .getContentAsString();
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
-
-        String temp = responseString;
-        int startIndex = temp.indexOf("id");
-        int endIndex = temp.indexOf("name");
-        String id = temp.substring(startIndex + 4, endIndex - 2);
-
-        log.info("id: " + id);
-
-        responseString = this.mvc.perform(get("/freightmodels/"+id).header("authorization",token))
-                .andExpect(status().isOk())
-                .andExpect(content().contentType("application/json;charset=UTF-8"))
-                .andReturn()
-                .getResponse()
-                .getContentAsString();
-        expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
-        JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
 
     /**
@@ -89,7 +73,7 @@ public class DefineFreightModelTest {
         String responseString = this.mvc.perform(post("/shops/1/freightmodels").header("authorization",token)
                 .contentType("application/json;charset=UTF-8")
                 .content(json))
-                .andExpect(status().isCreated())
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
                 .getResponse()

@@ -29,7 +29,7 @@ public class DeleteWeightFreightModelTest {
 
     @Test
     public void deleteWeightFreightModel() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",2L,201L))
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",2L,202L))
                 .andExpect(status().isForbidden())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -40,7 +40,7 @@ public class DeleteWeightFreightModelTest {
     }
     @Test
     public void deleteWeightFreightModel1() throws Exception{
-        String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",1L,201L))
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",1L,202L))
                 .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=UTF-8"))
                 .andReturn()
@@ -49,4 +49,16 @@ public class DeleteWeightFreightModelTest {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, responseString, false);
     }
+    @Test
+    public void deleteWeightFreightModel2() throws Exception{
+        String responseString = this.mvc.perform(delete("/shops/{shopId}/weightItems/{id}",1L,22233L))
+                .andExpect(status().isNotFound())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":504}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
 }
