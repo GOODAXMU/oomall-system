@@ -86,25 +86,13 @@ public class OrderDao {
 
         pageInfo.calAndSetPagesAndTotal(orderPoPage.getTotalElements(), orderPoPage.getTotalPages());
 
-        if (orderPoPage.isEmpty()) {
-            if (orderSn != null) {
-                Page<OrderPo> orderPoPage2 = orderRepository.findAll(
-                        SpecificationFactory.get(customerId, orderSn, beginTime, endTime),
-                        PageRequest.of(pageInfo.getJpaPage(), pageInfo.getPageSize()));
-                if (!orderPoPage2.isEmpty()) {
-                    return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
-                } else {
-                    return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-                }
-
-            } else {
-                return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-            }
-        }
-
         List<Order> orders = new ArrayList<>();
+
         for (OrderPo op : orderPoPage.getContent()) {
             if (op.getPid() != null && op.getPid() == 0 && !withParent) {
+                continue;
+            }
+            if (op.getBeDeleted() != null && op.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
                 continue;
             }
             orders.add(Order.toOrder(op));
