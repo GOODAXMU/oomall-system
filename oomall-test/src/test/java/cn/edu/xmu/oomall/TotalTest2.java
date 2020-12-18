@@ -44,7 +44,7 @@ public class TotalTest2 {
                 .returnResult()
                 .getResponseBodyContent();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":8}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":18}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
 
