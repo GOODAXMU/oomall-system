@@ -48,28 +48,28 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
 
         for (WeightFreightModel weightFreightModel : weightFreightModels) {
             Long curPrice = weightFreightModel.getFirstWeightFreight();
-            weightFreightModel.setFirstWeight(weightFreightModel.getFirstWeight() * weightFreightModel.getUnit());
-            if (totalWeight <= weightFreightModel.getFirstWeight() * kg) {
+
+            if (totalWeight <= weightFreightModel.getFirstWeight()) {
             } else if (totalWeight <= ten * kg) {
-                curPrice += (totalWeight - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
+                curPrice += (int) Math.ceil((totalWeight - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
             } else if (totalWeight <= fifty * kg) {
-                curPrice += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-                curPrice += (totalWeight - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
+                curPrice += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+                curPrice += (int) Math.ceil((totalWeight - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
             } else if (totalWeight <= hundry * kg) {
-                curPrice += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-                curPrice += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-                curPrice += (totalWeight - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
+                curPrice += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+                curPrice += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+                curPrice += (int) Math.ceil((totalWeight - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
             } else if (totalWeight <= trihundry * kg) {
-                curPrice += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-                curPrice += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-                curPrice += (hundry * kg - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
-                curPrice += (totalWeight - hundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getTrihunPrice();
+                curPrice += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+                curPrice += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+                curPrice += (int) Math.ceil((hundry * kg - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
+                curPrice += (int) Math.ceil((totalWeight - hundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTrihunPrice();
             } else {
-                curPrice += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-                curPrice += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-                curPrice += (hundry * kg - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
-                curPrice += (trihundry * kg - hundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getTrihunPrice();
-                curPrice += (totalWeight - trihundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getAbovePrice();
+                curPrice += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+                curPrice += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+                curPrice += (int) Math.ceil((hundry * kg - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
+                curPrice += (int) Math.ceil((trihundry * kg - hundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTrihunPrice();
+                curPrice += (int) Math.ceil((totalWeight - trihundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getAbovePrice();
             }
             if (curPrice > maxPrice) {
                 maxPrice = curPrice;
@@ -86,8 +86,8 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
         }
         for (PieceFreightModel pieceFreightModel : pieceFreightModels) {
             Long curPrice = pieceFreightModel.getFirstItemPrice();
-            if (totalCount > pieceFreightModel.getFirstItem()) {
-                curPrice += (int) Math.ceil((totalCount - pieceFreightModel.getFirstItem()) * 1.0 / pieceFreightModel.getAdditionalItems())
+            if (totalCount > pieceFreightModel.getFirstItem() * pieceFreightModel.getUnit()) {
+                curPrice += (int) Math.ceil((totalCount - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems() * pieceFreightModel.getUnit()))
                         * pieceFreightModel.getAdditionalItemsPrice();
             }
             if (curPrice > maxPrice) {
@@ -102,27 +102,27 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
         Long price = weightFreightModel.getFirstWeightFreight();
 
         Long weight = item.getWeight() * item.getCount();
-        if (weight <= weightFreightModel.getFirstWeight() * kg) {
+        if (weight <= weightFreightModel.getFirstWeight()) {
         } else if (weight <= ten * kg) {
-            price += (item.getWeight() - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
+            price += (int) Math.ceil((item.getWeight() - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
         } else if (weight <= fifty * kg) {
-            price += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-            price += (item.getWeight() - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
+            price += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+            price += (int) Math.ceil((item.getWeight() - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
         } else if (weight <= hundry * kg) {
-            price += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-            price += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-            price += (item.getWeight() - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
+            price += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+            price += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+            price += (int) Math.ceil((item.getWeight() - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
         } else if (weight <= trihundry * kg) {
-            price += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-            price += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-            price += (hundry * kg - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
-            price += (item.getWeight() - hundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getTrihunPrice();
+            price += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+            price += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+            price += (int) Math.ceil((hundry * kg - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
+            price += (int) Math.ceil((item.getWeight() - hundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTrihunPrice();
         } else {
-            price += (ten * kg - weightFreightModel.getFirstWeight() * kg) / weightFreightModel.getUnit() * weightFreightModel.getTenPrice();
-            price += (fifty * kg - ten * kg) / weightFreightModel.getUnit() * weightFreightModel.getFiftyPrice();
-            price += (hundry * kg - fifty * kg) / weightFreightModel.getUnit() * weightFreightModel.getHundredPrice();
-            price += (trihundry * kg - hundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getTrihunPrice();
-            price += (item.getWeight() - trihundry * kg) / weightFreightModel.getUnit() * weightFreightModel.getAbovePrice();
+            price += (int) Math.ceil((ten * kg - weightFreightModel.getFirstWeight()) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTenPrice();
+            price += (int) Math.ceil((fifty * kg - ten * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getFiftyPrice();
+            price += (int) Math.ceil((hundry * kg - fifty * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getHundredPrice();
+            price += (int) Math.ceil((trihundry * kg - hundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getTrihunPrice();
+            price += (int) Math.ceil((item.getWeight() - trihundry * kg) * 1.0 / weightFreightModel.getUnit()) * weightFreightModel.getAbovePrice();
         }
         return price;
     }
@@ -130,8 +130,8 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
     @Override
     public Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel) {
         Long price = pieceFreightModel.getFirstItemPrice();
-        if (item.getCount() > pieceFreightModel.getFirstItem()) {
-            price += (int) Math.ceil((item.getCount() - pieceFreightModel.getFirstItem()) * 1.0 / pieceFreightModel.getAdditionalItems())
+        if (item.getCount() > pieceFreightModel.getFirstItem() * pieceFreightModel.getUnit()) {
+            price += (int) Math.ceil((item.getCount() - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems() * pieceFreightModel.getUnit()))
                     * pieceFreightModel.getAdditionalItemsPrice();
         }
         return price;

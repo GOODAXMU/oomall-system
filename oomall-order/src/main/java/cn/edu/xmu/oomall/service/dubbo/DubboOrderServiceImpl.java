@@ -413,7 +413,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		} else {
 			Long o = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
 			Long d = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
-			return o - d;
+			Long f = po.getFreightPrice() == null ? 0L : po.getFreightPrice();
+			return o - d + f;
 		}
 	}
 }

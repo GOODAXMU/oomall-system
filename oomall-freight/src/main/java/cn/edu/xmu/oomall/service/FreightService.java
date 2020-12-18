@@ -10,6 +10,7 @@ import cn.edu.xmu.oomall.entity.PieceFreightModelPo;
 import cn.edu.xmu.oomall.entity.WeightFreightModelPo;
 import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.external.service.IGoodService;
+import cn.edu.xmu.oomall.external.service.IRegionService;
 import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.strategy.IFreightCalculate;
 import cn.edu.xmu.oomall.util.PageInfo;
@@ -50,6 +51,7 @@ public class FreightService {
 
     private IGoodService goodService;
 
+    private IRegionService regionService;
 
     private IFreightCalculate freightCalculate;
 
@@ -66,6 +68,7 @@ public class FreightService {
     public void init() {
         goodService = (IGoodService) serviceFactory.get(IGoodService.class);
         freightCalculate = (IFreightCalculate) serviceFactory.get(IFreightCalculate.class);
+        regionService = (IRegionService) serviceFactory.get(IRegionService.class);
     }
 
     /**
@@ -85,15 +88,16 @@ public class FreightService {
             if (!freightModels.contains(freightModel)) {
                 freightModels.add(freightModel);
             }
-            item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()) * freightModel.getUnit());
+            item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()));
         }
 
         List<Long> shopIds = new ArrayList<>();
+
         //没有定义模板则使用商家默认运费模板
         if (freightModels.isEmpty()) {
             for (PurchaseItem item : purchaseItems) {
                 Long shopId = goodService.getShopId(item.getSkuId());
-                if (!shopIds.contains(shopId)) {
+                if (shopId != null && !shopIds.contains(shopId)) {
                     shopIds.add(shopId);
                     freightModels.add(freightDao.getDefaultFreightModel(shopId));
                 }
@@ -116,25 +120,51 @@ public class FreightService {
             freightModel.setRid(rid);
             if (freightModel.getType().equals(ModelType.WEIGHT_MODEL.type())) {
                 Reply<WeightFreightModel> reply = freightDao.getWeightFreightModel(freightModel);
+
+                //如果没找到尝试寻找其上级地区
                 if (!reply.isOk()) {
-                    return new Reply<>(reply.getResponseStatus());
+                    Long pRid = regionService.getSuperiorRegionId(rid);
+                    while (pRid != null && !pRid.equals(-1L)) {
+                        freightModel.setRid(pRid);
+                        reply = freightDao.getWeightFreightModel(freightModel);
+                        if (reply.isOk()) {
+                            break;
+                        }
+                        pRid = regionService.getSuperiorRegionId(pRid);
+                    }
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
-                weightFreightModel.setUnit(freightModel.getUnit());
-                weightFreightModels.add(weightFreightModel);
+                if (null != weightFreightModel) {
+                    weightFreightModel.setUnit(freightModel.getUnit());
+                    weightFreightModels.add(weightFreightModel);
+                }
             } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
+                //如果没找到尝试寻找其上级地区
                 if (!reply.isOk()) {
-                    return new Reply<>(reply.getResponseStatus());
+                    Long pRid = regionService.getSuperiorRegionId(rid);
+                    while (pRid != null && !pRid.equals(-1L)) {
+                        freightModel.setRid(pRid);
+                        reply = freightDao.getPieceFreightModel(freightModel);
+                        if (reply.isOk()) {
+                            break;
+                        }
+                        pRid = regionService.getSuperiorRegionId(pRid);
+                    }
                 }
                 PieceFreightModel pieceFreightModel = reply.getData();
-                pieceFreightModels.add(pieceFreightModel);
+                if (null != pieceFreightModel) {
+                    pieceFreightModel.setUnit(freightModel.getUnit());
+                    pieceFreightModels.add(pieceFreightModel);
+                }
             }
         }
 
+        if (pieceFreightModels.isEmpty() && weightFreightModels.isEmpty()) {
+            return new Reply<>(ResponseStatus.REGION_NOT_REACH);
+        }
         //计算
         return new Reply<>(freightCalculate.calculateFreight(purchaseItems, weightFreightModels, pieceFreightModels));
-
     }
 
     /**
@@ -152,7 +182,7 @@ public class FreightService {
             log.debug("not in redis");
             //redis中未存储则计算运费
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(purchaseItem.getSkuId())).getData();
-            purchaseItem.setWeight(goodService.getGoodsSkuWeightById(purchaseItem.getSkuId()) * freightModel.getUnit());
+            purchaseItem.setWeight(goodService.getGoodsSkuWeightById(purchaseItem.getSkuId()));
 
             //商品没有模板
             if (null == freightModel) {
@@ -175,6 +205,7 @@ public class FreightService {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
+                weightFreightModel.setUnit(freightModel.getUnit());
                 freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
             } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
@@ -182,6 +213,7 @@ public class FreightService {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 PieceFreightModel pieceFreightModel = reply.getData();
+                pieceFreightModel.setUnit(freightModel.getUnit());
                 freight = freightCalculate.calActivityFreightByPiece(purchaseItem, pieceFreightModel);
             }
             redisTemplate.opsForValue().set(key, freight);
