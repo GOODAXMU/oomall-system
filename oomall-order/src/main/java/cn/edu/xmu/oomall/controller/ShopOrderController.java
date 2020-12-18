@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.controller;
 
+import cn.edu.xmu.oomall.annotation.Audit;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.entity.OrderPo;
 import cn.edu.xmu.oomall.service.ShopOrderService;
@@ -31,6 +32,7 @@ public class ShopOrderController {
     @Autowired
     private ShopOrderService shopOrderService;
 
+    @Audit
     @ApiOperation(value = "店家查询商户所有订单 (概要)。")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -62,19 +64,18 @@ public class ShopOrderController {
                 endTime == null ? null : LocalDateTime.parse(endTime),
                 pageInfo, false);
 
-        if(!(r.getData() instanceof List))
-        {
+        if (!(r.getData() instanceof List)) {
             return new Reply<>(r.getHttpStatus(), r.getResponseStatus());
         }
 
         OrderSummaryGetResponse vo = new OrderSummaryGetResponse();
-        vo.setSummaryList((List<Order>)(r.getData()));
+        vo.setSummaryList((List<Order>) (r.getData()));
         vo.setPageInfo(pageInfo);
 
         return new Reply<>(vo);
     }
 
-
+    @Audit
     @ApiOperation(value = "店家修改订单 (留言)。")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -93,7 +94,7 @@ public class ShopOrderController {
         return shopOrderService.addShopOrderMessage(shopId, id, message);
     }
 
-
+    @Audit
     @ApiOperation(value = "店家查询店内订单完整信息（普通，团购，预售）")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -119,7 +120,7 @@ public class ShopOrderController {
         return new Reply<>(vo);
     }
 
-
+    @Audit
     @ApiOperation(value = "管理员取消本店铺订单。")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
@@ -137,7 +138,7 @@ public class ShopOrderController {
         return shopOrderService.cancelShopOrder(shopId, id);
     }
 
-
+    @Audit
     @ApiOperation(value = "店家对订单标记发货。")
     @ApiImplicitParams({
             @ApiImplicitParam(paramType = "header", dataType = "String", name = "authorization", value = "Token", required = true),
