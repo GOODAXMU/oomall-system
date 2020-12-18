@@ -89,4 +89,15 @@ public interface IDubboOrderService {
 	 * @return
 	 */
 	Boolean changeOrderState(OrderStateDto dto);
+
+	/**
+	 * 获得订单当前状态应该支付的金额
+	 * @param customerId    支付顾客id
+	 * @param orderId       支付订单id
+	 * @return  null    ->  不存在该id的订单 (资源不存在)
+	 *         -1       ->  用户与订单不匹配 (资源操作不匹配)
+	 *          0       ->  订单不可支付 (订单状态禁止)
+	 *         > 0      ->  可支付金额 (正常支付)
+	 */
+	Long priceOrderCanBePaid(Long customerId, Long orderId);
 }
