@@ -2,11 +2,9 @@ server:
   port: 9900
 
 spring:
-  profiles:
-    #active: dev
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: none
     properties:
@@ -15,8 +13,8 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: OOMall
+      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: gooda
       password: 123456
       initial-size: 1
       min-idle: 1
@@ -64,19 +62,19 @@ rocketmq:
 oomall:
   external:
     customer-service:
-      name: ChenCustomerServiceImpl
+      name: SimulatedCustomerServiceImpl
       version: 0.0.1-SNAPSHOT
     shop-service:
-      name: WangShopServiceImpl
+      name: SimulatedShopServiceImpl
       version: 0.0.1-SNAPSHOT
     inventory-service:
-      name: WangInventoryServiceImpl
+      name: SimulatedInventoryServiceImpl
       version: 0.0.1-SNAPSHOT
     freight-service:
-      name: GoodaFreightServiceImpl
+      name: SimulatedFreightServiceImpl
       version: 0.0.1-SNAPSHOT
     discount-service:
-      name: WangDiscountServiceImpl
+      name: SimulatedDiscountServiceImpl
       version: 0.0.1-SNAPSHOT
     rebate-service:
       name: SimulatedRebateServiceImpl
@@ -88,16 +86,16 @@ oomall:
       name: SimulatedShareServiceImpl
       version: 0.0.1-SNAPSHOT
     activity-service:
-      name: WangActivityServiceImpl
+      name: SimulatedActivityServiceImpl
       version: 0.0.1-SNAPSHOT
     flash-sale-service:
-      name: SongFlashSaleServiceImpl
+      name: SimulatedFlashSaleServiceImpl
       version: 0.0.1-SNAPSHOT
     seckill-service:
-      name: GoodaSeckillServiceImpl
+      name: SimulatedSeckillServiceImpl
       version: 0.0.1-SNAPSHOT
     goods-service:
-      name: WangGoodsServiceImpl
+      name: SimulatedGoodsServiceImpl
       version: 0.0.1-SNAPSHOT
 
   order:
@@ -105,4 +103,4 @@ oomall:
 
 logging:
   level:
-    cn.edu.xmu: info
+    cn.edu.xmu: debug

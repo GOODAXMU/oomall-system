@@ -1,9 +1,7 @@
 spring:
-  profiles:
-    #active: dev
 
   jpa:
-    show-sql: false
+    show-sql: true
     hibernate:
       ddl-auto: none
     properties:
@@ -12,8 +10,8 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: OOMall
+      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: gooda
       password: 123456
       initial-size: 1
       min-idle: 1
