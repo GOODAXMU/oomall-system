@@ -107,7 +107,7 @@ public class ShopPaymentController {
 			@ApiResponse(code = 0, message = "成功")
 	})
 	@ResponseStatus(value = HttpStatus.CREATED)
-	@PostMapping(value = "/shops/{shopId}/payments/{id}/refund", produces = "application/json;charset=UTF-8")
+	@PostMapping(value = "/shops/{shopId}/payments/{id}/refunds", produces = "application/json;charset=UTF-8")
 	public Reply<RefundResponse> createRefund(
 			@Valid @RequestBody RefundPostRequest request,
 			@NotNull @Min(value = 0) @PathVariable Long id,
@@ -134,7 +134,7 @@ public class ShopPaymentController {
 			@ApiResponse(code = 0, message = "成功")
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping(value = "/shops/{shopId}/orders/{id}/refund", produces = "application/json;charset=UTF-8")
+	@GetMapping(value = "/shops/{shopId}/orders/{id}/refunds", produces = "application/json;charset=UTF-8")
 	public Reply<List<RefundResponse>> getOrderRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
@@ -164,7 +164,7 @@ public class ShopPaymentController {
 			@ApiResponse(code = 0, message = "成功")
 	})
 	@ResponseStatus(value = HttpStatus.OK)
-	@GetMapping(value = "/shops/{shopId}/aftersales/{id}/refund", produces = "application/json;charset=UTF-8")
+	@GetMapping(value = "/shops/{shopId}/aftersales/{id}/refunds", produces = "application/json;charset=UTF-8")
 	public Reply<List<RefundResponse>> getAfterSaleRefund(
 			@NotNull @Min(value = 0) @PathVariable Long id,
 			@NotNull @Min(value = 0) @PathVariable Long shopId) {
