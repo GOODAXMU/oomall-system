@@ -380,4 +380,29 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		);
 		return r == 1;
 	}
+
+	@Override
+	public Long priceOrderCanBePaid(Long customerId, Long orderId) {
+		Optional<OrderPo> op = orderRepository.findById(orderId);
+		if (op.isEmpty()) {
+			return null;
+		}
+
+		OrderPo po = op.get();
+		if (po.getState() >= OrderStatus.TO_BE_RECEIVED.value()) {
+			return -1L;
+		}
+
+		if (po.getOrderType() == OrderType.PRESALE.value()) {
+			if (po.getSubState() == OrderStatus.NEW.value()) {
+				return activityService.getPreSaleDeposit(po.getPresaleId());
+			} else {
+				return activityService.getPreSaleBalance(po.getPresaleId());
+			}
+		} else {
+			Long o = po.getOriginPrice() == null ? 0L : po.getOriginPrice();
+			Long d = po.getDiscountPrice() == null ? 0L : po.getDiscountPrice();
+			return o - d;
+		}
+	}
 }
