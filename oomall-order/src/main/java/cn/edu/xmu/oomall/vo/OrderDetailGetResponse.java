@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * @author Jianheng HUANG
  * @date 2020-11-9
- *
+ * <p>
  * modified by: xincong yao, date: 2020-11-25
  * modified by: Jianheng HUANG, date: 2020-12-17
  */
@@ -163,6 +163,7 @@ public class OrderDetailGetResponse {
         this.couponId = o.getCouponId();
         this.grouponId = o.getGrouponId();
         this.presaleId = o.getPresaleId();
+        this.shipmentSn = o.getShipmentSn();
         this.orderSn = o.getOrderSn();
 
         List<OrderItem> orderItems = new ArrayList<>();
