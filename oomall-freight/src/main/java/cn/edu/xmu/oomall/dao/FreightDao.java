@@ -448,9 +448,11 @@ public class FreightDao {
             isExist = false;
         }
 
+
         if (cancelFreightModelPo.getId().equals(id)) {
-            return new Reply(ResponseStatus.OK);
+            return new Reply(ResponseStatus.DEFAULT_MODEL_EXISTED);
         }
+
         FreightModelPo freightModelPo = new FreightModelPo();
         freightModelPo.setShopId(shopId);
         freightModelPo.setId(id);

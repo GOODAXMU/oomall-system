@@ -14,6 +14,7 @@ import java.util.List;
 /**
  * @author zhibin lan, Jianheng HUANG
  * @date 2020-11-09
+ * modified by: Jianheng HUANG, date: 2020-12-17
  */
 @ApiModel(description = "获取订单的响应对象")
 @Data
@@ -38,11 +39,15 @@ public class OrderSummaryGetResponse {
         private Integer orderType;
         private Integer state;
         private Integer subState;
-        private Long gmtCreate;
+        private String gmtCreate;
 
         private Long originPrice;
         private Long discountPrice;
         private Long freightPrice;
+
+        private Long grouponId;
+        private Long presaleId;
+        private String shipmentSn;
     }
 
     public void setPageInfo(PageInfo pageInfo) {
@@ -66,11 +71,13 @@ public class OrderSummaryGetResponse {
             summary.setOrderType(o.getOrderType());
             summary.setState(o.getState());
             summary.setSubState(o.getSubState());
-            summary.setGmtCreate(o.getGmtCreated().toEpochSecond(ZoneOffset.UTC));
+            summary.setGmtCreate(o.getGmtCreated().toString());
             summary.setOriginPrice(o.getOriginPrice());
             summary.setDiscountPrice(o.getDiscountPrice());
             summary.setFreightPrice(o.getFreightPrice());
-
+            summary.setGrouponId(o.getGrouponId());
+            summary.setPresaleId(o.getPresaleId());
+            summary.setShipmentSn(o.getShipmentSn());
             summaries.add(summary);
         }
         this.list = summaries;

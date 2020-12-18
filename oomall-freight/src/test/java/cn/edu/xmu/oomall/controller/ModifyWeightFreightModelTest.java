@@ -39,7 +39,7 @@ public class ModifyWeightFreightModelTest {
         weightItemRequest.setFirstWeight(1L);
         weightItemRequest.setFirstWeightPrice(1L);
         weightItemRequest.setHundredPrice(100L);
-        weightItemRequest.setRegionId(1L);
+        weightItemRequest.setRegionId(201231L);
         weightItemRequest.setTenPrice(10L);
         weightItemRequest.setTrihunPrice(300L);
         String json = JSON.toJSONString(weightItemRequest);

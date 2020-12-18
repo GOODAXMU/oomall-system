@@ -35,7 +35,7 @@ public class ModifyPieceFreightModelTest {
         pieceItemRequest.setAdditionalItemsPrice(1L);
         pieceItemRequest.setAdditionalItems(10);
         pieceItemRequest.setFirstItem(1);
-        pieceItemRequest.setRegionId(1L);
+        pieceItemRequest.setRegionId(25512L);
         pieceItemRequest.setFirstItemPrice(1L);
         String json = JSON.toJSONString(pieceItemRequest);
         String responseString = this.mvc.perform(put("/shops/1/pieceItems/201")

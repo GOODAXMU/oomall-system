@@ -114,7 +114,7 @@ public class TotalTest2 {
         int endIndex = temp.indexOf("name");
         String id = temp.substring(startIndex + 4, endIndex - 2);
 
-        byte[] queryResponseString = webClient.get().uri("/freightmodels/" + id).header("authorization", token)
+        byte[] queryResponseString = webClient.get().uri("/shops/1/freightmodels/" + id).header("authorization", token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -176,7 +176,7 @@ public class TotalTest2 {
     @Test
     public void defineDefaultFreightModel1() throws Exception {
         String token = creatTestToken(1L, 1L, 1000);
-        byte[] responseString = webClient.post().uri("/shops/1/freightmodels/9/default").header("authorization", token)
+        byte[] responseString = webClient.post().uri("/shops/1/freightmodels/10/default").header("authorization", token)
                 .exchange()
                 .expectStatus().isCreated()
                 .expectBody()
@@ -186,7 +186,7 @@ public class TotalTest2 {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
 
-        byte[] queryResponseString = webClient.get().uri("/freightmodels/9").header("authorization", token)
+        byte[] queryResponseString = webClient.get().uri("/shops/1/freightmodels/10").header("authorization", token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -248,7 +248,7 @@ public class TotalTest2 {
         int endIndex = temp.indexOf("name");
         String id = temp.substring(startIndex + 4, endIndex - 2);
 
-        byte[] queryResponseString = webClient.get().uri("/freightmodels/" + id).header("authorization", token)
+        byte[] queryResponseString = webClient.get().uri("/shops/1/freightmodels/" + id).header("authorization", token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -292,7 +292,7 @@ public class TotalTest2 {
     @Test
     public void getFreightModelSummary() throws Exception {
         String token = creatTestToken(1L, 1L, 1000);
-        byte[] responseString = webClient.get().uri("/freightmodels/200").header("authorization", token)
+        byte[] responseString = webClient.get().uri("/shops/1/freightmodels/200").header("authorization", token)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()
@@ -312,7 +312,7 @@ public class TotalTest2 {
     @Test
     public void getFreightModelSummary1() throws Exception {
         String token = creatTestToken(1L, 1L, 1000);
-        byte[] responseString = webClient.get().uri("/freightmodels/9").header("authorization", token)
+        byte[] responseString = webClient.get().uri("/shops/1/freightmodels/9").header("authorization", token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -333,7 +333,7 @@ public class TotalTest2 {
     @Test
     public void getFreightModelSummary2() throws Exception {
         String token = creatTestToken(1L, 1L, 1000);
-        byte[] responseString = webClient.get().uri("/freightmodels/13").header("authorization", token)
+        byte[] responseString = webClient.get().uri("/shops/1/freightmodels/13").header("authorization", token)
                 .exchange()
                 .expectStatus().isForbidden()
                 .expectBody()
@@ -360,7 +360,8 @@ public class TotalTest2 {
                 .returnResult()
                 .getResponseBodyContent();
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":10,\"total\":4,\"pages\":1,\"list\":[{\"id\":9,\"name\":\"测试模板\",\"type\":0,\"defaultModel\":true,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":10,\"name\":\"测试模板2\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":11,\"name\":\"测试模板3\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
+        System.out.println(new String(responseString, "UTF-8"));
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":10,\"total\":6,\"pages\":1,\"list\":[{\"id\":9,\"name\":\"测试模板\",\"type\":0,\"defaultModel\":true,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":10,\"name\":\"测试模板2\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":11,\"name\":\"测试模板3\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":22,\"name\":\"ight model/100g\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":23,\"name\":\"piece model/2\",\"type\":1,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}\n";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
 
@@ -401,8 +402,9 @@ public class TotalTest2 {
                 .expectBody()
                 .returnResult()
                 .getResponseBodyContent();
+        System.out.println(new String(responseString, "UTF-8"));
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":2,\"total\":4,\"pages\":2,\"list\":[{\"id\":9,\"name\":\"测试模板\",\"type\":0,\"defaultModel\":true,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":10,\"name\":\"测试模板2\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":1,\"pageSize\":2,\"total\":6,\"pages\":3,\"list\":[{\"id\":9,\"name\":\"测试模板\",\"type\":0,\"defaultModel\":true,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":10,\"name\":\"测试模板2\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
 
@@ -421,8 +423,9 @@ public class TotalTest2 {
                 .expectBody()
                 .returnResult()
                 .getResponseBodyContent();
+        System.out.println(new String(responseString, "UTF-8"));
 
-        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":2,\"pageSize\":2,\"total\":4,\"pages\":2,\"list\":[{\"id\":11,\"name\":\"测试模板3\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":{\"page\":2,\"pageSize\":2,\"total\":6,\"pages\":3,\"list\":[{\"id\":11,\"name\":\"测试模板3\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"},{\"id\":12,\"name\":\"测试模板4\",\"type\":0,\"defaultModel\":false,\"gmtCreate\":\"2020-12-02T20:33:08\",\"gmtModified\":\"2020-12-02T20:33:08\"}]}}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
     }
 
@@ -494,7 +497,7 @@ public class TotalTest2 {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
 
-        byte[] queryResponseString = webClient.get().uri("/freightmodels/9").header("authorization", token)
+        byte[] queryResponseString = webClient.get().uri("/shops/1/freightmodels/9").header("authorization", token)
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody()
@@ -569,7 +572,7 @@ public class TotalTest2 {
         String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\"}";
         JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), true);
 
-        byte[] queryResponseString = webClient.get().uri("/freightmodels/10").header("authorization", token)
+        byte[] queryResponseString = webClient.get().uri("/shops/1/freightmodels/10").header("authorization", token)
                 .exchange()
                 .expectStatus().isNotFound()
                 .expectBody()

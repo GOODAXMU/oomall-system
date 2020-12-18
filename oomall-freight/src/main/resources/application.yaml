@@ -75,11 +75,11 @@ oomall:
     goods-service:
       #      name: WangGoodsServiceImpl
       name: SimulatedGoodsServiceImpl
-      version: 0.0.5-SNAPSHOT
+      version: 0.8.7-SNAPSHOT
 
   strategy:
     freight-calculate:
-      name: FreightCalculateImpl
+      name: NewFreightCalculateImpl
 
   freight:
     version: 1.0.8-SNAPSHOT

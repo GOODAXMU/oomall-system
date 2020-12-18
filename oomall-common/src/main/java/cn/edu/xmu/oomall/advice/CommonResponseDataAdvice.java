@@ -35,7 +35,7 @@ public class CommonResponseDataAdvice implements ResponseBodyAdvice<Object> {
 		STATUS_MAP.put(ResponseStatus.REFUND_EXCESS.value(), HttpStatus.OK);
 		STATUS_MAP.put(ResponseStatus.REGION_NOT_REACH.value(), HttpStatus.OK);
 		STATUS_MAP.put(ResponseStatus.OUT_OF_STOCK.value(), HttpStatus.OK);
-
+		STATUS_MAP.put(ResponseStatus.DEFAULT_MODEL_EXISTED.value(), HttpStatus.OK);
 	}
 
 	/**

@@ -134,6 +134,6 @@ public interface OrderRepository extends
 
 	@Modifying
 	@Transactional
-	@Query(value="UPDATE OrderPo p SET p.state = :state, p.shipmentSn = :shipmentSn WHERE p.id = :id")
-	int markShopOrderDelievered(Long id, Integer state, String shipmentSn);
+	@Query(value="UPDATE OrderPo p SET p.subState = :subState, p.shipmentSn = :shipmentSn WHERE p.id = :id")
+	int markShopOrderDelievered(Long id, Integer subState, String shipmentSn);
 }

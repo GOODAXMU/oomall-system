@@ -226,6 +226,19 @@ public class FreightService {
      *
      * @param id
      * @param shopId
+     * @param uShopId
+     * @return
+     * @author zhibin lan
+     */
+    public Reply<FreightModel> getFreightModelById(Long id, Long shopId, Long uShopId) {
+        return freightDao.getFreightModelById(id, shopId, uShopId);
+    }
+
+    /**
+     * 查询指定运费模板
+     *
+     * @param id
+     * @param shopId
      * @return
      * @author zhibin lan
      */
