@@ -17,7 +17,6 @@ public interface IOrderService {
      * @param customerId 顾客id
      * @return  校验确认
      */
-    // todo 依然保留该接口, 用于订单查询
     Boolean isCustomerOwnOrder(Long customerId, Long orderId);
 
     /**
@@ -29,7 +28,6 @@ public interface IOrderService {
      *          0       ->  订单不可支付 (订单状态禁止)
      *         > 0      ->  可支付金额 (正常支付)
      */
-    // todo 新增接口, 代替创建支付时 isCustomerOwnOrder 和 orderCanBePaid 两个接口的功能
     Long priceOrderCanBePaid(Long customerId, Long orderId);
 
     /**
@@ -39,15 +37,6 @@ public interface IOrderService {
      * @return
      */
     Boolean isShopOwnOrder(Long shopId, Long orderId);
-
-
-    /**
-     * 查看订单是否可以进行支付
-     * @param id 订单id
-     * @return
-     */
-    // todo 废弃该接口
-    Boolean orderCanBePaid(Long id);
 
     /**
      * 根据已完成的支付数额修改订单状态

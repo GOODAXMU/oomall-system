@@ -25,18 +25,12 @@ public class SimulateOrderServiceImpl implements IOrderService {
 
     @Override
     public Long priceOrderCanBePaid(Long customerId, Long orderId) {
-        // todo 实现该方法
-        return Long.MAX_VALUE;
+        return orderService.priceOrderCanBePaid(customerId, orderId);
     }
 
     @Override
     public Boolean isShopOwnOrder(Long shopId, Long orderId) {
         return orderService.isShopOwnOrder(shopId, orderId);
-    }
-
-    @Override
-    public Boolean orderCanBePaid(Long id) {
-        return orderService.orderCanBePaid(id);
     }
 
     @Override
@@ -51,7 +45,7 @@ public class SimulateOrderServiceImpl implements IOrderService {
 
     @Override
     public Long getCustomerIdByOrderId(Long id) {
-//        return orderService.;
+        // todo
         return 0L;
     }
 

@@ -71,24 +71,14 @@ public class CustomerPaymentService {
 
         // price 为订单应付金额
 
-        // todo 下面的逻辑删除
-        /*
-        // 检查顾客查询订单属于本顾客
-        Boolean b = orderService.isCustomerOwnOrder(customerId, orderId);
-        if (null == b) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
-        }
-        if (!b) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
-        }
-
-        // 根据订单状态确认是否允许支付
-        if (!orderService.orderCanBePaid(orderId)) {
-            return new Reply<>(ResponseStatus.ORDER_FORBID);
-        }
-        */
-
         payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
+
+        if (payment.getActualAmount() == 0L) {
+            payment.setState(Payment.State.FAILED);
+
+            // 支付失败并不报错, 返回失败的支付信息
+            return new Reply<>(payment);
+        }
 
         // 进行支付
         if (patternPaymentService.payByPattern(payment)) {

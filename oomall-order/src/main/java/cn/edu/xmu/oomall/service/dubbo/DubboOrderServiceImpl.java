@@ -395,8 +395,13 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 
 		OrderPo po = op.get();
-		if (po.getState() >= OrderStatus.TO_BE_RECEIVED.value()) {
+
+		if (!po.getCustomerId().equals(customerId)) {
 			return -1L;
+		}
+
+		if (po.getState() >= OrderStatus.TO_BE_RECEIVED.value()) {
+			return 0L;
 		}
 
 		if (po.getOrderType() == OrderType.PRESALE.value()) {
