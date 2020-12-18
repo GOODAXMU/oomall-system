@@ -20,7 +20,7 @@ import java.util.UUID;
 /**
  * @author Wang Zhizhou
  * create 2020/11/24
- * modified 2020/12/16
+ * modified 2020/12/18
  */
 
 @Service
@@ -57,6 +57,22 @@ public class CustomerPaymentService {
             return new Reply<>(ResponseStatus.FIELD_INVALID);
         }
 
+        // 获取该订单在当前状态下的应支付金额
+        Long price = orderService.priceOrderCanBePaid(customerId, orderId);
+        if (null == price) {        // 订单id 不存在
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else if (price < 0) {     // 订单与顾客不匹配
+            return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
+        } else if (price == 0) {    // 订单状态不允许支付
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        } else if (price < payment.getActualAmount()) {     // 超额支付, 视作订单状态不允许
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
+        }
+
+        // price 为订单应付金额
+
+        // todo 下面的逻辑删除
+        /*
         // 检查顾客查询订单属于本顾客
         Boolean b = orderService.isCustomerOwnOrder(customerId, orderId);
         if (null == b) {
@@ -70,6 +86,7 @@ public class CustomerPaymentService {
         if (!orderService.orderCanBePaid(orderId)) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
         }
+        */
 
         payment.setPaySn(payment.getPattern() + "-" + UUID.randomUUID().toString());
 

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * @author Wang Zhizhou
  * create 2020/11/28
- * modified 2020/12/11
+ * modified 2020/12/18
  */
 public interface IOrderService {
 
@@ -17,7 +17,20 @@ public interface IOrderService {
      * @param customerId 顾客id
      * @return  校验确认
      */
+    // todo 依然保留该接口, 用于订单查询
     Boolean isCustomerOwnOrder(Long customerId, Long orderId);
+
+    /**
+     * 获得订单当前状态应该支付的金额
+     * @param customerId    支付顾客id
+     * @param orderId       支付订单id
+     * @return  null    ->  不存在该id的订单 (资源不存在)
+     *         -1       ->  用户与订单不匹配 (资源操作不匹配)
+     *          0       ->  订单不可支付 (订单状态禁止)
+     *         > 0      ->  可支付金额 (正常支付)
+     */
+    // todo 新增接口, 代替创建支付时 isCustomerOwnOrder 和 orderCanBePaid 两个接口的功能
+    Long priceOrderCanBePaid(Long customerId, Long orderId);
 
     /**
      * 检查商店是否拥有该订单
@@ -33,6 +46,7 @@ public interface IOrderService {
      * @param id 订单id
      * @return
      */
+    // todo 废弃该接口
     Boolean orderCanBePaid(Long id);
 
     /**
