@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 /**
  * @author Wang Zhizhou
  * create 2020/12/14
- * modified 2020/12/16
+ * modified 2020/12/18
  */
 @Component
 public class SimulateOrderServiceImpl implements IOrderService {
@@ -21,6 +21,12 @@ public class SimulateOrderServiceImpl implements IOrderService {
     @Override
     public Boolean isCustomerOwnOrder(Long customerId, Long orderId) {
         return orderService.isCustomerOwnOrder(customerId, orderId);
+    }
+
+    @Override
+    public Long priceOrderCanBePaid(Long customerId, Long orderId) {
+        // todo 实现该方法
+        return Long.MAX_VALUE;
     }
 
     @Override
