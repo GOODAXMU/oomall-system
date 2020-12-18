@@ -24,6 +24,9 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 	@Value(value = "${oomall.external.goods-service.name}")
 	private String goodsServiceName;
 
+	@Value(value = "${oomall.external.region-service.name}")
+	private String regionServiceName;
+
 	@Value(value = "${oomall.strategy.freight-calculate.name}")
 	private String freightCalculateName;
 
@@ -49,6 +52,7 @@ public class ServiceFactory implements InitializingBean, ApplicationContextAware
 	public void afterPropertiesSet() {
 		services.add(applicationContext.getBean(getBeanName(goodsServiceName)));
 		services.add(applicationContext.getBean(getBeanName(freightCalculateName)));
+		services.add(applicationContext.getBean(getBeanName(regionServiceName)));
 	}
 
 	@Override

@@ -8,12 +8,16 @@ import org.springframework.stereotype.Component;
 public class WangGoodsServiceImpl implements IGoodService {
 
     // todo 外部服务未配置
-    @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000,check = false)
+    @DubboReference(version = "${oomall.external.goods-service.version}", cache = "false", timeout = 5000, check = false)
     private cn.edu.xmu.goods.client.IGoodsService goodsService;
 
     @Override
     public Long getShopId(Long skuid) {
-        return goodsService.getShopIdBySKUId(skuid);
+        Long shopId = goodsService.getShopIdBySKUId(skuid);
+        if (shopId == null) {
+            return -1L;
+        }
+        return shopId;
     }
 
     @Override
@@ -28,6 +32,6 @@ public class WangGoodsServiceImpl implements IGoodService {
 
     @Override
     public Boolean deleteGoodsFreightModel(Long modelId, long shopId) {
-        return goodsService.deleteFreightModelIdBySku(modelId,shopId);
+        return goodsService.deleteFreightModelIdBySku(modelId, shopId);
     }
 }

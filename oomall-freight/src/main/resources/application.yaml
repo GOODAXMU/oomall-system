@@ -68,15 +68,16 @@ dubbo:
   protocol:
     name: dubbo
     port: 19888
+    #    host: 192.168.137.183
     host: localhost
-
 oomall:
   external:
     goods-service:
       #      name: WangGoodsServiceImpl
       name: SimulatedGoodsServiceImpl
-      version: 0.8.7-SNAPSHOT
-
+      version: 0.0.1-SNAPSHOT
+    region-service:
+      name: JiangRegionServiceImpl
   strategy:
     freight-calculate:
       name: NewFreightCalculateImpl
