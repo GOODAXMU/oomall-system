@@ -2,6 +2,7 @@ package cn.edu.xmu.oomall.service.dubbo;
 
 import cn.edu.xmu.oomall.bo.OrderItem;
 import cn.edu.xmu.oomall.bo.Shop;
+import cn.edu.xmu.oomall.constant.DbOrderStatus;
 import cn.edu.xmu.oomall.constant.OrderStatus;
 import cn.edu.xmu.oomall.constant.OrderType;
 import cn.edu.xmu.oomall.constant.ResponseStatus;
@@ -63,6 +64,11 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 		OrderPo orderPo = orderRepository.findOrderSnAndShopIdById(orderItemPo.getOrderId());
 		if (orderPo == null) {
+			return null;
+		}
+
+		if (orderPo.getState() == OrderStatus.COMPLETED.value()
+				|| (orderPo.getBeDeleted() != null && orderPo.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
 			return null;
 		}
 
