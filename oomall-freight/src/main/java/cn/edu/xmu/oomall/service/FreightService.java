@@ -85,7 +85,7 @@ public class FreightService {
         List<FreightModel> freightModels = new ArrayList<>();
         for (PurchaseItem item : purchaseItems) {
             FreightModel freightModel = freightDao.getFreightModelById(goodService.getFreightModelId(item.getSkuId())).getData();
-            if (!freightModels.contains(freightModel)) {
+            if (freightModel != null && !freightModels.contains(freightModel)) {
                 freightModels.add(freightModel);
             }
             item.setWeight(goodService.getGoodsSkuWeightById(item.getSkuId()));
@@ -99,7 +99,10 @@ public class FreightService {
                 Long shopId = goodService.getShopId(item.getSkuId());
                 if (shopId != null && !shopIds.contains(shopId)) {
                     shopIds.add(shopId);
-                    freightModels.add(freightDao.getDefaultFreightModel(shopId));
+                    FreightModel freightModel = freightDao.getDefaultFreightModel(shopId);
+                    if (freightModel != null) {
+                        freightModels.add(freightModel);
+                    }
                 }
             }
         }

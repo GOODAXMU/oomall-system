@@ -10,6 +10,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 import org.springframework.test.web.reactive.server.WebTestClient;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * @author zhibin lan
@@ -25,6 +30,73 @@ public class TotalTest2 {
                 .baseUrl("http://localhost:9800")
                 .defaultHeader(HttpHeaders.CONTENT_TYPE, "application/json;charset=UTF-8")
                 .build();
+    }
+
+    @Test
+    public void freightTest1(){
+        String token = creatTestToken(1L, 1L, 1000);
+        String requireJson = "[{\"count\":3,\"skuId\":517}]";
+
+        byte[] responseString = webClient.post().uri("/region/1625/price")
+                .header("authorization",token)
+                .bodyValue(requireJson).exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.errno").isEqualTo(ResponseCode.OK.getCode())
+                .jsonPath("$.data").isEqualTo(7000)
+                .returnResult()
+                .getResponseBodyContent();
+    }
+
+    @Test
+    public void freightTest2(){
+        String token = creatTestToken(1L, 1L, 1000);
+        String requireJson = "[{\"count\":3,\"skuId\":518}]";
+        byte[] responseString = webClient.post().uri("/region/1599/price")
+                .header("authorization",token)
+                .bodyValue(requireJson).exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .jsonPath("$.errno").isEqualTo(ResponseCode.OK.getCode())
+                .jsonPath("$.data").isEqualTo(1500)
+                .returnResult()
+                .getResponseBodyContent();
+    }
+
+    @Test
+    public void calculateFreight3() throws Exception {
+        String token = creatTestToken(1L, 1L, 1000);
+        String json = "[{\"count\":6,\"skuId\":10000},{\"count\":2,\"skuId\":10001},{\"count\":1,\"skuId\":10002}]";
+        byte[] responseString = webClient.post().uri("/region/2/price").header("authorization", token)
+                .bodyValue(json)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .returnResult()
+                .getResponseBodyContent();
+
+        String expectedResponse = "{\"errno\":0,\"data\":1794}";
+        JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), false);
+    }
+
+    /**
+     * 计算运费2
+     *
+     * @throws Exception
+     */
+    @Test
+    public void calculateFreight4() throws Exception {
+        String token = creatTestToken(1L, 1L, 1000);
+        String json = "[{\"count\":1,\"skuId\":10000},{\"count\":1,\"skuId\":10001},{\"count\":1,\"skuId\":10002}]";
+        byte[] responseString = webClient.post().uri("/region/2/price").header("authorization", token)
+                .bodyValue(json)
+                .exchange()
+                .expectStatus().isCreated()
+                .expectBody()
+                .returnResult()
+                .getResponseBodyContent();
+        String expectedResponse = "{\"errno\":0,\"data\":522}";
+        JSONAssert.assertEquals(expectedResponse, new String(responseString, "UTF-8"), false);
     }
 
     /**

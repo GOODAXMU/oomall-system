@@ -31,43 +31,48 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 public class CalculateFreightTest {
 
-	@Autowired
-	private MockMvc mvc;
+    @Autowired
+    private MockMvc mvc;
 
-	@Test
-	public void calculateFreight() throws Exception {
-		List<FreightCalculateRequest> freightCalculateRequestList = new ArrayList<FreightCalculateRequest>();
-		FreightCalculateRequest freightCalculateRequest = new FreightCalculateRequest();
-		freightCalculateRequest.setCount(1);
-		freightCalculateRequest.setSkuId(Long.valueOf(1275));
-		freightCalculateRequestList.add(freightCalculateRequest);
-		String json = JSON.toJSONString(freightCalculateRequestList);
-		System.out.println(json);
-		String responseString = this.mvc.perform(post("/region/201/price")
-				.contentType("application/json;charset=UTF-8")
-				.content(json))
-				.andExpect(status().isCreated())
-				.andExpect(content().contentType("application/json;charset=UTF-8"))
-				.andReturn()
-				.getResponse()
-				.getContentAsString();
-		String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":8}";
-		JSONAssert.assertEquals(expectedResponse, responseString, true);
-	}
+    @Test
+    public void calculateFreight() throws Exception {
+        List<FreightCalculateRequest> freightCalculateRequestList = new ArrayList<FreightCalculateRequest>();
+        FreightCalculateRequest freightCalculateRequest = new FreightCalculateRequest();
+        freightCalculateRequest.setCount(1);
+        freightCalculateRequest.setSkuId(Long.valueOf(1275));
+        freightCalculateRequestList.add(freightCalculateRequest);
+        String json = JSON.toJSONString(freightCalculateRequestList);
+        System.out.println(json);
+        String responseString = this.mvc.perform(post("/region/201/price")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isCreated())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":0,\"errmsg\":\"成功\",\"data\":18}";
+        JSONAssert.assertEquals(expectedResponse, responseString, true);
+    }
 
-	@Test
-	public void calculateFreight1() throws Exception {
-		String json = "[{\"count\":1,\"skuId\":1275}]";
-		System.out.println(json);
-		String responseString = this.mvc.perform(post("/region/2001/price")
-				.contentType("application/json;charset=UTF-8")
-				.content(json))
-				.andExpect(status().isOk())
-				.andExpect(content().contentType("application/json;charset=UTF-8"))
-				.andReturn()
-				.getResponse()
-				.getContentAsString();
-		String expectedResponse = "{\"errno\":805}";
-		JSONAssert.assertEquals(expectedResponse, responseString, false);
-	}
+    @Test
+    public void calculateFreight1() throws Exception {
+        String json = "[{\"count\":1,\"skuId\":1275}]";
+        System.out.println(json);
+        String responseString = this.mvc.perform(post("/region/2001/price")
+                .contentType("application/json;charset=UTF-8")
+                .content(json))
+                .andExpect(status().isOk())
+                .andExpect(content().contentType("application/json;charset=UTF-8"))
+                .andReturn()
+                .getResponse()
+                .getContentAsString();
+        String expectedResponse = "{\"errno\":805}";
+        JSONAssert.assertEquals(expectedResponse, responseString, false);
+    }
+
+    @Test
+    public void getPRegion() throws Exception {
+
+    }
 }

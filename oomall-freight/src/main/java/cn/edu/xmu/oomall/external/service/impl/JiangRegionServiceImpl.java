@@ -12,7 +12,8 @@ public class JiangRegionServiceImpl implements IRegionService {
     private IDubboRegionService regionService;
 
     @Override
-    public Long getSuperiorRegionId(Long regionId){
-        return regionService.getSuperiorRegionId(regionId);
+    public Long getSuperiorRegionId(Long regionId) {
+        Long sRegionId = regionService.getSuperiorRegionId(regionId);
+        return sRegionId == null ? -1 : sRegionId;
     }
 }

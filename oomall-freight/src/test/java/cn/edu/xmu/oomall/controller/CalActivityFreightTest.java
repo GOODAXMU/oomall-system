@@ -37,7 +37,7 @@ public class CalActivityFreightTest {
         Long rid = Long.valueOf(200);
         Long result = freightService.calActivityFreight(purchaseItem,rid).getData();
 
-        Assert.assertEquals(Long.valueOf(8),result);
+        Assert.assertEquals(Long.valueOf(18),result);
 
 
     }
