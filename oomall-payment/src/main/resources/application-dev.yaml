@@ -46,6 +46,7 @@ dubbo:
   protocol:
     name: dubbo
     port: 19400
+    host: 192.168.43.239
 
 oomall:
   external:
@@ -60,3 +61,6 @@ oomall:
     afterSale-service:
       name: SimulateAfterSaleServiceImpl
       version: 0.0.1-SNAPSHOT
+
+  payment:
+    version: 0.0.1-SNAPSHOT

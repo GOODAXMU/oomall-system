@@ -23,7 +23,7 @@ import java.util.UUID;
  * create 2020/12/11
  * modified 2020/12/15
  */
-//@DubboService(version = "${oomall.payment.version}")
+@DubboService(version = "${oomall.payment.version}")
 public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
     @Autowired
@@ -54,6 +54,10 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
         Long deposit = orderService.getOrderPresaleDeposit(oi.getOrderId());
         Reply<List<Payment>> r = paymentDao.getPaymentsByOrderId(oi.getOrderId());
+
+        if (r.getData() == null || r.getData().isEmpty()) {
+            return true;
+        }
 
         if (!r.isOk()) {            // 查询失败无从返款
             return false;

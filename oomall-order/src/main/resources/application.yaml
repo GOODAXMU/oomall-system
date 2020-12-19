@@ -47,7 +47,7 @@ dubbo:
     address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
-    host: localhost
+    host: 192.168.43.239
     port: 19900
 
 rocketmq:
@@ -105,4 +105,4 @@ oomall:
 
 logging:
   level:
-    cn.edu.xmu: info
+    cn.edu.xmu: debug

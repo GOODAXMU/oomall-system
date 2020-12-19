@@ -59,8 +59,10 @@ public class JwtHelper {
      */
     public UserAndDepart verifyTokenAndGetClaims(String token) {
         if (token == null || token.isEmpty()) {
+            logger.error("token == null || token.isEmpty(): " + token);
             return null;
         }
+
         try {
             Algorithm algorithm = Algorithm.HMAC256(SECRET);
             JWTVerifier verifier = JWT.require(algorithm)
@@ -68,10 +70,14 @@ public class JwtHelper {
                     .build();
             DecodedJWT jwt = verifier.verify(token);
             Map<String, Claim> claims = jwt.getClaims();
+
+            logger.debug(claims.toString());
+
             Claim claimUserId = claims.get("userId");
             Claim claimDepartId = claims.get("departId");
             return new UserAndDepart(claimUserId.asLong(), claimDepartId.asLong());
         } catch (JWTVerificationException exception) {
+            logger.error(exception.getMessage());
             return null;
         }
     }
