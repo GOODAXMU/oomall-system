@@ -48,7 +48,7 @@ dubbo:
   protocol:
     name: dubbo
     port: 19400
-    host: 192.168.43.239
+    host: localhost
 
 oomall:
   external:
@@ -69,4 +69,4 @@ oomall:
 
 logging:
   level:
-    cn.edu.xmu: debug
+    cn.edu.xmu: info
