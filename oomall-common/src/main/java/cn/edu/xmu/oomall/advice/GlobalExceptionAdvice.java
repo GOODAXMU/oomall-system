@@ -1,5 +1,6 @@
 package cn.edu.xmu.oomall.advice;
 
+import cn.edu.xmu.oomall.constant.ResponseStatus;
 import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.vo.CommonResponse;
 import org.springframework.http.HttpStatus;
@@ -41,6 +42,6 @@ public class GlobalExceptionAdvice {
 			msg.append(";");
 		}
 
-		return new CommonResponse<>(0, msg.toString());
+		return new CommonResponse<>(ResponseStatus.FIELD_INVALID.value(), msg.toString());
 	}
 }

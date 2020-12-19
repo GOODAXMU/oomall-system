@@ -1,5 +1,7 @@
 package cn.edu.xmu.oomall.annotation;
 
+import cn.edu.xmu.oomall.constant.ResponseStatus;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.util.JwtHelper;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -10,6 +12,7 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -44,13 +47,20 @@ public class AuditAspect {
 
 
 	@Around("auditAspect()")
-	public Object around(JoinPoint joinPoint) {
+	public Object around(JoinPoint joinPoint) throws OrderModuleException {
 		logger.debug("around: begin joinPoint = " + joinPoint);
 
 		HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
 		String token = request.getHeader(JwtHelper.LOGIN_TOKEN_KEY);
 
+		logger.debug("token: " + token);
+
 		JwtHelper.UserAndDepart userAndDepart = new JwtHelper().verifyTokenAndGetClaims(token);
+
+		if (userAndDepart == null) {
+			throw new OrderModuleException(HttpStatus.BAD_GATEWAY, ResponseStatus.RESOURCE_FALSIFY);
+		}
+
 		Long userId = userAndDepart.getUserId();
 		Long departId = userAndDepart.getDepartId();
 

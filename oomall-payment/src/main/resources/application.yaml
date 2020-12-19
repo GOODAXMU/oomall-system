@@ -3,7 +3,7 @@ server:
 
 spring:
   profiles:
-  #active: dev
+    #active: dev
 
   jpa:
     show-sql: false
@@ -48,6 +48,7 @@ dubbo:
   protocol:
     name: dubbo
     port: 19400
+    host: 192.168.43.239
 
 oomall:
   external:
@@ -63,3 +64,9 @@ oomall:
       name: SimulateAfterSaleServiceImpl
       version: 0.0.1-SNAPSHOT
 
+  payment:
+    version: 0.0.1-SNAPSHOT
+
+logging:
+  level:
+    cn.edu.xmu: debug
