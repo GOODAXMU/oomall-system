@@ -205,16 +205,20 @@ public class FreightService {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 WeightFreightModel weightFreightModel = reply.getData();
-                weightFreightModel.setUnit(freightModel.getUnit());
-                freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
+                if (null != weightFreightModel) {
+                    weightFreightModel.setUnit(freightModel.getUnit());
+                    freight = freightCalculate.calActivityFreightByWeight(purchaseItem, weightFreightModel);
+                }
             } else if (freightModel.getType().equals(ModelType.PIECE_MODEL.type())) {
                 Reply<PieceFreightModel> reply = freightDao.getPieceFreightModel(freightModel);
                 if (!reply.isOk()) {
                     return new Reply<>(reply.getResponseStatus());
                 }
                 PieceFreightModel pieceFreightModel = reply.getData();
-                pieceFreightModel.setUnit(freightModel.getUnit());
-                freight = freightCalculate.calActivityFreightByPiece(purchaseItem, pieceFreightModel);
+                if (null != pieceFreightModel) {
+                    pieceFreightModel.setUnit(freightModel.getUnit());
+                    freight = freightCalculate.calActivityFreightByPiece(purchaseItem, pieceFreightModel);
+                }
             }
             redisTemplate.opsForValue().set(key, freight);
             redisTemplate.expire(key, 1, TimeUnit.MINUTES);

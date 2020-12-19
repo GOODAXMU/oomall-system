@@ -86,8 +86,8 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
         }
         for (PieceFreightModel pieceFreightModel : pieceFreightModels) {
             Long curPrice = pieceFreightModel.getFirstItemPrice();
-            if (totalCount > pieceFreightModel.getFirstItem() * pieceFreightModel.getUnit()) {
-                curPrice += (int) Math.ceil((totalCount - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems() * pieceFreightModel.getUnit()))
+            if (totalCount > pieceFreightModel.getFirstItem()) {
+                curPrice += (int) Math.ceil((totalCount - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems()))
                         * pieceFreightModel.getAdditionalItemsPrice();
             }
             if (curPrice > maxPrice) {
@@ -130,8 +130,8 @@ public class NewFreightCalculateImpl implements IFreightCalculate {
     @Override
     public Long calActivityFreightByPiece(PurchaseItem item, PieceFreightModel pieceFreightModel) {
         Long price = pieceFreightModel.getFirstItemPrice();
-        if (item.getCount() > pieceFreightModel.getFirstItem() * pieceFreightModel.getUnit()) {
-            price += (int) Math.ceil((item.getCount() - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems() * pieceFreightModel.getUnit()))
+        if (item.getCount() > pieceFreightModel.getFirstItem()) {
+            price += (int) Math.ceil((item.getCount() - pieceFreightModel.getFirstItem()) * 1.0 / (pieceFreightModel.getAdditionalItems()))
                     * pieceFreightModel.getAdditionalItemsPrice();
         }
         return price;
