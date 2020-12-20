@@ -1,6 +1,8 @@
 package cn.edu.xmu.oomall.service;
 
 import cn.edu.xmu.oomall.OomallPaymentApplication;
+import cn.edu.xmu.oomall.bo.Payment;
+import cn.edu.xmu.oomall.vo.PaymentPostRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -29,5 +31,29 @@ public class PatternPayServiceTest {
         Assert.assertEquals(map.size(), 2);
         Assert.assertEquals(map.get("001"), "返点支付");
         Assert.assertEquals(map.get("002"), "模拟支付渠道");
+    }
+
+    /**
+     * 根据支付渠道进行支付
+     */
+    @Test
+    void payByPattern() {
+        PaymentPostRequest vo = new PaymentPostRequest();
+        vo.setPrice(100L);
+        vo.setPaymentPattern("002");
+
+        Payment payment = new Payment(null, 142857142857L, vo);
+        Boolean b = patternPayService.payByPattern(payment);
+        Assert.assertTrue(b);
+    }
+
+    /**
+     * 根据反向支付进行返款
+     */
+    @Test
+    void refundByPattern() {
+        Payment payment = new Payment("002", 0L, null, null);
+        Boolean b = patternPayService.refundByPattern(payment);
+        Assert.assertTrue(b);
     }
 }
