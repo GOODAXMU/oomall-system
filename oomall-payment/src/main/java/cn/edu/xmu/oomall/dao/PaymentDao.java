@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Wang Zhizhou
@@ -43,12 +44,12 @@ public class PaymentDao {
     }
 
     public Reply<Payment> getPaymentById(Long paymentId) {
-        PaymentPo po = paymentRepository.getOne(paymentId);
-        if (null == po) {
+        Optional<PaymentPo> paymentPo = paymentRepository.findById(paymentId);
+        if (paymentPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
 
-        return new Reply<>(new Payment(po));
+        return new Reply<>(new Payment(paymentPo.orElse(null)));
     }
 
     public Reply<Payment> savePayment(Payment payment) {
