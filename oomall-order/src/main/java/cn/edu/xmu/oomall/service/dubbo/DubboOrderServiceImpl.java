@@ -69,7 +69,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 		OrderPo orderPo = op.get();
 
-		if (orderPo.getState() == OrderStatus.COMPLETED.value()
+		if (orderPo.getState() != OrderStatus.COMPLETED.value()
 				|| (orderPo.getBeDeleted() != null && orderPo.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
 			return null;
 		}

@@ -5,6 +5,7 @@ import cn.edu.xmu.oomall.annotation.Audit;
 import cn.edu.xmu.oomall.annotation.LoginUser;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.constant.OrderStatus;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.service.IOrderService;
 import cn.edu.xmu.oomall.service.CustomerOrderService;
 import cn.edu.xmu.oomall.util.PageInfo;
@@ -20,6 +21,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -87,8 +89,22 @@ public class CustomerOrderController {
 			@RequestParam(required = false) String endTime,
 			@RequestParam(required = false, defaultValue = "1") Integer page,
 			@RequestParam(required = false, defaultValue = "10") Integer pageSize,
-			@LoginUser Long customerId) {
+			@LoginUser Long customerId) throws OrderModuleException {
 		PageInfo pageInfo = new PageInfo(page, pageSize);
+
+		if (beginTime != null) {
+			beginTime = beginTime.replace(' ', 'T');
+		}
+
+		if (endTime != null) {
+			endTime = endTime.replace(' ', 'T');
+		}
+
+		if ((beginTime != null && !beginTime.contains("T"))
+				|| (endTime != null && !endTime.contains("T"))) {
+			throw new OrderModuleException(HttpStatus.BAD_REQUEST, cn.edu.xmu.oomall.constant.ResponseStatus.FIELD_INVALID);
+		}
+
 		List<Order> os = customerOrderService.getOrders(
 				customerId, orderSn, state,
 				beginTime == null ? null : LocalDateTime.parse(beginTime),

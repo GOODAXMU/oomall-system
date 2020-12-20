@@ -45,13 +45,4 @@ public class GlobalExceptionAdvice {
 
 		return new CommonResponse<>(ResponseStatus.FIELD_INVALID.value(), msg.toString());
 	}
-
-	@ExceptionHandler(value = DateTimeParseException.class)
-	public CommonResponse<String> handleDateTimeParseException(HttpServletRequest request,
-																		HttpServletResponse response,
-																		MethodArgumentNotValidException e) {
-		response.setStatus(HttpStatus.BAD_REQUEST.value());
-
-		return new CommonResponse<>(ResponseStatus.FIELD_INVALID.value(), "时间格式错误");
-	}
 }
