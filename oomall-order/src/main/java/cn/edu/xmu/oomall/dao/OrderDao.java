@@ -234,9 +234,17 @@ public class OrderDao {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
 
-        int r = orderRepository.deleteSelfOrderById(id, DbOrderStatus.BE_DELETED.value());
-
-        return new Reply<>(ResponseStatus.OK);
+        if (o.getState() >= OrderStatus.COMPLETED.value()) {
+            orderRepository.deleteSelfOrderById(id, DbOrderStatus.BE_DELETED.value());
+            return new Reply<>(ResponseStatus.OK);
+        } else if (o.getState() <= OrderStatus.TO_BE_RECEIVED.value()) {
+            if (o.getSubState() == OrderStatus.DELIVERED.value()) {
+                return new Reply<>(ResponseStatus.ORDER_FORBID);
+            }
+            return updateOrderState(id, OrderStatus.CANCELED.value(), null);
+        } else {
+            return new Reply<>(ResponseStatus.OK);
+        }
     }
 
     /**

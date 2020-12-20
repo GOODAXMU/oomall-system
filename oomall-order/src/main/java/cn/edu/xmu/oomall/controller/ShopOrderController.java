@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.controller;
 import cn.edu.xmu.oomall.annotation.Audit;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.entity.OrderPo;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.service.ShopOrderService;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
@@ -57,8 +58,21 @@ public class ShopOrderController {
             @RequestParam(required = false) String beginTime,
             @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws OrderModuleException {
         PageInfo pageInfo = new PageInfo(page, pageSize);
+
+        if (beginTime != null) {
+            beginTime = beginTime.replace(' ', 'T');
+        }
+
+        if (endTime != null) {
+            endTime = endTime.replace(' ', 'T');
+        }
+
+        if ((beginTime != null && !beginTime.contains("T"))
+                || (endTime != null && !endTime.contains("T"))) {
+            throw new OrderModuleException(HttpStatus.BAD_REQUEST, cn.edu.xmu.oomall.constant.ResponseStatus.FIELD_INVALID);
+        }
 
         Reply<Object> r = shopOrderService.getShopOrders(shopId, customerId, orderSn,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
