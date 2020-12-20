@@ -80,6 +80,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		dto.setShopId(orderPo.getShopId());
 		dto.setSkuId(orderItemPo.getGoodsSkuId());
 		dto.setSkuName(orderItemPo.getName());
+		dto.setCustomerId(orderPo.getCustomerId());
 
 		return dto;
 	}

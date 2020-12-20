@@ -20,4 +20,5 @@ public class AfterSaleDto implements Serializable {
 	private Long skuId;
 	private String skuName;
 	private Long shopId;
+	private Long customerId;
 }

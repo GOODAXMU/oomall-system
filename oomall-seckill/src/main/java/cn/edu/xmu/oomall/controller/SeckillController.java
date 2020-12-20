@@ -1,6 +1,7 @@
 package cn.edu.xmu.oomall.controller;
 
 import cn.edu.xmu.oomall.cache.ICache;
+import cn.edu.xmu.oomall.dto.SeckillInventoryRequest;
 import cn.edu.xmu.oomall.dto.SeckillLoadRequest;
 import cn.edu.xmu.oomall.dto.SeckillStatusModifyRequest;
 import cn.edu.xmu.oomall.dto.SeckillUnloadRequest;
@@ -45,7 +46,7 @@ public class SeckillController {
 
 
 	@GetMapping("/load")
-	public Map<String, Object> loadAndStart(Long seckillId, Integer batchSize) {
+	public Object loadAndStart(Long seckillId, Integer batchSize) {
 		SeckillLoadRequest request = new SeckillLoadRequest();
 		request.setSeckillId(seckillId);
 		request.setBatchSize(batchSize);
@@ -58,9 +59,8 @@ public class SeckillController {
 		return r;
 	}
 
-
 	@GetMapping("/unload")
-	public Map<String, Object> unloadAndClose(Long seckillId) {
+	public Object unloadAndClose(Long seckillId) {
 		SeckillStatusModifyRequest request1 = new SeckillStatusModifyRequest();
 		request1.setSeckillId(seckillId);
 		request1.setSwitchOn(false);
@@ -68,6 +68,15 @@ public class SeckillController {
 		SeckillUnloadRequest request = new SeckillUnloadRequest();
 		request.setSeckillId(seckillId);
 		return seckillService.unloadSeckill(request);
+	}
+
+	@GetMapping("/modify")
+	public Object modifyInventory(Long seckillId, Long skuId, Integer quantity) {
+		SeckillInventoryRequest request = new SeckillInventoryRequest();
+		request.setSeckillId(seckillId);
+		request.setSkuId(skuId);
+		request.setQuantity(quantity);
+		return seckillService.modifyInventory(request);
 	}
 
 	@GetMapping("/checkAct")
