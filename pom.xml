@@ -31,12 +31,8 @@
         <module>oomall-payment-common</module>
         <module>oomall-timer</module>
         <module>oomall-timer-common</module>
-        <module>oomall-goods</module>
-        <module>oomall-activity</module>
-        <module>oomall-activity-common</module>
         <module>oomall-order-common</module>
         <module>oomall-order-consumer</module>
-        <module>oomall-gateway</module>
         <module>oomall-test</module>
     </modules>
 
