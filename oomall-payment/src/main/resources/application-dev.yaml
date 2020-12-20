@@ -4,7 +4,7 @@ server:
 spring:
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -13,8 +13,8 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: gooda
+      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: OOMall
       password: 123456
       initial-size: 1
       min-idle: 1
@@ -46,7 +46,7 @@ dubbo:
   protocol:
     name: dubbo
     port: 19400
-    host: 192.168.43.239
+    host: localhost
 
 oomall:
   external:
@@ -64,3 +64,7 @@ oomall:
 
   payment:
     version: 0.0.1-SNAPSHOT
+
+logging:
+  level:
+    cn.edu.xmu: info

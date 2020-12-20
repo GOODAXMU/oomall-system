@@ -4,7 +4,7 @@ server:
 spring:
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -13,8 +13,8 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: gooda
+      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: OOMall
       password: 123456
       initial-size: 1
       min-idle: 1
@@ -45,7 +45,7 @@ dubbo:
     address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
-    host: 192.168.43.239
+    host: localhost
     port: 19900
 
 rocketmq:
@@ -62,19 +62,19 @@ rocketmq:
 oomall:
   external:
     customer-service:
-      name: SimulatedCustomerServiceImpl
+      name: ChenCustomerServiceImpl
       version: 0.0.1-SNAPSHOT
     shop-service:
-      name: SimulatedShopServiceImpl
+      name: WangShopServiceImpl
       version: 0.0.1-SNAPSHOT
     inventory-service:
-      name: SimulatedInventoryServiceImpl
+      name: WangInventoryServiceImpl
       version: 0.0.1-SNAPSHOT
     freight-service:
-      name: SimulatedFreightServiceImpl
+      name: GoodaFreightServiceImpl
       version: 0.0.1-SNAPSHOT
     discount-service:
-      name: SimulatedDiscountServiceImpl
+      name: WangDiscountServiceImpl
       version: 0.0.1-SNAPSHOT
     rebate-service:
       name: SimulatedRebateServiceImpl
@@ -86,16 +86,16 @@ oomall:
       name: SimulatedShareServiceImpl
       version: 0.0.1-SNAPSHOT
     activity-service:
-      name: SimulatedActivityServiceImpl
+      name: WangActivityServiceImpl
       version: 0.0.1-SNAPSHOT
     flash-sale-service:
-      name: SimulatedFlashSaleServiceImpl
+      name: SongFlashSaleServiceImpl
       version: 0.0.1-SNAPSHOT
     seckill-service:
-      name: SimulatedSeckillServiceImpl
+      name: GoodaSeckillServiceImpl
       version: 0.0.1-SNAPSHOT
     goods-service:
-      name: SimulatedGoodsServiceImpl
+      name: WangGoodsServiceImpl
       version: 0.0.1-SNAPSHOT
 
   order:
@@ -103,4 +103,4 @@ oomall:
 
 logging:
   level:
-    cn.edu.xmu: debug
+    cn.edu.xmu: info

@@ -2,11 +2,12 @@ server:
   port: 9800
 
 spring:
+
   redis:
     port: 6379
-    host: localhost
+    host: 47.115.162.144
     # Redis服务器连接密码
-    password: 123456
+    #password: 123456
     # Redis数据库索引（默认为0）
     database: 0
     #连接池最大连接数（使用负值表示没有限制）
@@ -23,7 +24,7 @@ spring:
     timeout: 5000
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -32,8 +33,8 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: gooda
+      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: OOMall
       password: 123456
       initial-size: 1
       min-idle: 1
@@ -44,8 +45,7 @@ spring:
 
   cloud:
     nacos:
-      #      server-addr: 47.115.162.144:8848
-      server-addr: localhost:8848
+      server-addr: 47.115.162.144:8848
 
   application:
     name: oomall-freight
@@ -63,8 +63,7 @@ dubbo:
   scan:
     base-packages: cn.edu.xmu.oomall.external.dubbo
   registry:
-    address: nacos://localhost:8848
-  #    address: nacos://47.115.162.144:8848
+    address: nacos://47.115.162.144:8848
   protocol:
     name: dubbo
     port: 19888
@@ -73,16 +72,19 @@ dubbo:
 oomall:
   external:
     goods-service:
-      #      name: WangGoodsServiceImpl
-      name: SimulatedGoodsServiceImpl
-      version: 0.8.7-SNAPSHOT
+      name: WangGoodsServiceImpl
+      #name: SimulatedGoodsServiceImpl
+      version: 0.0.1-SNAPSHOT
+    region-service:
+      name: JiangRegionServiceImpl
+      version: 0.0.1-SNAPSHOT
 
   strategy:
     freight-calculate:
       name: NewFreightCalculateImpl
 
   freight:
-    version: 1.0.8-SNAPSHOT
+    version: 0.0.1-SNAPSHOT
 
   redis:
     prifix: freight
@@ -101,3 +103,6 @@ oomall:
   hundry: 100
   #300
   tri-hundry: 300
+
+
+
