@@ -31,7 +31,6 @@ import java.util.Optional;
  * @modified by Jianheng HUANG, date: 2020-11-29
  * @modified by xincong yao, date: 2020-12-3
  * @modified by Jianheng HUANG, date: 2020-12-12
- * TODO: 店家的权限检查
  */
 @Component
 public class OrderDao {
@@ -90,9 +89,6 @@ public class OrderDao {
 
         for (OrderPo op : orderPoPage.getContent()) {
             if (op.getPid() != null && op.getPid() == 0 && !withParent) {
-                continue;
-            }
-            if (op.getBeDeleted() != null && op.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
                 continue;
             }
             orders.add(Order.toOrder(op));
