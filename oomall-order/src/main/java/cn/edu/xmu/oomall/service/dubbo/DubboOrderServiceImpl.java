@@ -62,10 +62,12 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		}
 		OrderItemPo orderItemPo = o.get();
 
-		OrderPo orderPo = orderRepository.findOrderSnAndShopIdById(orderItemPo.getOrderId());
-		if (orderPo == null) {
+		Optional<OrderPo> op = orderRepository.findById(orderItemPo.getOrderId());
+		if (op.isEmpty()) {
 			return null;
 		}
+
+		OrderPo orderPo = op.get();
 
 		if (orderPo.getState() == OrderStatus.COMPLETED.value()
 				|| (orderPo.getBeDeleted() != null && orderPo.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
