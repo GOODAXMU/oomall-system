@@ -225,19 +225,22 @@ public class OrderDao {
         if (orderPo.isEmpty()) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
         }
+        OrderPo po = orderPo.get();
+        if (po.getBeDeleted() != null && po.getBeDeleted() == DbOrderStatus.BE_DELETED.value()) {
+            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        }
         Order o = Order.toOrder(orderPo.orElse(null));
         if (o.getShop().getId() == null || !o.getShop().getId().equals(shopId)) {
             return new Reply<>(ResponseStatus.RESOURCE_ID_OUT_OF_SCOPE);
         }
-        if (o.getState() == OrderStatus.COMPLETED.value() ||
-                o.getState() == OrderStatus.CANCELED.value()) {
+
+        if (o.getState() >= OrderStatus.COMPLETED.value()) {
             return new Reply<>(ResponseStatus.ORDER_FORBID);
-        }
-
-        int r = orderRepository.updateOrderState(id, OrderStatus.CANCELED.value());
-
-        if (r <= 0) {
-            return new Reply<>(ResponseStatus.RESOURCE_ID_NOT_EXIST);
+        } else if (o.getState() <= OrderStatus.TO_BE_RECEIVED.value()) {
+            if (o.getSubState() == OrderStatus.DELIVERED.value()) {
+                return new Reply<>(ResponseStatus.ORDER_FORBID);
+            }
+            return updateOrderState(id, OrderStatus.CANCELED.value(), null);
         } else {
             return new Reply<>(ResponseStatus.OK);
         }

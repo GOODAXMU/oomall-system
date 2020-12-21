@@ -3,6 +3,7 @@ package cn.edu.xmu.oomall.controller;
 import cn.edu.xmu.oomall.annotation.Audit;
 import cn.edu.xmu.oomall.bo.Order;
 import cn.edu.xmu.oomall.entity.OrderPo;
+import cn.edu.xmu.oomall.exception.OrderModuleException;
 import cn.edu.xmu.oomall.service.ShopOrderService;
 import cn.edu.xmu.oomall.util.PageInfo;
 import cn.edu.xmu.oomall.vo.*;
@@ -57,8 +58,21 @@ public class ShopOrderController {
             @RequestParam(required = false) String beginTime,
             @RequestParam(required = false) String endTime,
             @RequestParam(required = false, defaultValue = "1") Integer page,
-            @RequestParam(required = false, defaultValue = "10") Integer pageSize) {
+            @RequestParam(required = false, defaultValue = "10") Integer pageSize) throws OrderModuleException {
         PageInfo pageInfo = new PageInfo(page, pageSize);
+
+        if (beginTime != null) {
+            beginTime = beginTime.replace(' ', 'T');
+        }
+
+        if (endTime != null) {
+            endTime = endTime.replace(' ', 'T');
+        }
+
+        if ((beginTime != null && !beginTime.contains("T"))
+                || (endTime != null && !endTime.contains("T"))) {
+            throw new OrderModuleException(HttpStatus.BAD_REQUEST, cn.edu.xmu.oomall.constant.ResponseStatus.FIELD_INVALID);
+        }
 
         Reply<Object> r = shopOrderService.getShopOrders(shopId, customerId, orderSn,
                 beginTime == null ? null : LocalDateTime.parse(beginTime),
@@ -90,7 +104,7 @@ public class ShopOrderController {
     public Reply<Object> addShopOrderMessage(
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id,
-            @RequestBody ShopOrderMessageAddRequest orderInfo) {
+            @RequestBody @Valid ShopOrderMessageAddRequest orderInfo) {
         String message = orderInfo.getMessage();
         return shopOrderService.addShopOrderMessage(shopId, id, message);
     }
@@ -108,7 +122,7 @@ public class ShopOrderController {
     @GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Reply<OrderDetailGetResponse> getShopOrderDetails(
-            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 0) Long shopId,
             @PathVariable @Min(value = 1) Long id) {
         Reply<Order> r = shopOrderService.getShopOrderById(shopId, id);
         Order o = r.getData();
@@ -155,7 +169,7 @@ public class ShopOrderController {
     public Reply<Object> markShopOrderDeliver(
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id,
-            @Valid @RequestBody ShopOrderDeliverPutRequest body) {
+            @RequestBody @Valid ShopOrderDeliverPutRequest body) {
         String sn = body.getFreightSn();
         return shopOrderService.markShopOrderDelivered(shopId, id, sn);
     }

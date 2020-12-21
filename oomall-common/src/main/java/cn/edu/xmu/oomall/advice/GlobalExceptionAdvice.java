@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.time.format.DateTimeParseException;
 
 /**
  * @author xincong yao
@@ -23,7 +22,7 @@ public class GlobalExceptionAdvice {
 	@ExceptionHandler(value = OrderModuleException.class)
 	public CommonResponse<String> handleOrderModuleException(HttpServletRequest request,
 															 HttpServletResponse response,
-													OrderModuleException e) {
+															 OrderModuleException e) {
 		if (e.getHttpStatus() != null) {
 			response.setStatus(e.getHttpStatus().value());
 		}
@@ -44,14 +43,5 @@ public class GlobalExceptionAdvice {
 		}
 
 		return new CommonResponse<>(ResponseStatus.FIELD_INVALID.value(), msg.toString());
-	}
-
-	@ExceptionHandler(value = DateTimeParseException.class)
-	public CommonResponse<String> handleDateTimeParseException(HttpServletRequest request,
-																		HttpServletResponse response,
-																		MethodArgumentNotValidException e) {
-		response.setStatus(HttpStatus.BAD_REQUEST.value());
-
-		return new CommonResponse<>(ResponseStatus.FIELD_INVALID.value(), "时间格式错误");
 	}
 }

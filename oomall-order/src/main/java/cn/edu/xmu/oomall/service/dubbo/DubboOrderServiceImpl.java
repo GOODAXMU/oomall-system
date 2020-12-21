@@ -69,7 +69,7 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 
 		OrderPo orderPo = op.get();
 
-		if (orderPo.getState() == OrderStatus.COMPLETED.value()
+		if (orderPo.getState() != OrderStatus.COMPLETED.value()
 				|| (orderPo.getBeDeleted() != null && orderPo.getBeDeleted() == DbOrderStatus.BE_DELETED.value())) {
 			return null;
 		}
@@ -362,6 +362,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		exOrder.setRegionId(dto.getRegionId());
 		exOrder.setAddress(dto.getAddress());
 		exOrder.setConsignee(dto.getConsignee());
+		exOrder.setState(OrderStatus.TO_BE_RECEIVED.value());
+		exOrder.setSubState(OrderStatus.DELIVERED.value());
 
 		exOrder = orderRepository.save(exOrder);
 		log.debug("new orderId: " + exOrder.getId());

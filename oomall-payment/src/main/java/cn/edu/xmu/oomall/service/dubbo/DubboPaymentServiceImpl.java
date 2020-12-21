@@ -11,6 +11,7 @@ import cn.edu.xmu.oomall.external.util.ServiceFactory;
 import cn.edu.xmu.oomall.service.IDubboPaymentService;
 import cn.edu.xmu.oomall.service.PatternPayService;
 import cn.edu.xmu.oomall.vo.Reply;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.dubbo.config.annotation.DubboService;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,6 +24,7 @@ import java.util.UUID;
  * create 2020/12/11
  * modified 2020/12/15
  */
+@Slf4j
 @DubboService(version = "${oomall.payment.version}")
 public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
@@ -47,6 +49,8 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
 
     @Override
     public Boolean createRefund(Long afterSaleId, Long orderItemId, Integer quantity) {
+        log.debug("createRefund: " + afterSaleId + ", " + orderItemId + ", " + quantity);
+
         OrderItemDto oi = orderService.getOrderItem(orderItemId);
         if (null == oi) {
             return false;
@@ -62,11 +66,11 @@ public class DubboPaymentServiceImpl implements IDubboPaymentService {
         if (!r.isOk()) {            // 查询失败无从返款
             return false;
         } else if (deposit > 0){    // 存在定金, 定金无法返款
-            r.getData().removeIf(payment -> payment.getActualAmount() == deposit);
+            r.getData().removeIf(payment -> payment.getActualAmount().equals(deposit));
         }
 
         // 根据 orderItem 价格数量和折扣 和 返款quantity 计算返款 amount 和 返款比例
-        Long refundAmount = oi.getPrice() * quantity - oi.getDiscount() * quantity / oi.getQuantity();
+        Long refundAmount = oi.getDiscount() * quantity;
         Long totalPayment = 0L;
         for (Payment payment : r.getData()) {
             totalPayment += payment.getActualAmount();

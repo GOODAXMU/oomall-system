@@ -4,7 +4,7 @@ server:
 spring:
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: none
     properties:
@@ -13,9 +13,9 @@ spring:
 
   datasource:
     druid:
-      url: jdbc:mysql://localhost:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: gooda
-      password: 123456
+      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: OOMall
+      password: 1234567
       initial-size: 1
       min-idle: 1
       max-active: 20
@@ -25,7 +25,7 @@ spring:
 
   cloud:
     nacos:
-      server-addr: 47.115.162.144:8848
+      server-addr: 47.115.162.144:8847
 
   application:
     name: oomall-payment
@@ -42,11 +42,11 @@ dubbo:
   scan:
     base-packages: cn.edu.xmu.oomall.service
   registry:
-    address: nacos://47.115.162.144:8848
+    address: nacos://47.115.162.144:8847
   protocol:
     name: dubbo
     port: 19400
-    host: 192.168.43.239
+    host: localhost
 
 oomall:
   external:
@@ -64,3 +64,7 @@ oomall:
 
   payment:
     version: 0.0.1-SNAPSHOT
+
+logging:
+  level:
+    cn.edu.xmu: info
