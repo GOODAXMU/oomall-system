@@ -122,7 +122,7 @@ public class ShopOrderController {
     @GetMapping(value = "/{shopId}/orders/{id}", produces = "application/json;charset=UTF-8")
     @ResponseStatus(value = HttpStatus.OK)
     public Reply<OrderDetailGetResponse> getShopOrderDetails(
-            @PathVariable @Min(value = 1) Long shopId,
+            @PathVariable @Min(value = 0) Long shopId,
             @PathVariable @Min(value = 1) Long id) {
         Reply<Order> r = shopOrderService.getShopOrderById(shopId, id);
         Order o = r.getData();

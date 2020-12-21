@@ -101,7 +101,7 @@ public class CustomerOrderController {
 
 		if ((beginTime != null && !beginTime.contains("T"))
 				|| (endTime != null && !endTime.contains("T"))) {
-			throw new OrderModuleException(HttpStatus.BAD_REQUEST, cn.edu.xmu.oomall.constant.ResponseStatus.FIELD_INVALID);
+			return new Reply<>(HttpStatus.BAD_REQUEST, cn.edu.xmu.oomall.constant.ResponseStatus.FIELD_INVALID);
 		}
 
 		List<Order> os = customerOrderService.getOrders(

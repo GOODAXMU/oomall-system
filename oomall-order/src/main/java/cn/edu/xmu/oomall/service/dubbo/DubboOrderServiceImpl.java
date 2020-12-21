@@ -362,6 +362,8 @@ public class DubboOrderServiceImpl implements IDubboOrderService {
 		exOrder.setRegionId(dto.getRegionId());
 		exOrder.setAddress(dto.getAddress());
 		exOrder.setConsignee(dto.getConsignee());
+		exOrder.setState(OrderStatus.TO_BE_RECEIVED.value());
+		exOrder.setSubState(OrderStatus.DELIVERED.value());
 
 		exOrder = orderRepository.save(exOrder);
 		log.debug("new orderId: " + exOrder.getId());

@@ -235,8 +235,7 @@ public class OrderDao {
         }
 
         if (o.getState() >= OrderStatus.COMPLETED.value()) {
-            orderRepository.deleteSelfOrderById(id, DbOrderStatus.BE_DELETED.value());
-            return new Reply<>(ResponseStatus.OK);
+            return new Reply<>(ResponseStatus.ORDER_FORBID);
         } else if (o.getState() <= OrderStatus.TO_BE_RECEIVED.value()) {
             if (o.getSubState() == OrderStatus.DELIVERED.value()) {
                 return new Reply<>(ResponseStatus.ORDER_FORBID);
