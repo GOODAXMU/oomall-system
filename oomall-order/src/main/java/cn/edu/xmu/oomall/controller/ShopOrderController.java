@@ -13,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 
+import javax.validation.Valid;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -154,7 +155,7 @@ public class ShopOrderController {
     public Reply<Object> markShopOrderDeliver(
             @PathVariable @Min(value = 1) Long shopId,
             @PathVariable @Min(value = 1) Long id,
-            @RequestBody ShopOrderDeliverPutRequest body) {
+            @Valid @RequestBody ShopOrderDeliverPutRequest body) {
         String sn = body.getFreightSn();
         return shopOrderService.markShopOrderDelivered(shopId, id, sn);
     }
