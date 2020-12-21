@@ -17,9 +17,9 @@ spring:
     druid:
       #url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
       #username: OOMall
-      url: jdbc:mysql://192.168.43.92:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
-      username: gooda
-      password: 123456
+      url: jdbc:mysql://47.115.162.144:3306/oomall?serverTimezone=GMT%2B8&useUnicode=true&characterEncoding=utf-8
+      username: OOMall
+      password: 1234567
       initial-size: 1
       min-idle: 1
       max-active: 20
@@ -29,7 +29,7 @@ spring:
 
   cloud:
     nacos:
-      server-addr: domi.xqchen.site:8848
+      server-addr: 47.115.162.144:8847
 
   application:
     name: oomall-order
@@ -46,11 +46,10 @@ dubbo:
   scan:
     base-packages: cn.edu.xmu.oomall.service
   registry:
-    address: nacos://domi.xqchen.site:8848
-    #nacos://47.115.162.144:8848
+    address: nacos://47.115.162.144:8847
   protocol:
     name: dubbo
-    host: 192.168.43.123
+    host: 192.168.43.239
     port: 19900
 
 rocketmq:
@@ -108,4 +107,4 @@ oomall:
 
 logging:
   level:
-    cn.edu.xmu: info
+    cn.edu.xmu: debug
