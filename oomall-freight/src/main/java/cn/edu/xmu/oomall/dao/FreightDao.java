@@ -298,7 +298,6 @@ public class FreightDao {
         if (isFreightModelNameExist(freightModel.getName())) {
             return new Reply(ResponseStatus.FREIGHT_NAME_EXIST);
         }
-        System.out.println("update freight model check success: ");
         FreightModelPo freightModelPo = freightModel.createPo();
         int ret = freightModelRepository.update(freightModelPo);
         if (ret <= 0) {
